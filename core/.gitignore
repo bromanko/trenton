@@ -89,6 +89,8 @@ bin
 /build/
 *.exe
 !.paket/paket.bootstrapper.exe
+.paket/
+paket-files
 
 # End of https://www.gitignore.io/api/fsharp
 
