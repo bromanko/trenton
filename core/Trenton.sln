@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Webhooks", "Trenton.Webhooks\Trenton.Webhooks.fsproj", "{0AD6DDD4-B10E-4083-A728-BFCA790A4FBE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Paket", "Paket", "{D4C63BE7-3773-477A-BB97-53AB5512791A}"
 ProjectSection(SolutionItems) = preProject
 	paket.dependencies = paket.dependencies
 EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Webhooks", "src\Trenton.Webhooks\Trenton.Webhooks.fsproj", "{9F5FBA96-E4FD-4487-BD01-155FE91DA567}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,9 +13,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0AD6DDD4-B10E-4083-A728-BFCA790A4FBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0AD6DDD4-B10E-4083-A728-BFCA790A4FBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0AD6DDD4-B10E-4083-A728-BFCA790A4FBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0AD6DDD4-B10E-4083-A728-BFCA790A4FBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F5FBA96-E4FD-4487-BD01-155FE91DA567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F5FBA96-E4FD-4487-BD01-155FE91DA567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F5FBA96-E4FD-4487-BD01-155FE91DA567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F5FBA96-E4FD-4487-BD01-155FE91DA567}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
