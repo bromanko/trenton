@@ -18,6 +18,7 @@ WORKDIR /usr/src/app
 
 COPY . .
 
+RUN dotnet tool restore && dotnet paket restore
 RUN dotnet publish -c DEBUG -o out
 
 

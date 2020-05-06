@@ -1,0 +1,7 @@
+.idea
+.dockerignore
+.kubernetes
+docs
+packages
+Dockerfile
+.paket
