@@ -1,6 +1,6 @@
 output "gcr-bucket" {
   description = "Name of the GCS bucket backing the image registry."
-  value       = google_storage_bucket.gcr-bucket.name
+  value       = local.bucket_name
 }
 
 output "gcr-url" {
