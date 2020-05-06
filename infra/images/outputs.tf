@@ -1,8 +1,3 @@
-output "gcr-bucket" {
-  description = "Name of the GCS bucket backing the image registry."
-  value       = local.bucket_name
-}
-
 output "gcr-url" {
   description = "Fully-qualified registry URL."
   value       = local.url
