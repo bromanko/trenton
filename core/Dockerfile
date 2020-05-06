@@ -1,0 +1,29 @@
+##################################
+FROM fsharp:10.7.0-netcore as dev
+
+# Install Dockerize and requirements
+RUN apt-get update && \
+    apt-get --no-install-recommends install -y \
+    musl
+COPY --from=jwilder/dockerize:0.6.0 /usr/local/bin/dockerize /usr/local/bin
+
+WORKDIR /usr/src/app/
+ENTRYPOINT ["/usr/src/app/scripts/dev-entrypoint.sh"]
+
+
+##################################
+FROM fsharp:10.7.0-netcore as build
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN dotnet publish -c DEBUG -o out
+
+
+##################################
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 as prod
+
+COPY --from=build /usr/src/app/out .
+
+ENTRYPOINT ["dotnet", "Trenton.Webhooks.dll"]
