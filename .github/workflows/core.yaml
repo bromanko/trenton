@@ -6,7 +6,7 @@ on:
     - '.go/core/**'
     - '.github/workflows/core.yaml'
 
-#env:
+env:
   GCR_RW_TOKEN: ${{ secrets.GCR_RW_TOKEN }}
   GOOGLE_APPLICATION_CREDENTIALS: /home/runner/gcloud_auth.json
   GCLOUD_PROJECT_DEVELOPMENT: development
