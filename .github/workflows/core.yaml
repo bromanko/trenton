@@ -2,9 +2,9 @@ name: Core
 on:
   push:
     paths:
-    - core/**
-    - .go/core/**
-    - .github/workflows/core.yaml
+    - 'core/**'
+    - '.go/core/**'
+    - '.github/workflows/core.yaml'
 
 #env:
   GCR_RW_TOKEN: ${{ secrets.GCR_RW_TOKEN }}
