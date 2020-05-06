@@ -1,8 +1,17 @@
-﻿// Learn more about F# at http://fsharp.org
+﻿open Microsoft.AspNetCore.Builder
+open Microsoft.Extensions.Hosting
+open Microsoft.AspNetCore.Hosting
+open Giraffe
 
-open System
+
+let configureApp webApp (app: IApplicationBuilder) =
+    app.UseGiraffe webApp
+
+let private configureApp = ()
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
-    0 // return an integer exit code
+    Host.CreateDefaultBuilder()
+        .ConfigureWebHostDefaults(fun webHostBuilder ->
+        webHostBuilder.Configure(configureApp webApp) |> ignore).Build().Run()
+    0
