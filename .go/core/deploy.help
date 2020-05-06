@@ -1,0 +1,6 @@
+Deploys the core server to an environment
+
+== Detailed Usage ==
+
+environment           The environment to deploy to
+version               Commit hash for the version to deploy

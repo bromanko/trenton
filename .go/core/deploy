@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+script_path="$(
+  cd "$(dirname "$0")"
+  pwd -P
+)"
+# shellcheck source=../.common
+. "${script_path}/../.common"
+
+cd "${script_path}"/../../core
+
+function cleanup() {
+  find . -type f -name '*.decrypted' -delete
+}
+
+function decryptSecrets() {
+  trap cleanup EXIT
+  local env=$1
+  for sec in .kubernetes/overlays/"${env}"/*.enc.env; do
+    sops -d "${sec}" >"${sec}.decrypted"
+  done
+}
+
+function setImageTag() {
+  local ver=$1
+  pushd ".kubernetes/base" >/dev/null 2>&1
+  kustomize edit set image "${COMMON_DOCKER_IMAGE_BASE}/core:${ver}"
+  kustomize edit add annotation -f "app.kubernetes.io/version:${ver}"
+  popd >/dev/null 2>&1
+}
+
+function deploy() {
+  local env=$1
+  cd ".kubernetes/overlays/${env}"
+  kustomize build . | kubectl apply -f -
+  kubectl rollout status deployment webhooks --timeout=10m -n trenton-core
+}
+
+environment=${1?An environment must be specified}
+version=${2?A commit hash must be specified}
+context=$(kubectl config current-context)
+overlay_dir=".kubernetes/overlays/${environment}"
+[[ -d "${overlay_dir}" ]] || (error "The environment specified does not have a Kubernetes overlay" && exit 1)
+
+info "Deploying overlay \"${environment}\" version \"${version}\" to cluster \"${context}\""
+decryptSecrets "${environment}"
+setImageTag "${version}"
+deploy "${environment}"
