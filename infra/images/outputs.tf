@@ -8,3 +8,8 @@ output "gcr-images-ro-service-account-key" {
   value       = google_service_account_key.ro_key.private_key
   sensitive   = true
 }
+
+output "gcr-images-rw-service-account-key" {
+  description = "Service account key for read write access to GCR images"
+  value       = google_service_account_key.rw_key.private_key
+}

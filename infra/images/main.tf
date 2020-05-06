@@ -15,7 +15,7 @@ provider "google" {
 }
 
 locals {
-  url         = data.google_container_registry_repository.main.repository_url
+  url = data.google_container_registry_repository.main.repository_url
 }
 
 resource "google_project_service" "cloudresourcemanager" {
@@ -55,4 +55,8 @@ data "google_container_registry_repository" "main" {
 
 resource "google_service_account_key" "ro_key" {
   service_account_id = google_service_account.ro.account_id
+}
+
+resource "google_service_account_key" "rw_key" {
+  service_account_id = google_service_account.rw.account_id
 }
