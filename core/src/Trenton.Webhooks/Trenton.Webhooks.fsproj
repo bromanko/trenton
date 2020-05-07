@@ -6,6 +6,7 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="Paths.fs" />
+        <Compile Include="Routes\Meta.fs"/>
         <Compile Include="Host.fs" />
         <Compile Include="Program.fs" />
         <Content Include="paket.references" />

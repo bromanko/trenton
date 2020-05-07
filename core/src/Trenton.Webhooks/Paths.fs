@@ -4,6 +4,6 @@ open Microsoft.AspNetCore.Http
 
 [<RequireQualifiedAccess>]
 module Paths =
-    let Index () = PathString "/"
+    let index () = PathString "/"
 
-    let Healthz () = PathString "/healthz"
+    let health () = PathString "/healthz"

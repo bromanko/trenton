@@ -1,6 +1,7 @@
 namespace Trenton.Webhooks
 
 open Giraffe
+open Giraffe.Serialization
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Http
@@ -12,7 +13,7 @@ module Host =
         Giraffe.Routing.route path.Value
 
     let private webApp =
-        choose [ GET >=> choose [ route <| Paths.Index() >=> text "index" ] ]
+        choose [ GET >=> choose [ route <| Paths.index() >=> Routes.Meta.index() ] ]
 
     let private addHealthChecks (services: IServiceCollection) =
         services.AddHealthChecks() |> ignore
@@ -23,11 +24,13 @@ module Host =
 
         services.AddHttpContextAccessor() |> ignore
         addHealthChecks services
+        services.AddSingleton<IJsonSerializer>
+            (Utf8JsonSerializer(Utf8JsonSerializer.DefaultResolver)) |> ignore
         ()
 
     let private configureApp =
         fun (app: IApplicationBuilder) ->
-            app.UseHealthChecks(Paths.Healthz()).UseGiraffe(webApp)
+            app.UseHealthChecks(Paths.health()).UseGiraffe(webApp)
 
     let createHostBuilder argv =
         Host.CreateDefaultBuilder(argv)
