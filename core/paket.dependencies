@@ -4,3 +4,4 @@ storage: none
 framework: netcore3.1
 
 nuget Giraffe
+nuget Microsoft.AspNetCore.Diagnostics.HealthChecks

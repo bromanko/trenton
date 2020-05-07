@@ -5,6 +5,7 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="Paths.fs" />
         <Compile Include="Host.fs" />
         <Compile Include="Program.fs" />
         <Content Include="paket.references" />
