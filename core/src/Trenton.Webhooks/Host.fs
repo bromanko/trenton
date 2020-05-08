@@ -8,6 +8,7 @@ open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Trenton.Webhooks.Config
+open Trenton.Webhooks.Health
 
 module Host =
     let private route (path: PathString) =
@@ -19,12 +20,9 @@ module Host =
               >=> choose [ route <| Paths.index () >=> Routes.Meta.index () ] ]
 
     let private addHealthChecks (services: IServiceCollection) =
-        services.AddHealthChecks() |> ignore
+        services.AddTrentonHealthChecks() |> ignore
 
     let private configureServices (services: IServiceCollection) =
-        //        if config.Server.Development then
-        //            IdentityModelEventSource.ShowPII <- true
-
         services.AddHttpContextAccessor() |> ignore
         addHealthChecks services
         services.AddSingleton<IJsonSerializer>
@@ -33,7 +31,7 @@ module Host =
 
     let private configureApp =
         fun (app: IApplicationBuilder) ->
-            app.UseHealthChecks(Paths.health ()).UseGiraffe(webApp)
+            app.UseTrentonHealthChecks(Paths.health ()).UseGiraffe(webApp)
 
     let createHostBuilder argv config =
         Host.CreateDefaultBuilder(argv)
