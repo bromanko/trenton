@@ -14,7 +14,7 @@ secretGenerator:
 - name: webhooks-env-secrets
   namespace: trenton-core
   envs:
-  - secrets.env.decrypted
+  - secrets.enc.env.decrypted
 
 patchesJson6902:
 - target:
