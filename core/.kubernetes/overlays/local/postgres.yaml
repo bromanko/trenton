@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: alpine-core
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: alpine-core-api-postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: alpine-core-api-postgres
+        app.kubernetes.io/component: database
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:12.1
+        ports:
+        - containerPort: 5432
+          name: psql
+        envFrom:
+        - configMapRef:
+            name: postgres-env-config
+        - secretRef:
+            name: postgres-env-secrets
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - exec pg_isready -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -h 127.0.0.1 -p 5432
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 6
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - exec pg_isready -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -h 127.0.0.1 -p 5432
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 6

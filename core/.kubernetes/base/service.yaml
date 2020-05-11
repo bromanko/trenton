@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: webhooks
+  namespace: trenton-core
+  labels:
+    app.kubernetes.io/name: webhooks
+    app.kubernetes.io/component: backend-api
+spec:
+  selector:
+    app.kubernetes.io/name: webhooks
+  ports:
+    - port: 5000
+      targetPort: 5000
+      name: http

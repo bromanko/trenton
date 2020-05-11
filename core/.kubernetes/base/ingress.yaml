@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: webhooks-http-ingress
+  namespace: trenton-core
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: "letsencrypt"
+  labels:
+    app.kubernetes.io/name: webhooks
+spec:
+  rules:
+    - host: webhooks.trenton.seemy.app
+      http:
+        paths:
+          - backend:
+              serviceName: webhooks
+              servicePort: http
+  tls:
+    - hosts:
+        - webhooks.trenton.seemy.app
+      secretName: webhooks-tls
