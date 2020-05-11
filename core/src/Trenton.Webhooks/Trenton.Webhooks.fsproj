@@ -5,7 +5,9 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
+        <Compile Include="Logging.fs" />
         <Compile Include="Config.fs" />
+        <Compile Include="Serilog.fs" />
         <Compile Include="Paths.fs" />
         <Compile Include="Routes\Meta.fs" />
         <Compile Include="Health.fs" />

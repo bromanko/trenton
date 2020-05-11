@@ -7,6 +7,7 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
+open Serilog
 open Trenton.Webhooks.Config
 open Trenton.Webhooks.Health
 
@@ -31,11 +32,12 @@ module Host =
 
     let private configureApp =
         fun (app: IApplicationBuilder) ->
-            app.UseTrentonHealthChecks(Paths.health ()).UseGiraffe(webApp)
+            app.UseSerilogRequestLogging()
+               .UseTrentonHealthChecks(Paths.health ()).UseGiraffe(webApp)
 
     let createHostBuilder argv config =
         Host.CreateDefaultBuilder(argv)
             .ConfigureWebHost(fun wh -> wh.UseUrls(config.Server.Urls) |> ignore)
             .ConfigureWebHostDefaults(fun wb ->
-            wb.ConfigureServices(configureServices).Configure(configureApp)
-            |> ignore)
+            wb.UseSerilog().ConfigureServices(configureServices)
+              .Configure(configureApp) |> ignore)

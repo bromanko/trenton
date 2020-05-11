@@ -3,6 +3,12 @@ namespace Trenton.Webhooks
 open FsConfig
 
 module Config =
+    type LoggingConfig =
+        { [<DefaultValue("Information")>]
+          LogLevel: LogLevel
+          [<DefaultValue("Json")>]
+          LogTarget: LogTarget }
+
     type ServerConfig =
         { [<DefaultValue("true")>]
           Development: bool
@@ -22,7 +28,8 @@ module Config =
 
     [<Convention("TRENTON")>]
     type AppConfig =
-        { Server: ServerConfig }
+        { Logging: LoggingConfig
+          Server: ServerConfig }
 
     let failInvalidConfig error =
         match error with
