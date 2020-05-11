@@ -47,6 +47,7 @@ module Serilog =
     let getSerilog format (minLevel: LogLevel) =
         let lc =
             LoggerConfiguration()
+                .Destructure.FSharpTypes()
                 .Destructure.ByTransforming(destructureAppConfig)
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("App", "Trenton Webhooks Server")

@@ -2,6 +2,9 @@ STORAGE: NONE
 RESTRICTION: == netcoreapp3.1
 NUGET
   remote: https://api.nuget.org/v3/index.json
+    Destructurama.FSharp (1.1.1-dev-00035)
+      FSharp.Core (>= 4.3.4)
+      Serilog (>= 2.0 < 3.0)
     FsConfig (2.1.6)
       FSharp.Core (>= 4.2.3)
       Microsoft.Extensions.Configuration
