@@ -1,3 +1,5 @@
 creation_rules:
   - path_regex: .kubernetes/overlays/local/secrets.*\.enc\.env$
     gcp_kms: projects/development-a0ec991abee20869/locations/global/keyRings/sops-7ed75b9cab2df7f6/cryptoKeys/sops-key
+  - path_regex: .kubernetes/overlays/production/secrets.*\.enc\.env$
+    gcp_kms: projects/development-a0ec991abee20869/locations/global/keyRings/sops-7ed75b9cab2df7f6/cryptoKeys/sops-key

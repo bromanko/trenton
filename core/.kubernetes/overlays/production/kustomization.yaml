@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../base
+
+configMapGenerator:
+- name: webhooks-env-config
+  namespace: trenton-core
+  envs:
+  - .env
+
+secretGenerator:
+- name: webhooks-env-secrets
+  namespace: trenton-core
+  envs:
+  - secrets.env.decrypted
+
+patchesJson6902:
+- target:
+    group: networking.k8s.io
+    version: v1beta1
+    kind: Ingress
+    name: webhooks-http-ingress
+    namespace: trenton-core
+  path: ingress.yaml
