@@ -55,7 +55,7 @@ function ensureNetwork() {
 function gcloudProjectForEnv() {
   declare -A projects
   projects=(
-    [development]="tbd"
+    [production]="development-a0ec991abee20869"
   )
   environment=$1
   if [[ -z ${projects[$environment]+x} ]]; then
