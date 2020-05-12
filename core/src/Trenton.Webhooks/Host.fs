@@ -37,8 +37,8 @@ module Host =
 
     let createHostBuilder argv config =
         Host.CreateDefaultBuilder(argv)
-            .ConfigureWebHost(fun wh -> wh.UseUrls(config.Server.Urls) |> ignore)
             .ConfigureWebHostDefaults(fun wb ->
             wb.UseSerilog().ConfigureServices(configureServices)
+              .UseUrls(config.Server.Urls)
               .UseEnvironment(config.Server.Environment).Configure(configureApp)
             |> ignore)

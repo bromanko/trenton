@@ -16,15 +16,19 @@ module Config =
           Address: string
           [<DefaultValue("5000")>]
           HttpPort: int
-          [<DefaultValue("5001")>]
-          HttpsPort: int }
+          HttpsPort: int option }
 
         member this.Environment =
             if this.Development then "Development" else "Deployed"
 
         member this.Urls =
-            [| sprintf "http://%s:%d" this.Address this.HttpPort
-               sprintf "https://%s:%d" this.Address this.HttpsPort |]
+            let httpUrl =
+                [| sprintf "http://%s:%d" this.Address this.HttpPort |]
+            match this.HttpsPort with
+            | None -> httpUrl
+            | Some port ->
+                Array.append httpUrl
+                    [| sprintf "https://%s:%d" this.Address port |]
 
     [<Convention("TRENTON")>]
     type AppConfig =
