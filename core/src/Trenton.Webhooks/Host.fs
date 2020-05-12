@@ -16,9 +16,7 @@ module Host =
         Giraffe.Routing.route path.Value
 
     let private webApp =
-        choose
-            [ GET
-              >=> choose [ route <| Paths.index () >=> Routes.Meta.index () ] ]
+        choose [ Routes.Index.handler; Routes.Fitbit.handler ]
 
     let private addHealthChecks (services: IServiceCollection) =
         services.AddTrentonHealthChecks() |> ignore
@@ -33,7 +31,7 @@ module Host =
     let private configureApp =
         fun (app: IApplicationBuilder) ->
             app.UseSerilogRequestLogging()
-               .UseTrentonHealthChecks(Paths.health ()).UseGiraffe(webApp)
+               .UseTrentonHealthChecks(PathString "/healthz").UseGiraffe(webApp)
 
     let createHostBuilder argv config =
         Host.CreateDefaultBuilder(argv)

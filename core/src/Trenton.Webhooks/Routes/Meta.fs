@@ -1,7 +1,9 @@
 namespace Trenton.Webhooks.Routes
 
-open System
 open Giraffe
+open System
 
-module Meta =
-    let index () = json {| now = DateTime.UtcNow |}
+module Index =
+    let handler<'a> =
+        GET >=> route "/"
+        >=> warbler (fun _ -> json {| now = DateTime.UtcNow |})

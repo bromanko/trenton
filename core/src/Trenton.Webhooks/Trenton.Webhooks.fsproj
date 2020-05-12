@@ -8,8 +8,8 @@
         <Compile Include="Logging.fs" />
         <Compile Include="Config.fs" />
         <Compile Include="Serilog.fs" />
-        <Compile Include="Paths.fs" />
         <Compile Include="Routes\Meta.fs" />
+        <Compile Include="Routes\Fitbit.fs" />
         <Compile Include="Health.fs" />
         <Compile Include="Host.fs" />
         <Compile Include="Program.fs" />
