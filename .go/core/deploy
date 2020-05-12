@@ -26,7 +26,7 @@ function decryptSecrets() {
 function setImageTag() {
   local ver=$1
   pushd ".kubernetes/base" >/dev/null 2>&1
-  kustomize edit set image "${COMMON_DOCKER_IMAGE_BASE}/core:${ver}"
+  kustomize edit set image "${COMMON_DOCKER_IMAGE_BASE}/trenton-core:${ver}"
   kustomize edit add annotation -f "app.kubernetes.io/version:${ver}"
   popd >/dev/null 2>&1
 }

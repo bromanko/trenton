@@ -10,7 +10,7 @@ SCRIPT_PATH="$(
 
 cd "${SCRIPT_PATH}/../../core"
 
-image_name="core"
+image_name="trenton-core"
 
 docker build \
     -t "${COMMON_DOCKER_IMAGE_BASE}/${image_name}:${COMMON_COMMIT_SHA}" \

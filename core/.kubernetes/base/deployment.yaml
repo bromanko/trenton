@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: webhooks
-          image: gcr.io/trenton-images/core
+          image: gcr.io/alpine-images/trenton-core
           ports:
             - containerPort: 5000
               name: http
