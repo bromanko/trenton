@@ -18,3 +18,4 @@ docker build \
     .
 
 docker push "${COMMON_DOCKER_IMAGE_BASE}/${image_name}:${COMMON_COMMIT_SHA}"
+
