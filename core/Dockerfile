@@ -28,3 +28,4 @@ FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 as prod
 COPY --from=build /usr/src/app/out .
 
 ENTRYPOINT ["dotnet", "Trenton.Webhooks.dll"]
+
