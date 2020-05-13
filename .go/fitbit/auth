@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+script_path="$(
+  cd "$(dirname "$0")"
+  pwd -P
+)"
+# shellcheck source=../.common
+. "${script_path}/../.common"
+
+client_id=22CNRY
+redirect_uri="http://localhost:5000/fitbit/callback"
+#redirect_uri+=$(php -r  "echo rawurlencode('$redirect_uri');")
+scopes="activity heartrate location nutrition profile settings sleep social weight"
+#scopes+=$(php -r  "echo rawurlencode('$scopes');")
+set -x
+open "https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scopes}&expires_in=2592000000"
