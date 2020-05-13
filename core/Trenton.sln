@@ -13,6 +13,10 @@ ProjectSection(SolutionItems) = preProject
 	Dockerfile = Dockerfile
 EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Tenton.Health", "src\Tenton.Health\Tenton.Health.fsproj", "{F4FFF99C-136A-4CE9-B0A2-9B562ED442AD}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Common", "src\Trenton.Common\Trenton.Common.fsproj", "{14772E70-B57D-453D-954A-9B7D19E4E7EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,5 +27,13 @@ Global
 		{9F5FBA96-E4FD-4487-BD01-155FE91DA567}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F5FBA96-E4FD-4487-BD01-155FE91DA567}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F5FBA96-E4FD-4487-BD01-155FE91DA567}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4FFF99C-136A-4CE9-B0A2-9B562ED442AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4FFF99C-136A-4CE9-B0A2-9B562ED442AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4FFF99C-136A-4CE9-B0A2-9B562ED442AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4FFF99C-136A-4CE9-B0A2-9B562ED442AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14772E70-B57D-453D-954A-9B7D19E4E7EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14772E70-B57D-453D-954A-9B7D19E4E7EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14772E70-B57D-453D-954A-9B7D19E4E7EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14772E70-B57D-453D-954A-9B7D19E4E7EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

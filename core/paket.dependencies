@@ -4,6 +4,7 @@ storage: none
 framework: netcore3.1
 
 nuget Destructurama.FSharp prerelease
+nuget Fitbit.NET
 nuget FSharp.Core
 nuget FsConfig
 nuget Giraffe

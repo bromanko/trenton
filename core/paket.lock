@@ -5,6 +5,9 @@ NUGET
     Destructurama.FSharp (1.1.1-dev-00035)
       FSharp.Core (>= 4.3.4)
       Serilog (>= 2.0 < 3.0)
+    Fitbit.NET (2.3)
+      NETStandard.Library (>= 2.0.3)
+      Newtonsoft.Json (>= 12.0.3)
     FsConfig (2.1.6)
       FSharp.Core (>= 4.2.3)
       Microsoft.Extensions.Configuration

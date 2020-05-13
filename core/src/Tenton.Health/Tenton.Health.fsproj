@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>Trenton.Health</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Content Include="paket.references" />
+        <Compile Include="BodyFat.fs" />
+        <Compile Include="Fitbit.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj" />
+    </ItemGroup>
+
+</Project>
