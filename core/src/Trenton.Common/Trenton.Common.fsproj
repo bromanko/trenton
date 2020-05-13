@@ -6,6 +6,7 @@
 
     <ItemGroup>
         <Compile Include="Date.fs" />
+        <Compile Include="Decimals.fs" />
         <Compile Include="Percents.fs" />
     </ItemGroup>
 

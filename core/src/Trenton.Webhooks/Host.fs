@@ -16,7 +16,7 @@ module Host =
         Giraffe.Routing.route path.Value
 
     let private webApp =
-        choose [ Routes.Index.handler; Routes.Fitbit.handler ]
+        choose [ Routes.Index.handler; Routes.Fitbit.authCallbackHandler ]
 
     let private addHealthChecks (services: IServiceCollection) =
         services.AddTrentonHealthChecks() |> ignore
