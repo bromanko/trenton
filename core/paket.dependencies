@@ -4,12 +4,22 @@ storage: none
 framework: netcore3.1
 
 nuget Destructurama.FSharp prerelease
-nuget Fitbit.NET
+nuget Hopac
+nuget Http.Fs
 nuget FSharp.Core
 nuget FsConfig
+nuget FSharp.Data
 nuget Giraffe
 nuget Microsoft.AspNetCore.Diagnostics.HealthChecks
 nuget Serilog
 nuget Serilog.Sinks.Console
 nuget Serilog.Formatting.Compact
 nuget Serilog.AspNetCore
+
+nuget Logary.Adapters.Facade
+nuget Bogus
+nuget Expecto
+nuget Expecto.BenchmarkDotNet
+nuget Expecto.FsCheck
+nuget Expecto.Hopac
+nuget Microsoft.AspNetCore.TestHost
