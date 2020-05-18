@@ -17,13 +17,17 @@ module Fitbit =
             | Ok o -> f o next ctx
             | Result.Error r -> (RequestErrors.BAD_REQUEST r) next ctx
 
+    let private getRedirectUri (ctx: HttpContext) =
+        sprintf "%s://%s%s" (ctx.Request.Scheme)
+            (ctx.Request.Host.ToString()) (ctx.Request.Path.ToString())
+
     let private getAccessToken fitbitClient query: HttpHandler =
         fun (next: HttpFunc) (ctx: HttpContext) ->
             task {
                 let req =
                     AuthorizationCodeWithPkce
                         { Code = query.code
-                          RedirectUri = Some ""
+                          RedirectUri = getRedirectUri ctx |> Some
                           State = None
                           CodeVerifier = None }
                 let! tokenRes = fitbitClient.GetAccessToken req
