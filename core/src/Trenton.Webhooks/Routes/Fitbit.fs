@@ -8,19 +8,36 @@ open Trenton.Health.FitbitClient
 module Fitbit =
     [<CLIMutable>]
     type AuthCallbackQuery =
-        { Code: string }
+        { code: string }
 
-    let private getAccessToken fitbitClient query =
+    let bindQueryOrErr<'T> f =
+        fun (next: HttpFunc) (ctx: HttpContext) ->
+            let result = ctx.TryBindQueryString<'T>()
+            match result with
+            | Ok o -> f o next ctx
+            | Result.Error r -> (RequestErrors.BAD_REQUEST r) next ctx
+
+    let private getAccessToken fitbitClient query: HttpHandler =
         fun (next: HttpFunc) (ctx: HttpContext) ->
             task {
-                let! tokenRes = fitbitClient.GetAccessToken query.Code
-                return!
-                    match tokenRes with
-                    | Ok token -> json token next ctx
-                    | Error err -> ServerErrors.INTERNAL_ERROR err next ctx
+                let req =
+                    AuthorizationCodeWithPkce
+                        { Code = query.code
+                          RedirectUri = Some ""
+                          State = None
+                          CodeVerifier = None }
+                let! tokenRes = fitbitClient.GetAccessToken req
+                return! match tokenRes with
+                        | Ok token -> json token next ctx
+                        | Result.Error err ->
+                            let msg =
+                                match err with
+                                | Error e -> e
+                                | Exception e -> e.Message
+                            ServerErrors.INTERNAL_ERROR msg next ctx
             }
 
     let authCallbackHandler<'a> fitbitClient =
         GET >=> route "/fitbit/callback"
-        >=> bindQuery<AuthCallbackQuery> None (getAccessToken fitbitClient)
+        >=> bindQueryOrErr<AuthCallbackQuery> (getAccessToken fitbitClient)
         >=> Successful.NO_CONTENT

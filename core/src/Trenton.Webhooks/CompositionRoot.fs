@@ -8,9 +8,10 @@ type CompositionRoot =
 
 [<AutoOpen>]
 module ComponentRoot =
-    let private getFitbitClient _ =
-        FitbitClient.getClient FitbitClient.defaultConfig
+    let private getFitbitClient cfg =
+        FitbitClient.defaultConfig cfg.ClientId cfg.ClientSecret
+        |> FitbitClient.getClient
 
     let getCompRoot (config: AppConfig) =
-        { FitbitClient = getFitbitClient config }
+        { FitbitClient = getFitbitClient config.Fitbit }
 

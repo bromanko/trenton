@@ -24,9 +24,11 @@ module Host =
         services.AddTrentonHealthChecks() |> ignore
 
     let private configureServices (services: IServiceCollection) =
-        services.AddHttpContextAccessor() |> ignore
         addHealthChecks services
-        services.AddSingleton<IJsonSerializer>
+        services
+            .AddGiraffe()
+            .AddHttpContextAccessor()
+            .AddSingleton<IJsonSerializer>
             (Utf8JsonSerializer(Utf8JsonSerializer.DefaultResolver)) |> ignore
         ()
 

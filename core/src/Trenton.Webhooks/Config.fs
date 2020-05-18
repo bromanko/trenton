@@ -38,7 +38,8 @@ module Config =
     [<Convention("TRENTON")>]
     type AppConfig =
         { Logging: LoggingConfig
-          Server: ServerConfig }
+          Server: ServerConfig
+          Fitbit: FitbitConfig }
 
     let failInvalidConfig error =
         match error with
