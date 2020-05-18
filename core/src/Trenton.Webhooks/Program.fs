@@ -15,7 +15,8 @@ module Program =
 
         try
             try
-                (createHostBuilder argv config).Build().Run()
+                let compRoot = getCompRoot config
+                (createHostBuilder argv config compRoot).Build().Run()
             with ex -> Log.Logger.Fatal(ex, "Server startup failed")
         finally
             Log.CloseAndFlush()

@@ -8,6 +8,7 @@
     <Compile Include="Decimals.fs" />
     <Compile Include="Percents.fs" />
     <Compile Include="HttpUtils.fs" />
+    <Compile Include="ApiClient.fs" />
     <Content Include="paket.references" />
     <Compile Include="Json.fs" />
   </ItemGroup>
