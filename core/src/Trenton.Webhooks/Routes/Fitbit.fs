@@ -4,6 +4,7 @@ open FSharp.Control.Tasks.V2.ContextInsensitive
 open Giraffe
 open Microsoft.AspNetCore.Http
 open Trenton.Health.FitbitClient
+open Trenton.Webhooks.Config
 
 module Fitbit =
     [<CLIMutable>]
@@ -46,3 +47,29 @@ module Fitbit =
         >=> bindQueryOrErr<AuthCallbackQuery>
                 (getAccessToken fitbitClient serverBaseUrl)
         >=> Successful.NO_CONTENT
+
+
+    [<CLIMutable>]
+    type VerifyWebhookQuery =
+        { verify: string }
+
+    let private verifyWebhook subscriberCfg query =
+        fun (next: HttpFunc) (ctx: HttpContext) ->
+            match subscriberCfg.VerificationCode = query.verify with
+            | true -> Successful.NO_CONTENT next ctx
+            | false ->
+                RequestErrors.NOT_FOUND "Verify code is incorrect" next ctx
+
+    let verifyWebhookHandler<'a> subscriberCfg =
+        GET >=> route "/fitbit"
+        >=> bindQueryOrErr<VerifyWebhookQuery> (verifyWebhook subscriberCfg)
+
+    let private publishEvent =
+        fun (next: HttpFunc) (ctx: HttpContext) ->
+            task {
+                // take the body and enqueue it to GC pubsub
+                return! Successful.NO_CONTENT next ctx
+            }
+
+    let webhookHandler<'a> =
+        POST >=> route "/fitbit" >=> publishEvent

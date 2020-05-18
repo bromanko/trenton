@@ -31,10 +31,15 @@ module Config =
                 Array.append httpUrl
                     [| sprintf "https://%s:%d" this.Address port |]
 
+    type FitbitSubscriberConfig =
+        { Id: string
+          VerificationCode: string }
+
     type FitbitConfig =
         { BaseUrl: string option
           ClientId: string
-          ClientSecret: string }
+          ClientSecret: string
+          Subscriber: FitbitSubscriberConfig }
 
     [<Convention("TRENTON")>]
     type AppConfig =
