@@ -30,11 +30,11 @@ module Fitbit =
                 return! match tokenRes with
                         | Ok token -> json token next ctx
                         | Result.Error err ->
-                            let msg =
-                                match err with
-                                | Error e -> e
-                                | Exception e -> e.Message
-                            ServerErrors.INTERNAL_ERROR msg next ctx
+                            (match err with
+                             | Error e -> RequestErrors.BAD_REQUEST e
+                             | Exception e ->
+                                 ServerErrors.INTERNAL_ERROR e.Message) next
+                                ctx
             }
 
     let authCallbackHandler<'a> fitbitClient =
