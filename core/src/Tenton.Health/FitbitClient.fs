@@ -37,6 +37,9 @@ module FitbitClient =
         | AuthorizationCode of AuthorizationCodeAccessTokenRequest
         | AuthorizationCodeWithPkce of AuthorizationCodeWithPkceAccessTokenRequest
 
+    type RefreshAccessTokenRequest =
+        { RefreshToken: string }
+
     type AccessTokenDto =
         { AccessToken: string
           ExpiresInSeconds: int
@@ -102,6 +105,22 @@ module FitbitClient =
             |> Request.body (BodyForm form)
             |> execReq
 
+        let refreshAccessTokenForm (req: RefreshAccessTokenRequest) =
+            [ "grant_type", "refresh_token"
+              "refresh_token", req.RefreshToken
+              "expires_in", "28800" ]
+            |> List.map (fun (k, v) -> NameValue(k, v))
+
+        let refreshAccessToken config req =
+            let form =
+                refreshAccessTokenForm req
+
+            sprintf "%s/oauth2/token" config.BaseUrl
+            |> Http.httpPost
+            |> Http.setAuthHeader config
+            |> Request.body (BodyForm form)
+            |> execReq
+
     module private Parse =
         let accessTokenRespToDto (resp: Api.AccessTokenResponse) =
             { AccessToken = resp.AccessToken
@@ -133,12 +152,20 @@ module FitbitClient =
             return match resp with
                    | Choice1Of2 r -> r
                    | Choice2Of2 err ->
-                       Exception err
-                       |> Result.Error
+                       Exception err |> Result.Error
         }
 
-    let private getAccessToken config req: Async<Result<AccessTokenDto, FitbitApiError>> =
+    let private getAccessToken
+        config
+        req
+        : Async<Result<AccessTokenDto, FitbitApiError>>
+        =
         Api.getAccessToken config req
+        |> Job.map Parse.parseAccessToken
+        |> toAsync
+
+    let private refreshAccessToken config req =
+        Api.refreshAccessToken config req
         |> Job.map Parse.parseAccessToken
         |> toAsync
 
@@ -146,7 +173,9 @@ module FitbitClient =
     //        { GetBodyFat: unit -> Async<Result<CustomerDto [], exn>> }
 
     type T =
-        { GetAccessToken: AccessTokenRequest -> Async<Result<AccessTokenDto, FitbitApiError>> }
+        { GetAccessToken: AccessTokenRequest -> Async<Result<AccessTokenDto, FitbitApiError>>
+          RefreshAccessToken: RefreshAccessTokenRequest -> Async<Result<AccessTokenDto, FitbitApiError>> }
 
     let getClient cfg =
-        { GetAccessToken = fun req -> getAccessToken cfg req }
+        { GetAccessToken = fun req -> getAccessToken cfg req
+          RefreshAccessToken = fun req -> refreshAccessToken cfg req }

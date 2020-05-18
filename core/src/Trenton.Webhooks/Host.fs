@@ -15,10 +15,10 @@ module Host =
     let private route (path: PathString) =
         Giraffe.Routing.route path.Value
 
-    let private webApp compRoot =
+    let private webApp compRoot cfg =
         choose
             [ Routes.Index.handler
-              Routes.Fitbit.authCallbackHandler compRoot.FitbitClient ]
+              Routes.Fitbit.authCallbackHandler compRoot.FitbitClient cfg.Server.BaseUrl ]
 
     let private addHealthChecks (services: IServiceCollection) =
         services.AddTrentonHealthChecks() |> ignore
@@ -32,11 +32,11 @@ module Host =
             (Utf8JsonSerializer(Utf8JsonSerializer.DefaultResolver)) |> ignore
         ()
 
-    let private configureApp compRoot =
+    let private configureApp compRoot cfg =
         fun (app: IApplicationBuilder) ->
             app.UseSerilogRequestLogging()
                .UseTrentonHealthChecks(PathString "/healthz")
-               .UseGiraffe(webApp compRoot)
+               .UseGiraffe(webApp compRoot cfg)
 
     let createHostBuilder argv config compRoot =
         Host.CreateDefaultBuilder(argv)
@@ -44,4 +44,4 @@ module Host =
             wb.UseSerilog().ConfigureServices(configureServices)
               .UseUrls(config.Server.Urls)
               .UseEnvironment(config.Server.Environment)
-              .Configure(configureApp compRoot) |> ignore)
+              .Configure(configureApp compRoot config) |> ignore)

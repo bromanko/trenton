@@ -16,7 +16,8 @@ module Config =
           Address: string
           [<DefaultValue("5000")>]
           HttpPort: int
-          HttpsPort: int option }
+          HttpsPort: int option
+          BaseUrl: string }
 
         member this.Environment =
             if this.Development then "Development" else "Deployed"

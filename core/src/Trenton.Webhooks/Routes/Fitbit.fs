@@ -17,17 +17,17 @@ module Fitbit =
             | Ok o -> f o next ctx
             | Result.Error r -> (RequestErrors.BAD_REQUEST r) next ctx
 
-    let private getRedirectUri (ctx: HttpContext) =
-        sprintf "%s://%s%s" (ctx.Request.Scheme)
-            (ctx.Request.Host.ToString()) (ctx.Request.Path.ToString())
+    let private getRedirectUri serverBaseUrl (ctx: HttpContext) =
+        sprintf "%s%s" serverBaseUrl (ctx.Request.Path.ToString())
 
-    let private getAccessToken fitbitClient query: HttpHandler =
+    let private getAccessToken fitbitClient serverBaseUrl query: HttpHandler =
         fun (next: HttpFunc) (ctx: HttpContext) ->
             task {
                 let req =
                     AuthorizationCodeWithPkce
                         { Code = query.code
-                          RedirectUri = getRedirectUri ctx |> Some
+                          RedirectUri =
+                              getRedirectUri serverBaseUrl ctx |> Some
                           State = None
                           CodeVerifier = None }
                 let! tokenRes = fitbitClient.GetAccessToken req
@@ -41,7 +41,8 @@ module Fitbit =
                                 ctx
             }
 
-    let authCallbackHandler<'a> fitbitClient =
+    let authCallbackHandler<'a> fitbitClient serverBaseUrl =
         GET >=> route "/fitbit/callback"
-        >=> bindQueryOrErr<AuthCallbackQuery> (getAccessToken fitbitClient)
+        >=> bindQueryOrErr<AuthCallbackQuery>
+                (getAccessToken fitbitClient serverBaseUrl)
         >=> Successful.NO_CONTENT
