@@ -3,73 +3,83 @@ namespace Trenton.Webhooks.Routes
 open FSharp.Control.Tasks.V2.ContextInsensitive
 open Giraffe
 open Microsoft.AspNetCore.Http
+open System.Threading.Tasks
 open Trenton.Health.FitbitClient
 open Trenton.Webhooks.Config
 
 module Fitbit =
-    [<CLIMutable>]
-    type AuthCallbackQuery =
-        { code: string }
+    let private earlyReturn: HttpFunc = Some >> Task.FromResult
 
     let bindQueryOrErr<'T> f =
         fun (next: HttpFunc) (ctx: HttpContext) ->
             let result = ctx.TryBindQueryString<'T>()
             match result with
             | Ok o -> f o next ctx
-            | Result.Error r -> (RequestErrors.BAD_REQUEST r) next ctx
+            | Result.Error r -> (RequestErrors.BAD_REQUEST r) earlyReturn ctx
 
-    let private getRedirectUri serverBaseUrl (ctx: HttpContext) =
-        sprintf "%s%s" serverBaseUrl (ctx.Request.Path.ToString())
+    module AuthCallback =
+        [<CLIMutable>]
+        type AuthCallbackQuery =
+            { code: string }
 
-    let private getAccessToken fitbitClient serverBaseUrl query: HttpHandler =
-        fun (next: HttpFunc) (ctx: HttpContext) ->
-            task {
+        let private getRedirectUri serverBaseUrl (ctx: HttpContext) =
+            sprintf "%s%s" serverBaseUrl (ctx.Request.Path.ToString())
+
+        let private createSubscription fitbitClient =
+            fun (next: HttpFunc) (ctx: HttpContext) -> task { fitbitClient }
+
+        let private respond accessToken = json accessToken
+
+        let private respondErr =
+            function
+            | Error e -> RequestErrors.BAD_REQUEST e earlyReturn
+            | Exception e ->
+                ServerErrors.INTERNAL_ERROR e.Message earlyReturn
+
+        let private getAccessToken fitbitClient serverBaseUrl query: HttpHandler =
+            fun (next: HttpFunc) (ctx: HttpContext) ->
                 let req =
                     AuthorizationCodeWithPkce
                         { Code = query.code
-                          RedirectUri =
-                              getRedirectUri serverBaseUrl ctx |> Some
+                          RedirectUri = getRedirectUri serverBaseUrl ctx |> Some
                           State = None
                           CodeVerifier = None }
-                let! tokenRes = fitbitClient.GetAccessToken req
-                return! match tokenRes with
-                        | Ok token -> json token next ctx
-                        | Result.Error err ->
-                            (match err with
-                             | Error e -> RequestErrors.BAD_REQUEST e
-                             | Exception e ->
-                                 ServerErrors.INTERNAL_ERROR e.Message) next
-                                ctx
-            }
+                task {
+                    let! tokenRes = fitbitClient.GetAccessToken req
+                    return! match tokenRes with
+                            | Ok token -> respond token next ctx
+                            | Result.Error err -> respondErr err ctx
+                }
 
-    let authCallbackHandler<'a> fitbitClient serverBaseUrl =
-        GET >=> route "/fitbit/callback"
-        >=> bindQueryOrErr<AuthCallbackQuery>
-                (getAccessToken fitbitClient serverBaseUrl)
-        >=> Successful.NO_CONTENT
+        let handler<'a> fitbitClient serverBaseUrl =
+            GET >=> route "/fitbit/callback"
+            >=> bindQueryOrErr<AuthCallbackQuery>
+                    (getAccessToken fitbitClient serverBaseUrl)
+            >=> Successful.NO_CONTENT
 
+    module VerifySubscriber =
+        [<CLIMutable>]
+        type VerifySubscriberQuery =
+            { verify: string }
 
-    [<CLIMutable>]
-    type VerifyWebhookQuery =
-        { verify: string }
+        let private verifySubscriber subscriberCfg query =
+            fun (next: HttpFunc) (ctx: HttpContext) ->
+                match subscriberCfg.VerificationCode = query.verify with
+                | true -> Successful.NO_CONTENT next ctx
+                | false ->
+                    RequestErrors.NOT_FOUND "Verify code is incorrect" earlyReturn
+                        ctx
 
-    let private verifyWebhook subscriberCfg query =
-        fun (next: HttpFunc) (ctx: HttpContext) ->
-            match subscriberCfg.VerificationCode = query.verify with
-            | true -> Successful.NO_CONTENT next ctx
-            | false ->
-                RequestErrors.NOT_FOUND "Verify code is incorrect" next ctx
+        let handler<'a> subscriberCfg =
+            GET >=> route "/fitbit"
+            >=> bindQueryOrErr<VerifySubscriberQuery> (verifySubscriber subscriberCfg)
 
-    let verifyWebhookHandler<'a> subscriberCfg =
-        GET >=> route "/fitbit"
-        >=> bindQueryOrErr<VerifyWebhookQuery> (verifyWebhook subscriberCfg)
+    module Webhook =
+        let private publishEvent =
+            fun (next: HttpFunc) (ctx: HttpContext) ->
+                task {
+                    // take the body and enqueue it to GC pubsub
+                    return! Successful.NO_CONTENT next ctx }
 
-    let private publishEvent =
-        fun (next: HttpFunc) (ctx: HttpContext) ->
-            task {
-                // take the body and enqueue it to GC pubsub
-                return! Successful.NO_CONTENT next ctx
-            }
-
-    let webhookHandler<'a> =
-        POST >=> route "/fitbit" >=> publishEvent
+        let handler<'a> =
+            POST >=> route "/fitbit" >=> publishEvent

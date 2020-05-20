@@ -18,9 +18,9 @@ module Host =
     let private webApp compRoot cfg =
         choose
             [ Routes.Index.handler
-              Routes.Fitbit.authCallbackHandler compRoot.FitbitClient cfg.Server.BaseUrl
-              Routes.Fitbit.verifyWebhookHandler cfg.Fitbit.Subscriber
-              Routes.Fitbit.webhookHandler ]
+              Routes.Fitbit.AuthCallback.handler compRoot.FitbitClient cfg.Server.BaseUrl
+              Routes.Fitbit.VerifySubscriber.handler cfg.Fitbit.Subscriber
+              Routes.Fitbit.Webhook.handler ]
 
     let private addHealthChecks (services: IServiceCollection) =
         services.AddTrentonHealthChecks() |> ignore

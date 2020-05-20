@@ -52,9 +52,17 @@ module FitbitClient =
             |> Convert.ToBase64String
             |> sprintf "Basic %s"
 
+        let userAuthHeader accessToken =
+            sprintf "Bearer %s" accessToken
+
         let setAuthHeader (config: FitbitClientConfig) =
             Request.setHeader
                 (Authorization(authHeader config.ClientId config.ClientSecret))
+
+        let setUserAuthHeader accessToken =
+            userAuthHeader accessToken
+            |> Authorization
+            |> Request.setHeader
 
         let httpPost url =
             Uri url

@@ -15,6 +15,9 @@ nuget Serilog
 nuget Serilog.Sinks.Console
 nuget Serilog.Formatting.Compact
 nuget Serilog.AspNetCore
+nuget Google.Cloud.PubSub.V1
+nuget TaskBuilder.fs
+nuget FSharpx.Async
 
 nuget Logary.Adapters.Facade
 nuget Bogus
