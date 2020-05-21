@@ -12,8 +12,67 @@ env:
   GCLOUD_PROJECT: development-a0ec991abee20869
 
 jobs:
+  utest:
+    name: Run unit tests
+    # There is an issue running msbuild in Docker on the latest Ubuntu kernel
+    runs-on: ubuntu-16.04
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: GCloud login
+      env:
+        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        run: |
+          echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+          gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+    - name: Docker login
+      run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
+    - name: Install sops
+      run: |
+        sudo curl -fsSL https://github.com/mozilla/sops/releases/download/3.4.0/sops-3.4.0.linux -o /usr/local/bin/sops
+        sudo chmod +x /usr/local/bin/sops
+    - name: Write .env file
+      run: cd core && sops -d .config/ci.enc.env > .env
+    - name: Run unit tests
+      run: ./go core test
+
+  itest:
+    name: Run integration tests locally
+    # There is an issue running msbuild in Docker on the latest Ubuntu kernel
+    runs-on: ubuntu-16.04
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: GCloud login
+      env:
+        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+        run: |
+          echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+          gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+    - name: Docker login
+      run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
+    - name: Install sops
+      run: |
+        sudo curl -fsSL https://github.com/mozilla/sops/releases/download/3.4.0/sops-3.4.0.linux -o /usr/local/bin/sops
+        sudo chmod +x /usr/local/bin/sops
+    - name: Write .env file
+      run: cd core && sops -d .config/ci.enc.env > .env
+    - name: Start development server
+      run: |
+        ./go core start -d
+        echo "Waiting for server to start to get some logs..."
+        sleep 3m
+        cd core
+        docker-compose logs server
+    - name: Run integration tests
+      env:
+        TEST_SERVER_BASE: http://server
+        TEST_SEVER_PORT: 5000
+      run: ./go core itest
+
   publish:
     name: Publish Docker image
+    needs: [utest, itest]
     if: endsWith(github.ref, 'master')
     runs-on: ubuntu-latest
     steps:
