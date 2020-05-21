@@ -11,7 +11,7 @@ module Config =
 
     type ServerConfig =
         { [<DefaultValue("true")>]
-          Development: bool
+          IsDevelopment: bool
           [<DefaultValue("0.0.0.0")>]
           Address: string
           [<DefaultValue("5000")>]
@@ -20,7 +20,7 @@ module Config =
           BaseUrl: string }
 
         member this.Environment =
-            if this.Development then "Development" else "Deployed"
+            if this.IsDevelopment then "Development" else "Deployed"
 
         member this.Urls =
             let httpUrl =

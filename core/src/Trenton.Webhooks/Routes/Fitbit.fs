@@ -6,6 +6,7 @@ open Microsoft.AspNetCore.Http
 open System.Threading.Tasks
 open Trenton.Health.FitbitClient
 open Trenton.Webhooks.Config
+open Trenton.Webhooks
 
 module Fitbit =
     let private earlyReturn: HttpFunc = Some >> Task.FromResult
@@ -15,7 +16,7 @@ module Fitbit =
             let result = ctx.TryBindQueryString<'T>()
             match result with
             | Ok o -> f o next ctx
-            | Result.Error r -> (RequestErrors.BAD_REQUEST r) earlyReturn ctx
+            | Result.Error r -> badRequestErr r earlyReturn ctx
 
     module AuthCallback =
         [<CLIMutable>]
@@ -32,9 +33,8 @@ module Fitbit =
 
         let private respondErr =
             function
-            | Error e -> RequestErrors.BAD_REQUEST e earlyReturn
-            | Exception e ->
-                ServerErrors.INTERNAL_ERROR e.Message earlyReturn
+            | FitbitApiError.Error e -> badRequestErr e earlyReturn
+            | Exception e -> internalError e.Message earlyReturn
 
         let private getAccessToken fitbitClient serverBaseUrl query: HttpHandler =
             fun (next: HttpFunc) (ctx: HttpContext) ->

@@ -8,11 +8,15 @@ type ServerConfig =
       Port: int }
     member this.AddressUri = Uri(sprintf "%s:%i" this.Base this.Port)
 
+type FitbitConfig =
+    { SubscriberVerificationCode: string }
+
 [<Convention("TEST")>]
 type Config =
     { [<DefaultValue("false")>]
       LoggingEnabled: bool
-      Server: ServerConfig }
+      Server: ServerConfig
+      Fitbit: FitbitConfig }
 
 module Config =
     let private failWithInvalidConfig error =
