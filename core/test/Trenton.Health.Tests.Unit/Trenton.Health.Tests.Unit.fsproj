@@ -6,7 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Config.fs" />
-    <Compile Include="FitbitClientTests.fs" />
     <Compile Include="Program.fs" />
     <Content Include="paket.references" />
   </ItemGroup>
