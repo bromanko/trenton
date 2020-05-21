@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
+# shellcheck source=../.common
+. "${SCRIPT_PATH}"/../.common
+
+cd "${SCRIPT_PATH}/../../core"
+
+docker=1
+while getopts "l" options; do
+  case ${options} in
+    l)
+      docker=0
+      shift $((OPTIND-1))
+      ;;
+    *) error "Unknown option: -${OPTARG}"; exit 1 ;;
+  esac
+done
+
+[[ -n "${TEST_SERVER_BASE}" ]] && override_server=true
+[[ -n "${TEST_SERVER_PORT}" ]] && override_port=true
+
+if [[ $docker == 1 ]]; then
+  cmd="docker-compose run --rm "
+  [[ "$override_server" ]] && cmd+="-e TEST_SERVER_BASE=${TEST_SERVER_BASE} "
+  [[ "$override_port" ]] && cmd+="-e TEST_SERVER_PORT=${TEST_SERVER_PORT} "
+  cmd+="itests"
+  $cmd
+else
+  dotnet run --project test/Trenton.Webhooks.ITests/Trenton.Webhooks.ITests.fsproj
+fi
