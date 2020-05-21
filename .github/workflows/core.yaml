@@ -22,9 +22,9 @@ jobs:
     - name: GCloud login
       env:
         GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
-        run: |
-          echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
-          gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+      run: |
+        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
       run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
     - name: Install sops
@@ -46,9 +46,9 @@ jobs:
     - name: GCloud login
       env:
         GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
-        run: |
-          echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
-          gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+      run: |
+        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
       run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
     - name: Install sops
