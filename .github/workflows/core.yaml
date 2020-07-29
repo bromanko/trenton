@@ -30,7 +30,7 @@ jobs:
     - name: Run unit tests
       run: ./go core test
     - uses: colpal/actions-clean@v1
-        if: ${{ always() }}
+      if: ${{ always() }}
 
   itest:
     name: Run integration tests locally
@@ -60,7 +60,7 @@ jobs:
         TEST_SEVER_PORT: 5000
       run: ./go core itest
     - uses: colpal/actions-clean@v1
-        if: ${{ always() }}
+      if: ${{ always() }}
 
   publish:
     name: Publish Docker image
@@ -75,7 +75,7 @@ jobs:
     - name: Publish Docker image
       run: ./go core publish
     - uses: colpal/actions-clean@v1
-        if: ${{ always() }}
+      if: ${{ always() }}
 
   deploy:
     name: Deploy
@@ -91,4 +91,4 @@ jobs:
       run: |
         ./go core deploy production ${GITHUB_SHA}
     - uses: colpal/actions-clean@v1
-        if: ${{ always() }}
+      if: ${{ always() }}
