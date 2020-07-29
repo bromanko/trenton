@@ -29,9 +29,12 @@ jobs:
       run: cd core && sops -d .config/ci.enc.env > .env
     - name: Run unit tests
       run: ./go core test
+    - uses: colpal/actions-clean@v1
+        if: ${{ always() }}
 
   itest:
     name: Run integration tests locally
+    needs: [utest]
     runs-on: self-hosted
     steps:
     - name: Checkout code
@@ -56,6 +59,8 @@ jobs:
         TEST_SERVER_BASE: http://server
         TEST_SEVER_PORT: 5000
       run: ./go core itest
+    - uses: colpal/actions-clean@v1
+        if: ${{ always() }}
 
   publish:
     name: Publish Docker image
@@ -69,6 +74,8 @@ jobs:
       run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
     - name: Publish Docker image
       run: ./go core publish
+    - uses: colpal/actions-clean@v1
+        if: ${{ always() }}
 
   deploy:
     name: Deploy
@@ -83,3 +90,5 @@ jobs:
     - name: Deploy
       run: |
         ./go core deploy production ${GITHUB_SHA}
+    - uses: colpal/actions-clean@v1
+        if: ${{ always() }}
