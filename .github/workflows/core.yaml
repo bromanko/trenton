@@ -8,14 +8,13 @@ on:
 
 env:
   GCR_RW_TOKEN: ${{ secrets.GCR_RW_TOKEN }}
-  GOOGLE_APPLICATION_CREDENTIALS: /home/runner/gcloud_auth.json
-  GCLOUD_PROJECT: development-a0ec991abee20869
+  GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcloud_auth.json
+  GCLOUD_PROJECT: todo
 
 jobs:
   utest:
     name: Run unit tests
-    # There is an issue running msbuild in Docker on the latest Ubuntu kernel
-    runs-on: ubuntu-16.04
+    runs-on: self-hosted
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
@@ -38,8 +37,7 @@ jobs:
 
   itest:
     name: Run integration tests locally
-    # There is an issue running msbuild in Docker on the latest Ubuntu kernel
-    runs-on: ubuntu-16.04
+    runs-on: self-hosted
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
@@ -74,7 +72,7 @@ jobs:
     name: Publish Docker image
     needs: [utest, itest]
     if: endsWith(github.ref, 'master')
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
@@ -87,7 +85,7 @@ jobs:
     name: Deploy
     needs: [publish]
     if: endsWith(github.ref, 'master')
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
