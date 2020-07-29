@@ -10,7 +10,7 @@ env:
   GCR_RW_TOKEN: ${{ secrets.GCR_RW_TOKEN }}
   GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
   GCLOUD_PROJECT: trenton-production-c5cb9af5
-  GOOGLE_APPLICATION_CREDENTIALS: .gcloud_auth.json
+  GOOGLE_APPLICATION_CREDENTIALS: ${GITHUB_WORKSPACE}/.gcloud_auth.json
 
 jobs:
   utest:
