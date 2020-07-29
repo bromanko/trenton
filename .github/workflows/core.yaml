@@ -8,8 +8,8 @@ on:
 
 env:
   GCR_RW_TOKEN: ${{ secrets.GCR_RW_TOKEN }}
-  GCLOUD_AUTH: todo
-  GCLOUD_PROJECT: todo
+  GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
+  GCLOUD_PROJECT: trenton-production-c5cb9af5
   GOOGLE_APPLICATION_CREDENTIALS: .gcloud_auth.json
 
 jobs:
@@ -19,10 +19,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
-#    - name: GCloud login
-#      run: |
-#        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
-#        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+    - name: GCloud login
+      run: |
+        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
       run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
     - name: Write .env file
@@ -36,10 +36,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
-#    - name: GCloud login
-#      run: |
-#        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
-#        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+    - name: GCloud login
+      run: |
+        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
       run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
     - name: Write .env file
@@ -78,12 +78,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
-#    - name: GCloud login
-#      run: |
-#        echo "${GCLOUD_AUTH}" | base64 -d > "${GOOGLE_APPLICATION_CREDENTIALS}"
-#        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Configure kubectl
-      run: gcloud beta container clusters get-credentials apps --region us-central1
+      run: exit 1
     - name: Deploy
       run: |
         ./go core deploy production ${GITHUB_SHA}
