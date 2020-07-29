@@ -8,8 +8,9 @@ on:
 
 env:
   GCR_RW_TOKEN: ${{ secrets.GCR_RW_TOKEN }}
-  GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcloud_auth.json
+  GCLOUD_AUTH: todo
   GCLOUD_PROJECT: todo
+  GOOGLE_APPLICATION_CREDENTIALS: .gcloud_auth.json
 
 jobs:
   utest:
@@ -18,18 +19,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
-    - name: GCloud login
-      env:
-        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
-      run: |
-        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
-        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+#    - name: GCloud login
+#      run: |
+#        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+#        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
       run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
-    - name: Install sops
-      run: |
-        sudo curl -fsSL https://github.com/mozilla/sops/releases/download/3.4.0/sops-3.4.0.linux -o /usr/local/bin/sops
-        sudo chmod +x /usr/local/bin/sops
     - name: Write .env file
       run: cd core && sops -d .config/ci.enc.env > .env
     - name: Run unit tests
@@ -41,18 +36,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
-    - name: GCloud login
-      env:
-        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
-      run: |
-        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
-        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+#    - name: GCloud login
+#      run: |
+#        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+#        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
       run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
-    - name: Install sops
-      run: |
-        sudo curl -fsSL https://github.com/mozilla/sops/releases/download/3.4.0/sops-3.4.0.linux -o /usr/local/bin/sops
-        sudo chmod +x /usr/local/bin/sops
     - name: Write .env file
       run: cd core && sops -d .config/ci.enc.env > .env
     - name: Start development server
@@ -89,20 +78,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
-    - name: GCloud login
-      env:
-        GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
-      run: |
-        echo "${GCLOUD_AUTH}" | base64 -d > "${GOOGLE_APPLICATION_CREDENTIALS}"
-        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
-    - name: Install sops
-      run: |
-        sudo curl -fsSL https://github.com/mozilla/sops/releases/download/3.4.0/sops-3.4.0.linux -o /usr/local/bin/sops
-        sudo chmod +x /usr/local/bin/sops
-    - name: Install kustomize
-      run: |
-        cd /usr/local/bin
-        sudo curl -sL "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | sudo bash
+#    - name: GCloud login
+#      run: |
+#        echo "${GCLOUD_AUTH}" | base64 -d > "${GOOGLE_APPLICATION_CREDENTIALS}"
+#        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Configure kubectl
       run: gcloud beta container clusters get-credentials apps --region us-central1
     - name: Deploy
