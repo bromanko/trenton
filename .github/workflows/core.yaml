@@ -49,7 +49,7 @@ jobs:
       run: cd core && sops -d .config/ci.enc.env > .env
     - name: Start development server
       run: |
-        cat .env
+        cat core/.env
         ./go core start -d
         echo "Waiting for server to start to get some logs..."
         sleep 3m
