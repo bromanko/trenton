@@ -18,13 +18,12 @@ while getopts "l" options; do
   esac
 done
 
-[[ -n "${TEST_SERVER_BASE}" ]] && override_server=true
-[[ -n "${TEST_SERVER_PORT}" ]] && override_port=true
+set -x
 
 if [[ $docker == 1 ]]; then
   cmd="docker-compose run --rm "
-  [[ "$override_server" ]] && cmd+="-e TEST_SERVER_BASE=${TEST_SERVER_BASE} "
-  [[ "$override_port" ]] && cmd+="-e TEST_SERVER_PORT=${TEST_SERVER_PORT} "
+  [[ -n "${TEST_SERVER_BASE}" ]] && cmd+="-e TEST_SERVER_BASE=${TEST_SERVER_BASE} "
+  [[ -n "${TEST_SERVER_PORT}" ]] && cmd+="-e TEST_SERVER_PORT=${TEST_SERVER_PORT} "
   cmd+="itests"
   $cmd
 else
