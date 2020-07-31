@@ -18,8 +18,6 @@ while getopts "l" options; do
   esac
 done
 
-set -x
-
 if [[ $docker == 1 ]]; then
   cmd="docker-compose run --rm "
   [[ -n "${TEST_SERVER_BASE}" ]] && cmd+="-e TEST_SERVER_BASE=${TEST_SERVER_BASE} "

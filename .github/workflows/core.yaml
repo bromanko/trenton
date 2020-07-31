@@ -57,7 +57,7 @@ jobs:
     - name: Run integration tests
       env:
         TEST_SERVER_BASE: http://server
-        TEST_SEVER_PORT: 5000
+        TEST_SERVER_PORT: 5000
       run: ./go core itest
     - uses: colpal/actions-clean@v1
       if: ${{ always() }}
