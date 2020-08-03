@@ -8,13 +8,18 @@
         <Compile Include="Logging.fs" />
         <Compile Include="Config.fs" />
         <Compile Include="Serilog.fs" />
-        <Compile Include="Paths.fs" />
+        <Compile Include="ErrorHandler.fs" />
         <Compile Include="Routes\Meta.fs" />
+        <Compile Include="Routes\Fitbit.fs" />
         <Compile Include="Health.fs" />
+        <Compile Include="CompositionRoot.fs" />
         <Compile Include="Host.fs" />
         <Compile Include="Program.fs" />
         <Content Include="paket.references" />
         <Content Include="README.md" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Tenton.Health\Tenton.Health.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

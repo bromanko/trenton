@@ -9,7 +9,7 @@ services:
     networks:
       - trenton
     env_file:
-      - .env
+      - ${DOCKER_COMPOSE_ENV_OVERRIDE:-.env}
     command: dotnet run --project src/Trenton.Webhooks/Trenton.Webhooks.fsproj
     volumes:
       - server_packages:/root/.nuget/packages
@@ -18,8 +18,23 @@ services:
       - 5000:5000
       - 5001:5001
 
+  itests:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: dev
+    networks:
+      - trenton
+    env_file:
+      - ${DOCKER_COMPOSE_ENV_OVERRIDE:-.env}
+    command: dotnet run --project test/Trenton.Webhooks.ITests/Trenton.Webhooks.ITests.fsproj
+    volumes:
+      - itests_packages:/root/.nuget/packages
+      - .:/usr/src/app
+
 volumes:
   server_packages: {}
+  itests_packages: {}
 
 networks:
   trenton:

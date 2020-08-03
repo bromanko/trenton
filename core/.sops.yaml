@@ -1,5 +1,5 @@
 creation_rules:
-  - path_regex: .kubernetes/overlays/local/secrets.*\.enc\.env$
-    gcp_kms: projects/development-a0ec991abee20869/locations/global/keyRings/sops-7ed75b9cab2df7f6/cryptoKeys/sops-key
-  - path_regex: .kubernetes/overlays/production/secrets.*\.enc\.env$
-    gcp_kms: projects/development-a0ec991abee20869/locations/global/keyRings/sops-7ed75b9cab2df7f6/cryptoKeys/sops-key
+  - path_regex: .config/(.*)\.enc\.env$
+    gcp_kms: projects/trenton-production-c5cb9af5/locations/global/keyRings/sops-e5c13a4bbc73a75e/cryptoKeys/sops-key
+  - path_regex: .kubernetes/overlays/{local,production}/secrets.*\.enc\.env$
+    gcp_kms: projects/trenton-production-c5cb9af5/locations/global/keyRings/sops-e5c13a4bbc73a75e/cryptoKeys/sops-key

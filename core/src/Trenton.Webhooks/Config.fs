@@ -11,15 +11,16 @@ module Config =
 
     type ServerConfig =
         { [<DefaultValue("true")>]
-          Development: bool
+          IsDevelopment: bool
           [<DefaultValue("0.0.0.0")>]
           Address: string
           [<DefaultValue("5000")>]
           HttpPort: int
-          HttpsPort: int option }
+          HttpsPort: int option
+          BaseUrl: string }
 
         member this.Environment =
-            if this.Development then "Development" else "Deployed"
+            if this.IsDevelopment then "Development" else "Deployed"
 
         member this.Urls =
             let httpUrl =
@@ -30,10 +31,21 @@ module Config =
                 Array.append httpUrl
                     [| sprintf "https://%s:%d" this.Address port |]
 
+    type FitbitSubscriberConfig =
+        { Id: string
+          VerificationCode: string }
+
+    type FitbitConfig =
+        { BaseUrl: string option
+          ClientId: string
+          ClientSecret: string
+          Subscriber: FitbitSubscriberConfig }
+
     [<Convention("TRENTON")>]
     type AppConfig =
         { Logging: LoggingConfig
-          Server: ServerConfig }
+          Server: ServerConfig
+          Fitbit: FitbitConfig }
 
     let failInvalidConfig error =
         match error with

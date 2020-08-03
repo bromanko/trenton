@@ -4,11 +4,25 @@ storage: none
 framework: netcore3.1
 
 nuget Destructurama.FSharp prerelease
+nuget Hopac
+nuget Http.Fs
 nuget FSharp.Core
 nuget FsConfig
+nuget FSharp.Data
 nuget Giraffe
 nuget Microsoft.AspNetCore.Diagnostics.HealthChecks
 nuget Serilog
 nuget Serilog.Sinks.Console
 nuget Serilog.Formatting.Compact
 nuget Serilog.AspNetCore
+nuget Google.Cloud.PubSub.V1
+nuget TaskBuilder.fs
+nuget FSharpx.Async
+
+nuget Logary.Adapters.Facade
+nuget Bogus
+nuget Expecto
+nuget Expecto.BenchmarkDotNet
+nuget Expecto.FsCheck
+nuget Expecto.Hopac
+nuget Microsoft.AspNetCore.TestHost

@@ -15,30 +15,36 @@ module Host =
     let private route (path: PathString) =
         Giraffe.Routing.route path.Value
 
-    let private webApp =
+    let private webApp compRoot cfg =
         choose
-            [ GET
-              >=> choose [ route <| Paths.index () >=> Routes.Meta.index () ] ]
+            [ Routes.Index.handler
+              Routes.Fitbit.AuthCallback.handler compRoot.FitbitClient cfg.Server.BaseUrl
+              Routes.Fitbit.VerifySubscriber.handler cfg.Fitbit.Subscriber
+              Routes.Fitbit.Webhook.handler ]
 
     let private addHealthChecks (services: IServiceCollection) =
         services.AddTrentonHealthChecks() |> ignore
 
     let private configureServices (services: IServiceCollection) =
-        services.AddHttpContextAccessor() |> ignore
         addHealthChecks services
-        services.AddSingleton<IJsonSerializer>
+        services
+            .AddGiraffe()
+            .AddHttpContextAccessor()
+            .AddSingleton<IJsonSerializer>
             (Utf8JsonSerializer(Utf8JsonSerializer.DefaultResolver)) |> ignore
         ()
 
-    let private configureApp =
+    let private configureApp compRoot cfg =
         fun (app: IApplicationBuilder) ->
             app.UseSerilogRequestLogging()
-               .UseTrentonHealthChecks(Paths.health ()).UseGiraffe(webApp)
+               .UseTrentonHealthChecks(PathString "/healthz")
+               .UseGiraffeErrorHandler(giraffeErrHandler cfg.Server)
+               .UseGiraffe(webApp compRoot cfg)
 
-    let createHostBuilder argv config =
+    let createHostBuilder argv config compRoot =
         Host.CreateDefaultBuilder(argv)
             .ConfigureWebHostDefaults(fun wb ->
             wb.UseSerilog().ConfigureServices(configureServices)
               .UseUrls(config.Server.Urls)
-              .UseEnvironment(config.Server.Environment).Configure(configureApp)
-            |> ignore)
+              .UseEnvironment(config.Server.Environment)
+              .Configure(configureApp compRoot config) |> ignore)

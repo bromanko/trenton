@@ -1,0 +1,9 @@
+{
+  "errors": [
+    {
+      "errorType": "invalid_client",
+      "message": "message"
+    }
+  ],
+  "success": false
+}
