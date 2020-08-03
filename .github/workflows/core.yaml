@@ -13,60 +13,60 @@ env:
   GOOGLE_APPLICATION_CREDENTIALS: /home/github/actions-runner/_work/trenton/trenton/.gcloud_auth.json
 
 jobs:
-  utest:
-    name: Run unit tests
-    runs-on: self-hosted
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v1
-    - name: GCloud login
-      run: |
-        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
-        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
-    - name: Docker login
-      run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
-    - name: Write .env file
-      run: cd core && sops -d .config/ci.enc.env > .env
-    - name: Run unit tests
-      run: ./go core test
-    - uses: colpal/actions-clean@v1
-      if: ${{ always() }}
-
-  itest:
-    name: Run integration tests locally
-    needs: [utest]
-    runs-on: self-hosted
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v1
-    - name: GCloud login
-      run: |
-        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
-        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
-    - name: Docker login
-      run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
-    - name: Write .env file
-      run: cd core && sops -d .config/ci.enc.env > .env
-    - name: Start development server
-      run: |
-        cat core/.env
-        ./go core start -d
-        echo "Waiting for server to start to get some logs..."
-        sleep 3m
-        cd core
-        docker-compose logs server
-    - name: Run integration tests
-      env:
-        TEST_SERVER_BASE: http://server
-        TEST_SERVER_PORT: 5000
-      run: ./go core itest
-    - uses: colpal/actions-clean@v1
-      if: ${{ always() }}
+#  utest:
+#    name: Run unit tests
+#    runs-on: self-hosted
+#    steps:
+#    - name: Checkout code
+#      uses: actions/checkout@v1
+#    - name: GCloud login
+#      run: |
+#        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+#        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+#    - name: Docker login
+#      run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
+#    - name: Write .env file
+#      run: cd core && sops -d .config/ci.enc.env > .env
+#    - name: Run unit tests
+#      run: ./go core test
+#    - uses: colpal/actions-clean@v1
+#      if: ${{ always() }}
+#
+#  itest:
+#    name: Run integration tests locally
+#    needs: [utest]
+#    runs-on: self-hosted
+#    steps:
+#    - name: Checkout code
+#      uses: actions/checkout@v1
+#    - name: GCloud login
+#      run: |
+#        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+#        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+#    - name: Docker login
+#      run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
+#    - name: Write .env file
+#      run: cd core && sops -d .config/ci.enc.env > .env
+#    - name: Start development server
+#      run: |
+#        cat core/.env
+#        ./go core start -d
+#        echo "Waiting for server to start to get some logs..."
+#        sleep 3m
+#        cd core
+#        docker-compose logs server
+#    - name: Run integration tests
+#      env:
+#        TEST_SERVER_BASE: http://server
+#        TEST_SERVER_PORT: 5000
+#      run: ./go core itest
+#    - uses: colpal/actions-clean@v1
+#      if: ${{ always() }}
 
   publish:
     name: Publish Docker image
-    needs: [utest, itest]
-    if: endsWith(github.ref, 'master')
+#    needs: [utest, itest]
+#    if: endsWith(github.ref, 'master')
     runs-on: self-hosted
     steps:
     - name: Checkout code
