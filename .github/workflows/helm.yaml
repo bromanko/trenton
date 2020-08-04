@@ -1,0 +1,17 @@
+name: Core
+on:
+  push:
+    paths:
+    - 'helm/**'
+    - '.go/helm/**'
+    - '.github/workflows/helm.yaml'
+
+jobs:
+  lint:
+    name: Lint Charts
+    runs-on: self-hosted
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: Lint
+      run: ./go helm lint
