@@ -1,0 +1,10 @@
+image:
+  repository: gcr.io/see-my-app-gcr-964a1fa4/trenton-core
+  pullPolicy: IfNotPresent
+
+imagePullSecrets:
+  - name: gcr-pull-secret
+
+service:
+  port: 5000
+

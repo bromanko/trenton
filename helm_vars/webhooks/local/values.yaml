@@ -1,0 +1,3 @@
+ingress:
+  annotations: {}
+  host: webhooks.trenton.local

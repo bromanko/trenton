@@ -1,0 +1,5 @@
+apiVersion: v2
+name: webhooks
+description: Webhooks server
+type: application
+version: 0.1.0
