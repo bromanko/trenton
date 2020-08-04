@@ -30,8 +30,9 @@ lint() {
 }
 
 if [[ -z "$1" ]]; then
-  for chart in ./*/; do
-    lint "${chart}"
+  for c in */*/; do
+    c=${c%/} # remove trailing slash
+    lint "${c}"
   done
 else
   [[ -d "$1" ]] || (echo "A helm_vars directory of $1 does not exist." && exit 1)
