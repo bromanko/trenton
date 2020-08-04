@@ -1,0 +1,5 @@
+
+Lints Helm charts
+
+Arguments:
+    chart       Optional name of chart to lint. Defaults to all charts.
