@@ -1,0 +1,8 @@
+Deploys a Helm chart to an environment
+
+== Detailed Usage ==
+
+chart                 The Helm chart to deploy
+version               Commit hash for the version to deploy
+environment           The environment to deploy to
+namespace             The Kubernetes namespace to deploy to
