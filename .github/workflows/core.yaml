@@ -86,10 +86,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
-    - name: Configure kubectl
-      run: exit 1
-    - name: Deploy
-      run: |
-        ./go core deploy production ${GITHUB_SHA}
-    - uses: colpal/actions-clean@v1
+#    - name: Configure kubectl
+#      run: exit 1
+#    - name: Deploy
+#      run: |
+#        ./go core deploy production ${GITHUB_SHA}
+#    - uses: colpal/actions-clean@v1
       if: ${{ always() }}
