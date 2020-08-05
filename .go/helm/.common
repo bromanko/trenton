@@ -1,0 +1,15 @@
+getHelmArgs() {
+  chart=${1?A Helm chart must be specified}
+  version=${2?A commit hash must be specified}
+  environment=${3?An environment must be specified}
+
+  env_vars="${chart}/${environment}"
+  [[ -d "${env_vars}" ]] || (error "Helm vars do not exist for ${env_vars}" && exit 1)
+
+  args="--set image.tag=${version} "
+  [[ -f "$chart/values.yaml" ]] && args+="-f $chart/values.yaml "
+  [[ -f "$chart/secrets.yaml" ]] && args+="-f $chart/secrets.yaml "
+  [[ -f "$env_vars/values.yaml" ]] && args+="-f $env_vars/values.yaml "
+  [[ -f "$env_vars/secrets.yaml" ]] && args+="-f $env_vars/secrets.yaml "
+  echo "$args"
+}

@@ -22,12 +22,6 @@ namespace=${4?A Kubernetes namespace must be specified}
 
 args=$(getHelmArgs "$chart" "$version" "$environment" "$namespace")
 
-info "\nGenerating diff for deployment."
-"${script_path}"/diff "$@"
-
-info "\nDeploying..."
-eval $helm_cmd upgrade \
-  --install \
-  --wait \
-  --namespace "${namespace}" \
+eval "$helm_cmd" diff upgrade \
+  --allow-unreleased \
   "$args" "$chart" "../helm/$chart"
