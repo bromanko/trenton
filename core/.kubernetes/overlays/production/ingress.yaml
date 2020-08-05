@@ -1,8 +1,0 @@
-- op: replace
-  path: /spec/rules/0/host
-  value: webhooks.development.alpine.seemy.app
-
-- op: replace
-  path: /spec/tls/0/hosts
-  value:
-    - webhooks.development.alpine.seemy.app
