@@ -1,3 +1,8 @@
 ingress:
   annotations: {}
-  host: webhooks.trenton.local
+  host: webhooks.trenton.localhost
+
+config:
+  TRENTON_SERVER_BASE_URL: http://webhooks.trenton.localhost
+  TRENTON_FITBIT_CLIENT_ID: 22CNRY
+  TRENTON_FITBIT_SUBSCRIBER_ID: localhost
