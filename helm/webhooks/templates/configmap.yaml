@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "webhooks.fullname" . }}
+  labels:
+    {{- include "webhooks.labels" . | nindent 4 }}
+data:
+  TRENTON_LOGGING_LOG_TARGET: {{ .Values.config.TRENTON_LOGGING_LOG_TARGET }}
+  TRENTON_SERVER_BASE_URL: {{ .Values.config.TRENTON_SERVER_BASE_URL }}
+  TRENTON_FITBIT_CLIENT_ID: {{ .Values.config.TRENTON_FITBIT_CLIENT_ID }}
+  TRENTON_FITBIT_SUBSCRIBER_ID: {{ .Values.config.TRENTON_FITBIT_SUBSCRIBER_ID }}

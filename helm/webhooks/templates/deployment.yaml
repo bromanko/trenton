@@ -13,6 +13,9 @@ spec:
     metadata:
       labels:
         {{- include "webhooks.labels" . | nindent 8 }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        checksum/secrets: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -25,11 +28,11 @@ spec:
           ports:
             - containerPort: {{ .Values.service.port }}
               name: http
-#          envFrom:
-#            - configMapRef:
-#                name: webhooks-env-config
-#            - secretRef:
-#                name: webhooks-env-secrets
+          envFrom:
+            - configMapRef:
+                name: {{ include "webhooks.fullname" . }}
+            - secretRef:
+                name: {{ include "webhooks.fullname" . }}
           livenessProbe:
             httpGet:
               path: /healthz
