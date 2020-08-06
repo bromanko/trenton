@@ -102,7 +102,6 @@ jobs:
         kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig config set-context seemy.app \
           --cluster=seemy.app --user=cluster-admin
     - name: Deploy
-      env:
       run: |
         export KUBECONFIG=$GITHUB_WORKSPACE/.kubeconfig
         ./go helm deploy webhooks ${GITHUB_SHA} production trenton
