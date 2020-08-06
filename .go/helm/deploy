@@ -29,5 +29,4 @@ info "\nDeploying..."
 eval $helm_cmd upgrade \
   --install \
   --wait \
-  --namespace "${namespace}" \
   "$args" "$chart" "../helm/$chart"
