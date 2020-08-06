@@ -25,6 +25,7 @@ lint() {
   [[ -f "$1/secrets.yaml" ]] && files+="-f $1/secrets.yaml "
 
   echo
+  echo "Linting ${chart} with values at $1..."
   eval $helm_cmd lint "$files" "../helm/$chart"
   echo
 }
