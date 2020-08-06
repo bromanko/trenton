@@ -107,5 +107,5 @@ jobs:
         export KUBECONFIG=$GITHUB_WORKSPACE/.kubeconfig
         kubectl config current-context
         ./go helm deploy webhooks ${GITHUB_SHA} production trenton
-    - uses: colpal/actions-clean@v1
-      if: ${{ always() }}
+#    - uses: colpal/actions-clean@v1
+#      if: ${{ always() }}
