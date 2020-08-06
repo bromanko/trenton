@@ -103,9 +103,8 @@ jobs:
           --cluster=seemy.app --user=cluster-admin
     - name: Deploy
       env:
-        KUBECONFIG: $GITHUB_WORKSPACE/.kubeconfig
       run: |
-        stat $GITHUB_WORKSPACE/.kubeconfig
+        export KUBECONFIG=$GITHUB_WORKSPACE/.kubeconfig
         ./go helm deploy webhooks ${GITHUB_SHA} production trenton
     - uses: colpal/actions-clean@v1
       if: ${{ always() }}
