@@ -86,6 +86,10 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
+    - name: GCloud login
+      run: |
+        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Configure kubectl
       run: |
         touch .kubeconfig
