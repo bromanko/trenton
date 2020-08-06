@@ -101,9 +101,11 @@ jobs:
           --username=admin --password=${{ secrets.K3S_PASSWORD }}
         kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig config set-context seemy.app \
           --cluster=seemy.app --user=cluster-admin
+        kubectl --kubeconfig=$GITHUB_WORKSPACE/.kubeconfig config use-context seemy.app
     - name: Deploy
       run: |
         export KUBECONFIG=$GITHUB_WORKSPACE/.kubeconfig
+        kubectl config current-context
         ./go helm deploy webhooks ${GITHUB_SHA} production trenton
-#    - uses: colpal/actions-clean@v1
-#      if: ${{ always() }}
+    - uses: colpal/actions-clean@v1
+      if: ${{ always() }}
