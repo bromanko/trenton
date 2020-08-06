@@ -105,7 +105,7 @@ jobs:
       env:
         KUBECONFIG: $GITHUB_WORKSPACE/.kubeconfig
       run: |
-        cat $GITHUB_WORKSPACE/.kubeconfig
+        stat $GITHUB_WORKSPACE/.kubeconfig
         ./go helm deploy webhooks ${GITHUB_SHA} production trenton
     - uses: colpal/actions-clean@v1
       if: ${{ always() }}
