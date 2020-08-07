@@ -10,7 +10,7 @@
     <Content Include="paket.references" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Tenton.Health\Tenton.Health.fsproj" />
+    <ProjectReference Include="..\..\src\Trenton.Health\Trenton.Health.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

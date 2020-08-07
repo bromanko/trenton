@@ -13,7 +13,7 @@ ProjectSection(SolutionItems) = preProject
 	Dockerfile = Dockerfile
 EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Tenton.Health", "src\Tenton.Health\Tenton.Health.fsproj", "{F4FFF99C-136A-4CE9-B0A2-9B562ED442AD}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Health", "src\Trenton.Health\Trenton.Health.fsproj", "{F4FFF99C-136A-4CE9-B0A2-9B562ED442AD}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Common", "src\Trenton.Common\Trenton.Common.fsproj", "{14772E70-B57D-453D-954A-9B7D19E4E7EF}"
 EndProject
