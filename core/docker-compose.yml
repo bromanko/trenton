@@ -17,6 +17,8 @@ services:
     ports:
       - 5000:5000
       - 5001:5001
+    depends_on:
+      - datastore
 
   itests:
     build:
@@ -32,9 +34,22 @@ services:
       - itests_packages:/root/.nuget/packages
       - .:/usr/src/app
 
+  datastore:
+    build:
+      dockerfile: ../emulators/datastore/Dockerfile.datastore
+      context: .
+    environment:
+      CLOUDSDK_CORE_PROJECT: localhost
+    ports:
+      - 8432:8432
+    command: start --host-port 0.0.0.0:8432 --data-dir /data
+    volumes:
+      - datastore:/data
+
 volumes:
   server_packages: {}
   itests_packages: {}
+  datastore: {}
 
 networks:
   trenton:
