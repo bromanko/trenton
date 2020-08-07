@@ -5,6 +5,7 @@ open Microsoft.Extensions.Logging
 open System
 open Trenton.Webhooks.Config
 
+[<CLIMutable>]
 type ErrorResponse =
     { Message: string }
 
