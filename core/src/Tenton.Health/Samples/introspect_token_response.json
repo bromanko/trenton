@@ -1,0 +1,14 @@
+[
+  {
+    "active": false
+  },
+  {
+    "active": true,
+    "scope": "{ACTIVITY=READ_WRITE}",
+    "client_id": "asdf",
+    "user_id": "asdf",
+    "token_type": "access_token",
+    "exp": "",
+    "iat": ""
+  }
+]

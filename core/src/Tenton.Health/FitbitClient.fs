@@ -40,10 +40,17 @@ module FitbitClient =
     type RefreshAccessTokenRequest =
         { RefreshToken: string }
 
+    type IntrospectTokenRequest =
+        { Token: string }
+
     type AccessTokenDto =
         { AccessToken: string
           ExpiresInSeconds: int
           RefreshToken: string }
+
+    type TokenStateResponse =
+        | ActiveTokenStateResponse of {| UserId: string |}
+        | InactiveTokenStateResponse
 
     module private Http =
         let authHeader clientId clientSecret =
@@ -84,6 +91,11 @@ module FitbitClient =
             JsonProvider<"Samples/get_access_token_response.json", EmbeddedResource="Trenton.Health, get_access_token_response.json">
 
         type AccessTokenResponse = AccessTokenResponseTypeProvider.Root
+
+        type IntrospectTokenResponseTypeProvider =
+            JsonProvider<"Samples/introspect_token_response.json", EmbeddedResource="Trenton.Health, introspect_token_response.json", SampleIsList=true>
+
+        type IntrospectTokenResponse = IntrospectTokenResponseTypeProvider.Root
 
         let getAccessTokenForm clientId req =
             match req with
@@ -129,6 +141,14 @@ module FitbitClient =
             |> Request.body (BodyForm form)
             |> execReq
 
+        let introspectToken config accessToken req =
+            sprintf "%s/oauth2/introspect" config.BaseUrl
+            |> Http.httpPost
+            |> Http.setUserAuthHeader accessToken
+            |> Request.body (BodyForm [ NameValue("token", req.Token) ])
+            |> execReq
+
+
     module private Parse =
         let accessTokenRespToDto (resp: Api.AccessTokenResponse) =
             { AccessToken = resp.AccessToken
@@ -144,6 +164,26 @@ module FitbitClient =
             | Ok r ->
                 Api.AccessTokenResponseTypeProvider.Parse r.Body
                 |> accessTokenRespToDto
+                |> Result.Ok
+            | ApiResponse.Error r ->
+                Api.ErrorResponseTypeProvider.Parse r.Body
+                |> firstErrorMessage
+                |> FitbitApiError.Error
+                |> Result.Error
+
+        let introspectTokenRespToDto (resp: Api.IntrospectTokenResponse) =
+            match resp.Active with
+            | false -> InactiveTokenStateResponse
+            | true ->
+                match resp.UserId with
+                | None -> InactiveTokenStateResponse
+                | Some uId -> ActiveTokenStateResponse {| UserId = uId |}
+
+        let parseTokenState =
+            function
+            | Ok r ->
+                Api.IntrospectTokenResponseTypeProvider.Parse r.Body
+                |> introspectTokenRespToDto
                 |> Result.Ok
             | ApiResponse.Error r ->
                 Api.ErrorResponseTypeProvider.Parse r.Body
@@ -177,13 +217,28 @@ module FitbitClient =
         |> Job.map Parse.parseAccessToken
         |> toAsync
 
-    //    type FitbitAuthenticatedApi =
+    let private introspectToken
+        config
+        accessToken
+        req
+        : Async<Result<TokenStateResponse, FitbitApiError>>
+        =
+        Api.introspectToken config accessToken req
+        |> Job.map Parse.parseTokenState
+        |> toAsync
+
+    type FitbitAuthenticatedApi =
+        { IntrospectToken: IntrospectTokenRequest -> Async<Result<TokenStateResponse, FitbitApiError>> }
     //        { GetBodyFat: unit -> Async<Result<CustomerDto [], exn>> }
 
     type T =
         { GetAccessToken: AccessTokenRequest -> Async<Result<AccessTokenDto, FitbitApiError>>
-          RefreshAccessToken: RefreshAccessTokenRequest -> Async<Result<AccessTokenDto, FitbitApiError>> }
+          RefreshAccessToken: RefreshAccessTokenRequest -> Async<Result<AccessTokenDto, FitbitApiError>>
+          Authenticated: string -> FitbitAuthenticatedApi }
 
     let getClient cfg =
-        { GetAccessToken = fun req -> getAccessToken cfg req
-          RefreshAccessToken = fun req -> refreshAccessToken cfg req }
+        { GetAccessToken = getAccessToken cfg
+          RefreshAccessToken = refreshAccessToken cfg
+          Authenticated =
+              fun accessToken ->
+                  { IntrospectToken = introspectToken cfg accessToken } }

@@ -9,6 +9,7 @@
     <Compile Include="DataSource.fs" />
     <Compile Include="BodyFat.fs" />
     <Compile Include="FitbitClient.fs" />
+    <EmbeddedResource Include="Samples\introspect_token_response.json" />
     <EmbeddedResource Include="Samples\get_access_token_response.json" />
     <EmbeddedResource Include="Samples\error_response.json" />
   </ItemGroup>
