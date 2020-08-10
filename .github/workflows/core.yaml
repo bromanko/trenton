@@ -24,7 +24,7 @@ jobs:
         echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
-      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin gcr.io
+      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
     - name: Write .env file
       run: cd core && sops -d .config/ci.enc.env > .env
     - name: Run unit tests
@@ -44,7 +44,7 @@ jobs:
         echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
-      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin gcr.io
+      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
     - name: Write .env file
       run: cd core && sops -d .config/ci.enc.env > .env
     - name: Start development server
@@ -72,7 +72,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v1
     - name: Docker login
-      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin gcr.io
+      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
     - name: Publish Docker image
       run: ./go core publish
     - uses: colpal/actions-clean@v1
