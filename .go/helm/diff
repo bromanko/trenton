@@ -24,5 +24,4 @@ args=$(getHelmArgs "$chart" "$version" "$environment" "$namespace")
 
 eval "$helm_cmd" diff upgrade \
   --allow-unreleased \
-  "$args" "$chart" "../helm/$chart" \
-  | less
+  "$args" "$chart" "../helm/$chart"
