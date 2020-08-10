@@ -1,5 +1,5 @@
 image:
-  repository: gcr.io/see-my-app-gcr-964a1fa4/trenton-core
+  repository: us-central1-docker.pkg.dev/trenton-production-c5cb9af5/trenton/trenton-core
   pullPolicy: IfNotPresent
 
 imagePullSecrets:
