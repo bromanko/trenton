@@ -3,7 +3,7 @@ image:
   pullPolicy: IfNotPresent
 
 imagePullSecrets:
-  - name: gcr-pull-secret
+  name: gcr-pull-secret
 
 service:
   port: 5000
