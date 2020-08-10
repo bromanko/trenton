@@ -9,6 +9,7 @@ on:
 env:
   GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
   GCLOUD_PROJECT: trenton-production-c5cb9af5
+  # Path to credentials file. This is an env var defined by the gcloud SDK
   GOOGLE_APPLICATION_CREDENTIALS: /home/github/actions-runner/_work/trenton/trenton/.gcloud_auth.json
 
 jobs:
