@@ -7,4 +7,4 @@ Serilog
 Serilog.Sinks.Console
 Serilog.Formatting.Compact
 Serilog.AspNetCore
-Google.Cloud.PubSub.V1
+Google.Cloud.Datastore.V1
