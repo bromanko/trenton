@@ -48,9 +48,12 @@ module FitbitClient =
           ExpiresInSeconds: int
           RefreshToken: string }
 
-    type TokenStateResponse =
-        | ActiveTokenStateResponse of {| UserId: string |}
-        | InactiveTokenStateResponse
+    type ActiveTokenStateDto =
+        { UserId: string }
+
+    type TokenStateDto =
+        | Active of ActiveTokenStateDto
+        | Inactive
 
     module private Http =
         let authHeader clientId clientSecret =
@@ -173,11 +176,11 @@ module FitbitClient =
 
         let introspectTokenRespToDto (resp: Api.IntrospectTokenResponse) =
             match resp.Active with
-            | false -> InactiveTokenStateResponse
+            | false -> Inactive
             | true ->
                 match resp.UserId with
-                | None -> InactiveTokenStateResponse
-                | Some uId -> ActiveTokenStateResponse {| UserId = uId |}
+                | None -> Inactive
+                | Some uId -> Active { UserId = uId }
 
         let parseTokenState =
             function
@@ -221,14 +224,14 @@ module FitbitClient =
         config
         accessToken
         req
-        : Async<Result<TokenStateResponse, FitbitApiError>>
+        : Async<Result<TokenStateDto, FitbitApiError>>
         =
         Api.introspectToken config accessToken req
         |> Job.map Parse.parseTokenState
         |> toAsync
 
     type FitbitAuthenticatedApi =
-        { IntrospectToken: IntrospectTokenRequest -> Async<Result<TokenStateResponse, FitbitApiError>> }
+        { IntrospectToken: IntrospectTokenRequest -> Async<Result<TokenStateDto, FitbitApiError>> }
     //        { GetBodyFat: unit -> Async<Result<CustomerDto [], exn>> }
 
     type T =

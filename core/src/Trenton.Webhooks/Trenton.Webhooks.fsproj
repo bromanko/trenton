@@ -9,6 +9,7 @@
         <Compile Include="Config.fs" />
         <Compile Include="Serilog.fs" />
         <Compile Include="ErrorHandler.fs" />
+        <Compile Include="Firestore.fs" />
         <Compile Include="Routes\Meta.fs" />
         <Compile Include="Routes\Fitbit.fs" />
         <Compile Include="Health.fs" />
