@@ -7,7 +7,6 @@ on:
     - '.github/workflows/core.yaml'
 
 env:
-  GCR_RW_TOKEN: ${{ secrets.GCR_RW_TOKEN }}
   GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
   GCLOUD_PROJECT: trenton-production-c5cb9af5
   GOOGLE_APPLICATION_CREDENTIALS: /home/github/actions-runner/_work/trenton/trenton/.gcloud_auth.json
@@ -24,7 +23,7 @@ jobs:
         echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
-      run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
+      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin gcr.io
     - name: Write .env file
       run: cd core && sops -d .config/ci.enc.env > .env
     - name: Run unit tests
@@ -44,7 +43,7 @@ jobs:
         echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
-      run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
+      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin gcr.io
     - name: Write .env file
       run: cd core && sops -d .config/ci.enc.env > .env
     - name: Start development server
@@ -72,7 +71,7 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v1
     - name: Docker login
-      run: echo $GCR_RW_TOKEN | docker login -u _json_key --password-stdin gcr.io
+      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin gcr.io
     - name: Publish Docker image
       run: ./go core publish
     - uses: colpal/actions-clean@v1
