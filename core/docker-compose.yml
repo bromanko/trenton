@@ -36,7 +36,7 @@ services:
 
   datastore:
     build:
-      dockerfile: ../emulators/datastore/Dockerfile.datastore
+      dockerfile: ../emulators/datastore/Dockerfile
       context: .
     environment:
       CLOUDSDK_CORE_PROJECT: localhost
