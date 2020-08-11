@@ -18,7 +18,7 @@ services:
       - 5000:5000
       - 5001:5001
     depends_on:
-      - datastore
+      - firestore
 
   itests:
     build:
@@ -34,22 +34,25 @@ services:
       - itests_packages:/root/.nuget/packages
       - .:/usr/src/app
 
-  datastore:
+  firestore:
     build:
-      dockerfile: ../emulators/datastore/Dockerfile
+      dockerfile: ../emulators/firebase/Dockerfile
       context: .
-    environment:
-      CLOUDSDK_CORE_PROJECT: localhost
     ports:
-      - 8432:8432
-    command: start --host-port 0.0.0.0:8432 --data-dir /data
+      - "9001:4000"
+      - "9000:9000"
+    networks:
+      - trenton
+    env_file:
+      - ${DOCKER_COMPOSE_ENV_OVERRIDE:-.env}
+    # Important to pass the project otherwise the UI won't start
+    command: emulators:start -P ${GCLOUD_PROJECT}
     volumes:
-      - datastore:/data
+      - ${PWD}/firebase.json:/home/node/firebase.json
 
 volumes:
   server_packages: {}
   itests_packages: {}
-  datastore: {}
 
 networks:
   trenton:
