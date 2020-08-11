@@ -11,7 +11,11 @@
     <Compile Include="Assertions.fs" />
     <Compile Include="MetaTests.fs" />
     <Compile Include="FitbitTests.fs" />
+    <Compile Include="FirestoreTests.fs" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Trenton.Webhooks\Trenton.Webhooks.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

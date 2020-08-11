@@ -17,7 +17,7 @@ module Firestore =
 
         let private parseAccessToken (token: AccessTokenDto) (now: DateTime) =
             { AccessToken.AccessToken = token.AccessToken
-              ExpiresAt = now.AddSeconds <| (float token.ExpiresInSeconds)
+              ExpiresAt = now.ToUniversalTime().AddSeconds <| (float token.ExpiresInSeconds)
               RefreshToken = token.RefreshToken }
 
         let upsertAccessToken (db: FirestoreDb) getNow token tokenState =
@@ -27,3 +27,4 @@ module Firestore =
             getNow ()
             |> parseAccessToken token
             |> docRef.SetAsync
+            |> Async.AwaitTask
