@@ -1,1 +1,1 @@
-Creates a Docker image for the core server and publishes it to the Docker registry.
+Publishes built image to the Docker registry.

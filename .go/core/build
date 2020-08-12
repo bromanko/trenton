@@ -12,4 +12,7 @@ SCRIPT_PATH="$(
 
 cd "${SCRIPT_PATH}/../../core"
 
-docker push "${COMMON_DOCKER_IMAGE_BASE}/${CORE_IMAGE_NAME}:${COMMON_COMMIT_SHA}"
+docker build \
+    -t "${COMMON_DOCKER_IMAGE_BASE}/${CORE_IMAGE_NAME}:${COMMON_COMMIT_SHA}" \
+    -f Dockerfile \
+    .

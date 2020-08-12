@@ -29,10 +29,12 @@ services:
       - trenton
     env_file:
       - ${DOCKER_COMPOSE_ENV_OVERRIDE:-.env}
-    command: dotnet run --project test/Trenton.Webhooks.ITests/Trenton.Webhooks.ITests.fsproj
+    entrypoint: ./scripts/itest-entrypoint.sh
     volumes:
       - itests_packages:/root/.nuget/packages
       - .:/usr/src/app
+    depends_on:
+    - firestore
 
   firestore:
     build:
