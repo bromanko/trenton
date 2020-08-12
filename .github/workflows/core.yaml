@@ -52,18 +52,18 @@ jobs:
       run: |
         cd core && sops -d .config/ci.enc.env > .env
         cat .env
+    - name: Build development server
+      run: ./go core build
     - name: Start development server
-      run: ./go core start -d
+      run: ./go core start -d > .server-container
     - name: Run integration tests
       run: ./go core itest
-    - name: Output server logs
+    - name: Stop development server
       if: ${{ always() }}
-      run: cd core && docker-compose logs server
-    - name: Cleanup Docker
-      run: cd core && docker-compose down
+      run: |
+        [[ -f .server-container ]] && docker stop $(cat .server-container)
+    - uses: colpal/actions-clean@v1
       if: ${{ always() }}
-#    - uses: colpal/actions-clean@v1
-#      if: ${{ always() }}
 
   publish:
     name: Publish Docker image
@@ -75,6 +75,8 @@ jobs:
       uses: actions/checkout@v1
     - name: Docker login
       run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
+    - name: Build Docker image
+      run: ./go core build
     - name: Publish Docker image
       run: ./go core publish
     - uses: colpal/actions-clean@v1
