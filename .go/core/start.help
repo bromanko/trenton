@@ -1,5 +1,4 @@
-Starts the core server
+Starts the core server from a prebuilt image
 
 Options:
-    -l                Runs commands locally rather than in Docker containers
-    -d                When running in docker will start the service in the background
+    -d                Start the service in the background

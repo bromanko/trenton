@@ -1,0 +1,5 @@
+Starts the core server for development
+
+Options:
+    -l                Runs commands locally rather than in Docker containers
+    -d                When running in docker will start the service in the background
