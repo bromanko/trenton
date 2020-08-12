@@ -13,31 +13,28 @@ env:
   GOOGLE_APPLICATION_CREDENTIALS: /home/github/actions-runner/_work/trenton/trenton/.gcloud_auth.json
 
 jobs:
-#  utest:
-#    name: Run unit tests
-#    runs-on: self-hosted
-#    steps:
-#    - name: Checkout code
-#      uses: actions/checkout@v1
-#    - name: GCloud login
-#      run: |
-#        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
-#        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
-#    - name: Docker login
-#      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
-#    - name: Write .env file
-#      run: cd core && sops -d .config/ci.enc.env > .env
-#    - name: Run unit tests
-#      run: ./go core test
-#- name: Cleanup Docker
-#  run: cd core && docker-compose down
-#  if: ${{ always() }}
-#    - uses: colpal/actions-clean@v1
-#      if: ${{ always() }}
+  utest:
+    name: Run unit tests
+    runs-on: self-hosted
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: GCloud login
+      run: |
+        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+    - name: Docker login
+      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
+    - name: Write .env file
+      run: cd core && sops -d .config/ci.enc.env > .env
+    - name: Run unit tests
+      run: ./go core test
+    - uses: colpal/actions-clean@v1
+      if: ${{ always() }}
 
   itest:
     name: Run integration tests locally
-#    needs: [utest]
+    needs: [utest]
     runs-on: self-hosted
     steps:
     - name: Checkout code
@@ -67,7 +64,7 @@ jobs:
 
   publish:
     name: Publish Docker image
-    needs: [ itest]
+    needs: [utest, itest]
     if: endsWith(github.ref, 'master')
     runs-on: self-hosted
     steps:
@@ -114,3 +111,27 @@ jobs:
         ./go helm deploy webhooks ${GITHUB_SHA} production trenton
     - uses: colpal/actions-clean@v1
       if: ${{ always() }}
+
+  post-deploy-itests:
+    name: Run integration tests in Production
+    needs: [deploy]
+    runs-on: self-hosted
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: GCloud login
+      run: |
+        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+    - name: Docker login
+      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
+    - name: Write .env file
+      run: |
+        cd core && sops -d .config/ci.enc.env > .env
+        sed --in-place='' 's/TEST_SERVER_HOST=.*/TEST_SERVER_HOST=webhooks.trenton.seemy.app/' .env
+        cat .env
+    - name: Run integration tests
+      run: ./go core itest
+    - uses: colpal/actions-clean@v1
+      if: ${{ always() }}
+
