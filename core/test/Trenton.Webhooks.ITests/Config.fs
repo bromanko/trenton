@@ -11,12 +11,17 @@ type ServerConfig =
 type FitbitConfig =
     { SubscriberVerificationCode: string }
 
+type FirestoreConfig =
+    { Host: string
+      Project: string }
+
 [<Convention("TEST")>]
 type Config =
     { [<DefaultValue("false")>]
       LoggingEnabled: bool
       Server: ServerConfig
-      Fitbit: FitbitConfig }
+      Fitbit: FitbitConfig
+      Firestore: FirestoreConfig }
 
 module Config =
     let private failWithInvalidConfig error =

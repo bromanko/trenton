@@ -46,7 +46,7 @@ services:
     env_file:
       - ${DOCKER_COMPOSE_ENV_OVERRIDE:-.env}
     # Important to pass the project otherwise the UI won't start
-    command: emulators:start -P ${GCLOUD_PROJECT}
+    command: emulators:start -P ${TEST_FIRESTORE_PROJECT}
     volumes:
       - ${PWD}/firebase.json:/home/node/firebase.json
 
