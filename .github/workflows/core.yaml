@@ -69,7 +69,7 @@ jobs:
 
   publish:
     name: Publish Docker image
-    needs: [utest, itest]
+    needs: [ itest]
     if: endsWith(github.ref, 'master')
     runs-on: self-hosted
     steps:
