@@ -29,9 +29,9 @@ jobs:
 #      run: cd core && sops -d .config/ci.enc.env > .env
 #    - name: Run unit tests
 #      run: ./go core test
-#    - name: Stop docker
-#      run: cd core && docker-compose stop
-#      if: ${{ always() }}
+#- name: Cleanup Docker
+#  run: cd core && docker-compose down
+#  if: ${{ always() }}
 #    - uses: colpal/actions-clean@v1
 #      if: ${{ always() }}
 
@@ -61,11 +61,11 @@ jobs:
     - name: Output server logs
       if: ${{ always() }}
       run: cd core && docker-compose logs server
-    - name: Stop docker
-      run: cd core && docker-compose stop
+    - name: Cleanup Docker
+      run: cd core && docker-compose down
       if: ${{ always() }}
-#    - uses: colpal/actions-clean@v1
-#      if: ${{ always() }}
+    - uses: colpal/actions-clean@v1
+      if: ${{ always() }}
 
   publish:
     name: Publish Docker image
