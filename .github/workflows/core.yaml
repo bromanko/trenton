@@ -112,26 +112,28 @@ jobs:
     - uses: colpal/actions-clean@v1
       if: ${{ always() }}
 
-  post-deploy-itests:
-    name: Run integration tests in Production
-    needs: [deploy]
-    runs-on: self-hosted
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v1
-    - name: GCloud login
-      run: |
-        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
-        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
-    - name: Docker login
-      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
-    - name: Write .env file
-      run: |
-        cd core && sops -d .config/ci.enc.env > .env
-        sed --in-place='' 's/TEST_SERVER_HOST=.*/TEST_SERVER_HOST=webhooks.trenton.seemy.app/' .env
-        cat .env
-    - name: Run integration tests
-      run: ./go core itest
-    - uses: colpal/actions-clean@v1
-      if: ${{ always() }}
-
+# This needs some thought on setting up the env vars and possibly
+# separating e2e tests from itests
+#  post-deploy-itests:
+#    name: Run integration tests in Production
+#    needs: [deploy]
+#    runs-on: self-hosted
+#    steps:
+#    - name: Checkout code
+#      uses: actions/checkout@v1
+#    - name: GCloud login
+#      run: |
+#        echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
+#        gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+#    - name: Docker login
+#      run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
+#    - name: Write .env file
+#      run: |
+#        cd core && sops -d .config/ci.enc.env > .env
+#        sed --in-place='' 's/TEST_SERVER_HOST=.*/TEST_SERVER_HOST=webhooks.trenton.seemy.app/' .env
+#        cat .env
+#    - name: Run integration tests
+#      run: ./go core itest
+#    - uses: colpal/actions-clean@v1
+#      if: ${{ always() }}
+#
