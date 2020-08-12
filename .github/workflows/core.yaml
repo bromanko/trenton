@@ -53,11 +53,7 @@ jobs:
         cd core && sops -d .config/ci.enc.env > .env
         cat .env
     - name: Start development server
-      run: |
-        ./go core start -d
-        echo "Waiting for server to start..."
-        cd core
-        ../.github/scripts/wait-for-it.sh localhost:5000 -t 180 -- docker-compose logs server
+      run: ./go core start -d
     - name: Run integration tests
       run: ./go core itest
     - name: Output server logs
