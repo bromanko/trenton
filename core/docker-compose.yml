@@ -33,8 +33,6 @@ services:
     volumes:
       - itests_packages:/root/.nuget/packages
       - .:/usr/src/app
-    depends_on:
-      - server
 
   firestore:
     build:
