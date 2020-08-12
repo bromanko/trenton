@@ -4,9 +4,8 @@ open FsConfig
 open System
 
 type ServerConfig =
-    { Base: string
-      Port: int }
-    member this.AddressUri = Uri(sprintf "%s:%i" this.Base this.Port)
+    { Host: string }
+    member this.AddressUri = Uri(sprintf "http://%s" this.Host)
 
 type FitbitConfig =
     { SubscriberVerificationCode: string }
