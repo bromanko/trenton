@@ -66,8 +66,8 @@ jobs:
     - name: Cleanup Docker
       run: cd core && docker-compose down
       if: ${{ always() }}
-    - uses: colpal/actions-clean@v1
-      if: ${{ always() }}
+#    - uses: colpal/actions-clean@v1
+#      if: ${{ always() }}
 
   publish:
     name: Publish Docker image
