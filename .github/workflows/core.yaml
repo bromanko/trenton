@@ -52,7 +52,7 @@ jobs:
         ./go core start -d
         echo "Waiting for server to start..."
         cd core
-        ../.github/scripts/wait-for-it.sh ${TEST_SERVER_HOST} -t 180 -- docker-compose logs server
+        ../.github/scripts/wait-for-it.sh localhost:5000 -t 180 -- docker-compose logs server
     - name: Run integration tests
       run: ./go core itest
     - name: Output server logs
