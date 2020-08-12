@@ -56,10 +56,10 @@ jobs:
         cd core
         docker-compose logs server
     - name: Run integration tests
-      env:
-        TEST_SERVER_BASE: http://server
-        TEST_SERVER_PORT: 5000
       run: ./go core itest
+    - name: Collect server logs
+      if: ${{ job.status != 'success' }}
+      run: docker-compose logs server
     - uses: colpal/actions-clean@v1
       if: ${{ always() }}
 
