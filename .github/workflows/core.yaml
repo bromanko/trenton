@@ -49,7 +49,9 @@ jobs:
     - name: Docker login
       run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
     - name: Write .env file
-      run: cd core && sops -d .config/ci.enc.env > .env
+      run: |
+        cd core && sops -d .config/ci.enc.env > .env
+        cat .env
     - name: Start development server
       run: |
         ./go core start -d
