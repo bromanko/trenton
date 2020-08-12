@@ -49,17 +49,15 @@ jobs:
       run: cd core && sops -d .config/ci.enc.env > .env
     - name: Start development server
       run: |
-        cat core/.env
         ./go core start -d
-        echo "Waiting for server to start to get some logs..."
-        sleep 3m
+        echo "Waiting for server to start..."
         cd core
-        docker-compose logs server
+        ../.github/scripts/wait-for-it.sh ${TEST_SERVER_HOST} -t 180 docker-compose logs server
     - name: Run integration tests
       run: ./go core itest
-    - name: Collect server logs
-      if: ${{ job.status != 'success' }}
-      run: docker-compose logs server
+    - name: Output server logs
+      if: ${{ always() }}
+      run: cd core && docker-compose logs server
     - uses: colpal/actions-clean@v1
       if: ${{ always() }}
 
