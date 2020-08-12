@@ -5,3 +5,8 @@ docs
 packages
 Dockerfile
 .paket
+paket-files
+src/**/bin
+src/**/obj
+test/**/bin
+test/**/obj
