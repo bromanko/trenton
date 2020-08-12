@@ -10,10 +10,7 @@ cd "${SCRIPT_PATH}/../../core"
 docker=1
 while getopts "l" options; do
   case ${options} in
-    l)
-      docker=0
-      shift $((OPTIND-1))
-      ;;
+    l) docker=0 ;;
     *) error "Unknown option: -${OPTARG}"; exit 1 ;;
   esac
 done
