@@ -1,6 +1,7 @@
-namespace Trenton.Webhooks
+namespace Trenton.Server
 
 open FsConfig
+open Trenton.Common
 
 module Config =
     type LoggingConfig =
@@ -31,32 +32,7 @@ module Config =
                 Array.append httpUrl
                     [| sprintf "https://%s:%d" this.Address port |]
 
-    type FitbitSubscriberConfig =
-        { Id: string
-          VerificationCode: string }
-
-    type FitbitConfig =
-        { BaseUrl: string option
-          ClientId: string
-          ClientSecret: string
-          Subscriber: FitbitSubscriberConfig }
-
     [<Convention("TRENTON")>]
     type AppConfig =
         { Logging: LoggingConfig
-          Server: ServerConfig
-          Fitbit: FitbitConfig }
-
-    let failInvalidConfig error =
-        match error with
-        | NotFound envVarName ->
-            failwithf "Environment variable %s not found" envVarName
-        | BadValue (envVarName, value) ->
-            failwithf "Environment variable %s has invalid value %s" envVarName
-                value
-        | NotSupported msg -> failwith msg
-
-    let loadAppConfig () =
-        match EnvConfig.Get<AppConfig>() with
-        | Ok config -> config
-        | ConfigParseResult.Error error -> failInvalidConfig error
+          Server: ServerConfig }

@@ -1,14 +1,15 @@
-﻿namespace Trenton.Webhooks
+﻿namespace Trenton.Server
 
 open Microsoft.Extensions.Hosting
 open Serilog
-open Trenton.Webhooks.Config
-open Trenton.Webhooks.Host
+open Trenton.Common.Config
+open Trenton.Server.Config
+open Trenton.Server.Host
 
 module Program =
     [<EntryPoint>]
     let main argv =
-        let config = loadAppConfig ()
+        let config = loadAppConfig<AppConfig> ()
         Log.Logger <-
             getSerilog config.Logging.LogTarget config.Logging.LogLevel
         Log.Logger.Information("Configured with {@AppConfig}", config)

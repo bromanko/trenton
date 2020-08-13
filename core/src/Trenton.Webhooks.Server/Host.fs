@@ -13,7 +13,7 @@ open Trenton.Webhooks.Health
 
 module Host =
     let private route (path: PathString) =
-        Giraffe.Routing.route path.Value
+        Routing.route path.Value
 
     let private webApp compRoot cfg =
         choose

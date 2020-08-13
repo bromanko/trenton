@@ -4,13 +4,15 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="paket.references" />
     <Compile Include="Date.fs" />
     <Compile Include="Decimals.fs" />
     <Compile Include="Percents.fs" />
     <Compile Include="HttpUtils.fs" />
     <Compile Include="ApiClient.fs" />
-    <Content Include="paket.references" />
+    <Compile Include="Logging.fs" />
     <Compile Include="Json.fs" />
+    <Compile Include="Config.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

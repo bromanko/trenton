@@ -1,4 +1,4 @@
-namespace Trenton.Webhooks
+namespace Trenton.Server
 
 open System
 open System.Net
@@ -6,7 +6,8 @@ open Serilog
 open Serilog.Events
 open Serilog.Formatting.Compact
 open Serilog.Sinks.SystemConsole.Themes
-open Trenton.Webhooks.Config
+open Trenton.Common
+open Trenton.Server.Config
 
 module Serilog =
     [<Literal>]
@@ -50,7 +51,7 @@ module Serilog =
                 .Destructure.FSharpTypes()
                 .Destructure.ByTransforming(destructureAppConfig)
                 .Enrich.FromLogContext()
-                .Enrich.WithProperty("App", "Trenton Webhooks Server")
+                .Enrich.WithProperty("App", "Trenton Server")
                 .Enrich.WithProperty("Host", Dns.GetHostName())
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
             |> setFormat format

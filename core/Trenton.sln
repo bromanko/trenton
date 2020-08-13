@@ -5,7 +5,7 @@ ProjectSection(SolutionItems) = preProject
 	paket.dependencies = paket.dependencies
 EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Webhooks", "src\Trenton.Webhooks\Trenton.Webhooks.fsproj", "{9F5FBA96-E4FD-4487-BD01-155FE91DA567}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Webhooks.Server", "src\Trenton.Webhooks.Server\Trenton.Webhooks.Server.fsproj", "{9F5FBA96-E4FD-4487-BD01-155FE91DA567}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{B3C556C0-BAE5-4198-9179-D8705393D11B}"
 ProjectSection(SolutionItems) = preProject
@@ -29,6 +29,8 @@ EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Common.Tests.Unit", "test\Trenton.Common.Tests.Unit\Trenton.Common.Tests.Unit.fsproj", "{E48E50D8-2E01-4AF4-B154-4A93209A9DAC}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Webhooks.ITests", "test\Trenton.Webhooks.ITests\Trenton.Webhooks.ITests.fsproj", "{D8B03A63-F5CF-4D97-8199-878701F34089}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Web.Server", "src\Trenton.Web.Server\Trenton.Web.Server.fsproj", "{3DFD8712-0E87-4C5D-82FC-E97121055AB8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +62,10 @@ Global
 		{D8B03A63-F5CF-4D97-8199-878701F34089}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8B03A63-F5CF-4D97-8199-878701F34089}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8B03A63-F5CF-4D97-8199-878701F34089}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DFD8712-0E87-4C5D-82FC-E97121055AB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DFD8712-0E87-4C5D-82FC-E97121055AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DFD8712-0E87-4C5D-82FC-E97121055AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DFD8712-0E87-4C5D-82FC-E97121055AB8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1B9A79F6-0B3E-407D-9110-5D2D8899E611} = {19F67596-458B-4046-9D3E-024DA7699DEF}

@@ -5,7 +5,7 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="Logging.fs" />
+        <Content Include="paket.references" />
         <Compile Include="Config.fs" />
         <Compile Include="Serilog.fs" />
         <Compile Include="ErrorHandler.fs" />
@@ -16,7 +16,6 @@
         <Compile Include="CompositionRoot.fs" />
         <Compile Include="Host.fs" />
         <Compile Include="Program.fs" />
-        <Content Include="paket.references" />
         <Content Include="README.md" />
     </ItemGroup>
     <ItemGroup>

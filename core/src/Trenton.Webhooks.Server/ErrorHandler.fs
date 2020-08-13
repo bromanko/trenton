@@ -3,6 +3,7 @@ namespace Trenton.Webhooks
 open Giraffe
 open Microsoft.Extensions.Logging
 open System
+open Trenton.Common
 open Trenton.Webhooks.Config
 
 [<CLIMutable>]
