@@ -2,8 +2,11 @@ Destructurama.FSharp
 FSharp.Core
 FsConfig
 Microsoft.AspNetCore.Diagnostics.HealthChecks
+Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
 Serilog
 Serilog.Sinks.Console
 Serilog.Formatting.Compact
 Serilog.AspNetCore
 Google.Cloud.Firestore
+Bolero.Server
+Bolero.HotReload.Server

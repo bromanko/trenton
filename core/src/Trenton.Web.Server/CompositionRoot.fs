@@ -1,6 +1,6 @@
-namespace Trenton.Server
+namespace Trenton.Web.Server
 
-open Trenton.Server.Config
+open Trenton.Web.Server.Config
 
 type CompositionRoot = unit
 

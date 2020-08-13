@@ -1,10 +1,10 @@
-﻿namespace Trenton.Server
+﻿namespace Trenton.Web.Server
 
 open Microsoft.Extensions.Hosting
 open Serilog
 open Trenton.Common.Config
-open Trenton.Server.Config
-open Trenton.Server.Host
+open Trenton.Web.Server.Config
+open Trenton.Web.Server.Host
 
 module Program =
     [<EntryPoint>]

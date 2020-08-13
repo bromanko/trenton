@@ -1,4 +1,4 @@
-namespace Trenton.Server
+namespace Trenton.Web.Server
 
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Diagnostics.HealthChecks
@@ -8,6 +8,7 @@ open Microsoft.Extensions.Diagnostics.HealthChecks
 open System
 open System.Net.Mime
 open System.Threading.Tasks
+open System.Text.Json
 
 module Health =
     type IServiceCollection with
@@ -19,9 +20,8 @@ module Health =
             Func<HttpContext, HealthReport, Task>(fun ctx report ->
                 let body = report
                 ctx.Response.ContentType <- MediaTypeNames.Application.Json
-                ctx.WriteJsonAsync body :> Task)
+                JsonSerializer.SerializeAsync(ctx.Response.Body, body))
 
         member this.UseTrentonHealthChecks(path) =
             this.UseHealthChecks
                 (path, HealthCheckOptions(ResponseWriter = this.JsonWriter))
-

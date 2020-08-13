@@ -1,4 +1,4 @@
-namespace Trenton.Server
+namespace Trenton.Web.Server
 
 open System
 open System.Net
@@ -7,7 +7,7 @@ open Serilog.Events
 open Serilog.Formatting.Compact
 open Serilog.Sinks.SystemConsole.Themes
 open Trenton.Common
-open Trenton.Server.Config
+open Trenton.Web.Server.Config
 
 module Serilog =
     [<Literal>]

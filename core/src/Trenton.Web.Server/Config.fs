@@ -1,4 +1,4 @@
-namespace Trenton.Server
+namespace Trenton.Web.Server
 
 open FsConfig
 open Trenton.Common
@@ -15,10 +15,9 @@ module Config =
           IsDevelopment: bool
           [<DefaultValue("0.0.0.0")>]
           Address: string
-          [<DefaultValue("5000")>]
+          [<DefaultValue("5002")>]
           HttpPort: int
-          HttpsPort: int option
-          BaseUrl: string }
+          HttpsPort: int option }
 
         member this.Environment =
             if this.IsDevelopment then "Development" else "Deployed"
@@ -32,7 +31,7 @@ module Config =
                 Array.append httpUrl
                     [| sprintf "https://%s:%d" this.Address port |]
 
-    [<Convention("TRENTON")>]
+    [<Convention("TRENTON_WEB")>]
     type AppConfig =
         { Logging: LoggingConfig
           Server: ServerConfig }
