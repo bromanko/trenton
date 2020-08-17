@@ -28,7 +28,7 @@ jobs:
     - name: Write .env file
       run: cd core && sops -d .config/ci.enc.env > .env
     - name: Run unit tests
-      run: ./go core test
+      run: ./go webhooks test
     - uses: colpal/actions-clean@v1
       if: ${{ always() }}
 
@@ -50,11 +50,11 @@ jobs:
         cd core && sops -d .config/ci.enc.env > .env
         cat .env
     - name: Build development server
-      run: ./go core build
+      run: ./go webhooks build
     - name: Start development server
-      run: ./go core start -d > .server-container
+      run: ./go webhooks start -d > .server-container
     - name: Run integration tests
-      run: ./go core itest
+      run: ./go webhooks itest
     - name: Stop development server
       if: ${{ always() }}
       run: |
@@ -73,9 +73,9 @@ jobs:
     - name: Docker login
       run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
     - name: Build Docker image
-      run: ./go core build
+      run: ./go webhooks build
     - name: Publish Docker image
-      run: ./go core publish
+      run: ./go webhooks publish
     - uses: colpal/actions-clean@v1
       if: ${{ always() }}
 
@@ -133,7 +133,7 @@ jobs:
 #        sed --in-place='' 's/TEST_SERVER_HOST=.*/TEST_SERVER_HOST=webhooks.trenton.seemy.app/' .env
 #        cat .env
 #    - name: Run integration tests
-#      run: ./go core itest
+#      run: ./go webhooks itest
 #    - uses: colpal/actions-clean@v1
 #      if: ${{ always() }}
 #
