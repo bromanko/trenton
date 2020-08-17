@@ -39,7 +39,6 @@ jobs:
 
   itest:
     name: Run integration tests locally
-    needs: [utest]
     # There is an issue running msbuild in Docker on the latest ubuntu kernel.
     runs-on: ubuntu-16.04
     steps:
