@@ -9,10 +9,6 @@ on:
 env:
   GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
   GCLOUD_PROJECT: trenton-production-c5cb9af5
-  # Path to credentials file. This is an env var defined by the gcloud SDK
-  GOOGLE_APPLICATION_CREDENTIALS: /home/runner/.gcloud_auth.json
-
-jobs:
   utest:
     name: Run unit tests
     # There is an issue running msbuild in Docker on the latest ubuntu kernel.
@@ -21,6 +17,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v1
     - name: GCloud login
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: /home/runner/.gcloud_auth.json
       run: |
         echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
@@ -45,6 +43,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v1
     - name: GCloud login
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: /home/runner/.gcloud_auth.json
       run: |
         echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
@@ -99,6 +99,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v1
     - name: GCloud login
+      env:
+        GOOGLE_APPLICATION_CREDENTIALS: /home/github/actions-runner/_work/trenton/trenton/.gcloud_auth.json
       run: |
         echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
