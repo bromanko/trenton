@@ -24,6 +24,8 @@ else
     cmd="scripts/test.sh"
 fi
 
-docker-compose run --rm \
+docker-compose \
+    -f docker/docker-compose.webhooks.yaml \
+    run --rm \
     server \
     "${cmd}" "$@"

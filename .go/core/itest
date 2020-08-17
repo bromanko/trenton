@@ -16,7 +16,9 @@ while getopts "l" options; do
 done
 
 if [[ $docker == 1 ]]; then
-  docker-compose run --rm itests
+  docker-compose \
+    -f docker/docker-compose.webhooks.yaml \
+    run --rm itests
 else
   dotnet run --project test/Trenton.Webhooks.ITests/Trenton.Webhooks.ITests.fsproj
 fi

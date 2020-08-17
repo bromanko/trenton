@@ -16,7 +16,9 @@ if [[ "$#" -gt 1 ]]; then
   cmd="$@"
 fi
 
-docker-compose run --rm \
+docker-compose \
+  -f docker/docker-compose.webhooks.yaml \
+  run --rm \
   --service-ports \
   --entrypoint "${entrypoint}" \
   server \

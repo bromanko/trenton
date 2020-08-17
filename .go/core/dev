@@ -21,7 +21,7 @@ while getopts "ld" options; do
 done
 
 if [[ $docker == 1 ]]; then
-  docker-compose up ${detach} server
+  docker-compose -f docker/docker-compose.webhooks.yaml up ${detach} server
 else
   dotnet run --project src/Trenton.Webhooks/Trenton.Webhooks.fsproj
 fi

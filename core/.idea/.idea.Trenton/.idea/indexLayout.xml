@@ -3,6 +3,7 @@
   <component name="ContentModelUserStore">
     <attachedFolders>
       <Path>.kubernetes</Path>
+      <Path>docker</Path>
       <Path>docs</Path>
       <Path>scripts</Path>
     </attachedFolders>

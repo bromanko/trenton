@@ -1,9 +1,9 @@
 version: "3.7"
 
 services:
-  server:
+  webhooks-server:
     build:
-      dockerfile: Dockerfile
+      dockerfile: docker/Dockerfile.webhooks
       context: .
       target: dev
     networks:
@@ -23,7 +23,7 @@ services:
   itests:
     build:
       dockerfile: Dockerfile
-      context: .
+      text: .
       target: dev
     networks:
       - trenton
