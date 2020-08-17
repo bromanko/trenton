@@ -1,5 +1,5 @@
 image:
-  repository: us-central1-docker.pkg.dev/trenton-production-c5cb9af5/trenton/trenton-core
+  repository: us-central1-docker.pkg.dev/trenton-production-c5cb9af5/trenton/webhooks
   pullPolicy: IfNotPresent
 
 imagePullSecrets:

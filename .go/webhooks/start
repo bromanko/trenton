@@ -26,5 +26,5 @@ docker run --rm \
   --network "${DOCKER_COMPOSE_NETWORK}" \
   --env-file .env \
   ${detach} \
-  "${COMMON_DOCKER_IMAGE_BASE}/${CORE_IMAGE_NAME}:${COMMON_COMMIT_SHA}" \
+  "${COMMON_DOCKER_IMAGE_BASE}/${IMAGE_NAME}:${COMMON_COMMIT_SHA}" \
   dotnet run --project src/Trenton.Webhooks/Trenton.Webhooks.fsproj

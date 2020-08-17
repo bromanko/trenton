@@ -13,6 +13,6 @@ SCRIPT_PATH="$(
 cd "${SCRIPT_PATH}/../../core"
 
 docker build \
-    -t "${COMMON_DOCKER_IMAGE_BASE}/${CORE_IMAGE_NAME}:${COMMON_COMMIT_SHA}" \
+    -t "${COMMON_DOCKER_IMAGE_BASE}/${IMAGE_NAME}:${COMMON_COMMIT_SHA}" \
     -f docker/Dockerfile.webhooks \
     .
