@@ -10,7 +10,7 @@ env:
   GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
   GCLOUD_PROJECT: trenton-production-c5cb9af5
   # Path to credentials file. This is an env var defined by the gcloud SDK
-  GOOGLE_APPLICATION_CREDENTIALS: /home/github/actions-runner/_work/trenton/trenton/.gcloud_auth.json
+  GOOGLE_APPLICATION_CREDENTIALS: /home/runner/.gcloud_auth.json
 
 jobs:
   utest:
@@ -26,6 +26,10 @@ jobs:
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
       run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
+    - name: Install sops
+      run: |
+        sudo curl -fsSL https://github.com/mozilla/sops/releases/download/3.4.0/sops-3.4.0.linux -o /usr/local/bin/sops
+        sudo chmod +x /usr/local/bin/sops
     - name: Write .env file
       run: cd core && sops -d .config/ci.enc.env > .env
     - name: Run unit tests
@@ -47,6 +51,10 @@ jobs:
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
     - name: Docker login
       run: echo $GCLOUD_AUTH | docker login -u _json_key --password-stdin us-central1-docker.pkg.dev
+    - name: Install sops
+      run: |
+        sudo curl -fsSL https://github.com/mozilla/sops/releases/download/3.4.0/sops-3.4.0.linux -o /usr/local/bin/sops
+        sudo chmod +x /usr/local/bin/sops
     - name: Write .env file
       run: |
         cd core && sops -d .config/ci.enc.env > .env
