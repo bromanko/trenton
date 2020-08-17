@@ -1,4 +1,4 @@
-name: Core
+name: Webhooks
 on:
   push:
     paths:
