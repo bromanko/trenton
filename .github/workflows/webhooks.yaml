@@ -15,12 +15,12 @@ jobs:
     name: Run unit tests
     # There is an issue running msbuild in Docker on the latest ubuntu kernel.
     runs-on: ubuntu-16.04
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: /home/runner/.gcloud_auth.json
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
     - name: GCloud login
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: /home/runner/.gcloud_auth.json
       run: |
         echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
@@ -41,12 +41,12 @@ jobs:
     name: Run integration tests locally
     # There is an issue running msbuild in Docker on the latest ubuntu kernel.
     runs-on: ubuntu-16.04
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: /home/runner/.gcloud_auth.json
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
     - name: GCloud login
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: /home/runner/.gcloud_auth.json
       run: |
         echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
@@ -97,12 +97,12 @@ jobs:
     needs: [publish]
     if: endsWith(github.ref, 'master')
     runs-on: self-hosted
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: /home/github/actions-runner/_work/trenton/trenton/.gcloud_auth.json
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
     - name: GCloud login
-      env:
-        GOOGLE_APPLICATION_CREDENTIALS: /home/github/actions-runner/_work/trenton/trenton/.gcloud_auth.json
       run: |
         echo "${GCLOUD_AUTH}" > "${GOOGLE_APPLICATION_CREDENTIALS}"
         gcloud auth activate-service-account --project=${GCLOUD_PROJECT} --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
