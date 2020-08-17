@@ -9,6 +9,8 @@ on:
 env:
   GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
   GCLOUD_PROJECT: trenton-production-c5cb9af5
+
+jobs:
   utest:
     name: Run unit tests
     # There is an issue running msbuild in Docker on the latest ubuntu kernel.
