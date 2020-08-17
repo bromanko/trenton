@@ -1,16 +1,16 @@
 namespace Trenton.Web.Server
 
+open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
-open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.DependencyInjection
+open Bolero.Server.RazorHost
+open Bolero.Templating.Server
+open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Hosting
-open Microsoft.AspNetCore.Authentication.Cookies
 open Serilog
 open Trenton.Web.Server.Config
 open Trenton.Web.Server.Health
-open Bolero.Server.RazorHost
-open Bolero.Templating.Server
 
 module Host =
     let private configureServices cfg (services: IServiceCollection) =
@@ -30,9 +30,14 @@ module Host =
             |> ignore
 
 
-    let private configureApp _ _ (app: IApplicationBuilder) =
+    let private configureApp _ cfg (app: IApplicationBuilder) =
         app.UseSerilogRequestLogging()
-           .UseTrentonHealthChecks(PathString "/healthz")
+           .UseTrentonHealthChecks(PathString "/healthz").UseStaticFiles()
+           .UseRouting().UseBlazorFrameworkFiles()
+           .UseEndpoints(fun endpoints ->
+           if cfg.Server.IsDevelopment then endpoints.UseHotReload() |> ignore
+           endpoints.MapBlazorHub() |> ignore
+           endpoints.MapFallbackToPage("/_Host") |> ignore)
         |> ignore
 
     let createHostBuilder argv config compRoot =

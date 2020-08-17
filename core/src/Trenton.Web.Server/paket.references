@@ -3,6 +3,7 @@ FSharp.Core
 FsConfig
 Microsoft.AspNetCore.Diagnostics.HealthChecks
 Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
+Microsoft.AspNetCore.Components.WebAssembly.Server
 Serilog
 Serilog.Sinks.Console
 Serilog.Formatting.Compact

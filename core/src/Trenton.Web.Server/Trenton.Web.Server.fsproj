@@ -15,6 +15,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj" />
+    <ProjectReference Include="..\Trenton.Web.Client\Trenton.Web.Client.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
