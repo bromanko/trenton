@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+SCRIPT_PATH="$(
+  cd "$(dirname "$0")"
+  pwd -P
+)"
+# shellcheck source=../.common
+. "${SCRIPT_PATH}"/../.common
+# shellcheck source=.common
+. "${SCRIPT_PATH}"/.common
+
+cd "${SCRIPT_PATH}/../../core"
+
+detach=""
+while getopts "d" options; do
+  case ${options} in
+    d) detach="--detach" ; shift $((OPTIND-1)) ;;
+    *) error "Unknown option: -${OPTARG}"; exit 1 ;;
+  esac
+done
+
+docker run --rm \
+  --name server \
+  -p 5000:5000 \
+  --network "${DOCKER_COMPOSE_NETWORK}" \
+  --env-file .env \
+  ${detach} \
+  "${COMMON_DOCKER_IMAGE_BASE}/${IMAGE_NAME}:${COMMON_COMMIT_SHA}" \
+  dotnet run --project src/Trenton.Webhooks.Server/Trenton.Webhooks.Server.fsproj

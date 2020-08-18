@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+SCRIPT_PATH="$(
+  cd "$(dirname "$0")"
+  pwd -P
+)"
+# shellcheck source=../.common
+. "${SCRIPT_PATH}"/../.common
+# shellcheck source=.common
+. "${SCRIPT_PATH}"/.common
+
+cd "${SCRIPT_PATH}/../../core"
+
+docker push "${COMMON_DOCKER_IMAGE_BASE}/${IMAGE_NAME}:${COMMON_COMMIT_SHA}"

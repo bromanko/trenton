@@ -1,4 +1,4 @@
-Starts the webhooks server for development
+Starts the web server for development
 
 Options:
     -l                Runs commands locally rather than in Docker containers

@@ -1,60 +1,24 @@
 version: "3.7"
 
 services:
-  webhooks-server:
+  server:
     build:
-      dockerfile: docker/Dockerfile.webhooks
-      context: .
+      dockerfile: docker/Dockerfile.web
+      context: ..
       target: dev
     networks:
-      - trenton
+    - trenton
     env_file:
-      - ${DOCKER_COMPOSE_ENV_OVERRIDE:-.env}
-    command: dotnet run --project src/Trenton.Webhooks/Trenton.Webhooks.fsproj
+    - ${DOCKER_COMPOSE_ENV_OVERRIDE:-../.env}
+    command: dotnet run --project src/Trenton.Web.Server/Trenton.Web.Server.fsproj
     volumes:
-      - server_packages:/root/.nuget/packages
-      - .:/usr/src/app
+    - server_packages:/root/.nuget/packages
+    - ..:/usr/src/app
     ports:
-      - 5000:5000
-      - 5001:5001
-    depends_on:
-      - firestore
-
-  itests:
-    build:
-      dockerfile: Dockerfile
-      text: .
-      target: dev
-    networks:
-      - trenton
-    env_file:
-      - ${DOCKER_COMPOSE_ENV_OVERRIDE:-.env}
-    entrypoint: ./scripts/itest-entrypoint.sh
-    volumes:
-      - itests_packages:/root/.nuget/packages
-      - .:/usr/src/app
-    depends_on:
-    - firestore
-
-  firestore:
-    build:
-      dockerfile: ../emulators/firebase/Dockerfile
-      context: .
-    ports:
-      - "9001:4000"
-      - "9000:9000"
-    networks:
-      - trenton
-    env_file:
-      - ${DOCKER_COMPOSE_ENV_OVERRIDE:-.env}
-    # Important to pass the project otherwise the UI won't start
-    command: emulators:start -P ${TEST_FIRESTORE_PROJECT}
-    volumes:
-      - ${PWD}/firebase.json:/home/node/firebase.json
+    - 5002:5002
 
 volumes:
   server_packages: {}
-  itests_packages: {}
 
 networks:
   trenton:

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -eo pipefail
+SCRIPT_PATH="$(
+  cd "$(dirname "$0")"
+  pwd -P
+)"
+# shellcheck source=../.common
+. "${SCRIPT_PATH}"/../.common
+
+cd "${SCRIPT_PATH}/../../core"
+
+docker=1
+detach=""
+while getopts "ld" options; do
+  case ${options} in
+    l) docker=0 ; shift $((OPTIND-1)) ;;
+    d) detach="--detach" ; shift $((OPTIND-1)) ;;
+    *) error "Unknown option: -${OPTARG}"; exit 1 ;;
+  esac
+done
+
+if [[ $docker == 1 ]]; then
+  docker-compose -f docker/docker-compose.web.yaml up ${detach} server
+else
+  dotnet run --project src/Trenton.Web.Server/Trenton.Web.Server.fsproj
+fi
