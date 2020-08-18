@@ -1,8 +1,9 @@
-name: Core
+name: Helm
 on:
   push:
     paths:
     - 'helm/**'
+    - 'helm_vars/**'
     - '.go/helm/**'
     - '.github/workflows/helm.yaml'
 
