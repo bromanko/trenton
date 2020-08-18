@@ -1,0 +1,4 @@
+ingress:
+  annotations: {}
+  host: trenton.localhost
+
