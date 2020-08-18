@@ -13,7 +13,6 @@ env:
 jobs:
   publish:
     name: Publish Docker image
-    needs: [utest, itest]
     if: endsWith(github.ref, 'master')
     # There is an issue running msbuild in Docker on the latest ubuntu kernel.
     runs-on: ubuntu-16.04
