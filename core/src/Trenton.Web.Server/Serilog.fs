@@ -53,7 +53,6 @@ module Serilog =
                 .Enrich.FromLogContext()
                 .Enrich.WithProperty("App", "Trenton Server")
                 .Enrich.WithProperty("Host", Dns.GetHostName())
-                .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
             |> setFormat format
             |> setMinLevel minLevel
         lc.CreateLogger()
