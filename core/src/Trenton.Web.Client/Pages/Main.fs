@@ -60,6 +60,5 @@ module Main =
                     update view
                 |> Program.withRouter router
 
-            if cfg.IsDevelopment then Program.withHotReload program |> ignore
-
-            program
+            if cfg.IsDevelopment then Program.withHotReload program
+            else program
