@@ -10,11 +10,9 @@ nuget FSharp.Core
 nuget FsConfig
 nuget FSharp.Data
 nuget Giraffe
+nuget Giraffe.Razor
 nuget Microsoft.AspNetCore.Diagnostics.HealthChecks
 nuget Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
-nuget Microsoft.AspNetCore.Components.WebAssembly.Build
-nuget Microsoft.AspNetCore.Components.WebAssembly.Server
-nuget Microsoft.AspNetCore.Components.WebAssembly.DevServer
 nuget Serilog
 nuget Serilog.Sinks.Console
 nuget Serilog.Formatting.Compact
@@ -22,11 +20,6 @@ nuget Serilog.AspNetCore
 nuget Google.Cloud.Firestore
 nuget TaskBuilder.fs
 nuget FSharpx.Async
-nuget Bolero
-nuget Bolero.Build
-nuget Bolero.Server
-nuget Bolero.HotReload
-nuget Bolero.HotReload.Server
 
 nuget Logary.Adapters.Facade
 nuget Bogus

@@ -3,19 +3,32 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Trenton.Web.Server</RootNamespace>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
+    <RunWorkingDirectory>$(MSBuildThisFileDirectory)</RunWorkingDirectory> 
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Views\Error.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Dashboard.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="paket.references" />
     <Compile Include="Config.fs" />
     <Compile Include="Serilog.fs" />
+    <Compile Include="ErrorHandler.fs" />
+    <Compile Include="Routes\Dashboard.fs" />
     <Compile Include="Health.fs" />
     <Compile Include="CompositionRoot.fs" />
     <Compile Include="Host.fs" />
     <Compile Include="Program.fs" />
+    <Folder Include="WebRoot" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj" />
-    <ProjectReference Include="..\Trenton.Web.Client\Trenton.Web.Client.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
+  <ItemGroup>
+    <Watch Include="**\*.fs" Exclude="bin\**\*;obj\**\*;Views\**\*"/>
+  </ItemGroup>
 </Project>

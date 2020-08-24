@@ -1,67 +1,69 @@
 namespace Trenton.Web.Server
 
 open System.IO
+open Giraffe
+open Giraffe.Razor
 open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.DependencyInjection
-open Bolero.Server.RazorHost
-open Bolero.Templating.Server
-open Bolero.Remoting.Server
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Hosting
 open Serilog
+open Trenton.Web.Server
 open Trenton.Web.Server.Config
 open Trenton.Web.Server.Health
 
 module Host =
-    let private configureServices cfg (services: IServiceCollection) =
-        services.AddMvc().AddRazorRuntimeCompilation()
+    let private route (path: PathString) = Routing.route path.Value
+
+    let private webApp _ _ = choose [ Routes.Dashboard.handler ]
+
+    let private configureServices _
+                                  _
+                                  (context: WebHostBuilderContext)
+                                  (services: IServiceCollection)
+                                  =
+//        services.AddMvc().AddRazorRuntimeCompilation()
+//        |> ignore
+
+        services.AddGiraffe() |> ignore
+
+        Path.Combine(context.HostingEnvironment.ContentRootPath, "Views")
+        |> services.AddRazorEngine
         |> ignore
-        services.AddServerSideBlazor() |> ignore
+
         services.AddAuthorization() |> ignore
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie()
         |> ignore
-        //        services.AddRemoting<>() |> ignore
-        services.AddBoleroHost() |> ignore
+
         services.AddTrentonHealthChecks() |> ignore
         services.AddHttpContextAccessor() |> ignore
 
-        if cfg.Server.IsDevelopment then
-            services.AddHotReload
-                (templateDir = __SOURCE_DIRECTORY__
-                 + "/../Trenton.Web.Client")
-            |> ignore
 
-        services.AddSingleton<Trenton.Web.Client.Pages.Main.Config>
-            ({ Trenton.Web.Client.Pages.Main.Config.IsDevelopment =
-                   cfg.Server.IsDevelopment })
-        |> ignore
-
-
-    let private configureApp _ cfg (app: IApplicationBuilder) =
+    let private configureApp compRoot cfg (app: IApplicationBuilder) =
         app.UseAuthentication() |> ignore
-        app.UseRemoting() |> ignore
         app.UseStaticFiles() |> ignore
         app.UseRouting() |> ignore
-        app.UseBlazorFrameworkFiles() |> ignore
-        app.UseEndpoints(fun endpoints ->
-            if cfg.Server.IsDevelopment then endpoints.UseHotReload() |> ignore
-            endpoints.MapBlazorHub() |> ignore
-            endpoints.MapFallbackToPage("/_Host") |> ignore)
-        |> ignore
         app.UseSerilogRequestLogging() |> ignore
         app.UseTrentonHealthChecks(PathString "/healthz")
         |> ignore
+        app.UseGiraffeErrorHandler(giraffeErrHandler cfg.Server)
+        |> ignore
+        app.UseGiraffe(webApp compRoot cfg) |> ignore
 
     let createHostBuilder argv config compRoot =
+        let contentRoot = Directory.GetCurrentDirectory()
+
         Host.CreateDefaultBuilder(argv)
             .ConfigureWebHostDefaults(fun wb ->
-            wb.UseContentRoot(Directory.GetCurrentDirectory()) |> ignore
+            wb.UseContentRoot(contentRoot) |> ignore
+            wb.UseWebRoot(Path.Combine(contentRoot, "WebRoot"))
+            |> ignore
             wb.UseStaticWebAssets() |> ignore
             wb.UseSerilog() |> ignore
-            wb.ConfigureServices(configureServices config)
+            wb.ConfigureServices(configureServices compRoot config)
             |> ignore
             wb.UseUrls(config.Server.Urls) |> ignore
             wb.UseEnvironment(config.Server.Environment)
