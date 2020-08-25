@@ -16,8 +16,6 @@ open Trenton.Web.Server.Health
 open Westwind.AspNetCore.LiveReload
 
 module Host =
-    let private route (path: PathString) = Routing.route path.Value
-
     let private webApp _ _ = choose [ Routes.Dashboard.handler ]
 
     let private configureServices _

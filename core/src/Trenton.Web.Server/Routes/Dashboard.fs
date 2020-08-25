@@ -4,8 +4,9 @@ open Giraffe
 open Giraffe.Razor
 
 module Dashboard =
+    let path = "/"
+
     let handler<'a> =
-        GET >=> route "/"
+        GET
+        >=> route path
         >=> razorHtmlView "Dashboard" None None None
-
-
