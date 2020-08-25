@@ -16,7 +16,10 @@ open Trenton.Web.Server.Health
 open Westwind.AspNetCore.LiveReload
 
 module Host =
-    let private webApp _ _ = choose [ Routes.Dashboard.handler ]
+    let private webApp _ _ =
+        choose [ Routes.Dashboard.handler
+                 Routes.Health.handler
+                 Routes.Settings.handler ]
 
     let private configureServices _
                                   cfg
@@ -25,7 +28,8 @@ module Host =
                                   =
         if cfg.Server.IsDevelopment then
             services.AddLiveReload(fun rc ->
-                rc.ClientFileExtensions <- String.concat "," [ ".css"; ".js"; ".cshtml" ])
+                rc.ClientFileExtensions <-
+                    String.concat "," [ ".css"; ".js"; ".cshtml" ])
             |> ignore
 
         services.AddGiraffe() |> ignore

@@ -9,12 +9,16 @@
   <ItemGroup>
     <Compile Include="Constants.fs" />
     <Compile Include="Icons.fs" />
+    <Compile Include="ViewModels.fs" />
     <Content Include="Views\Error.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Dashboard.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Shared\_Sidebar.cshtml" />
+    <Content Include="Views\Shared\_MobileMenuItem.cshtml" />
+    <Content Include="Views\Shared\_DesktopMenuItem.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -24,6 +28,8 @@
     <Compile Include="Serilog.fs" />
     <Compile Include="ErrorHandler.fs" />
     <Compile Include="Routes\Dashboard.fs" />
+    <Compile Include="Routes\Health.fs" />
+    <Compile Include="Routes\Settings.fs" />
     <Compile Include="Health.fs" />
     <Compile Include="CompositionRoot.fs" />
     <Compile Include="Host.fs" />
