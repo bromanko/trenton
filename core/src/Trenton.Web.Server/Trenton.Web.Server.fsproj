@@ -7,10 +7,14 @@
     <RunWorkingDirectory>$(MSBuildThisFileDirectory)</RunWorkingDirectory> 
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Constants.fs" />
     <Content Include="Views\Error.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Dashboard.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\_Layout.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="paket.references" />
@@ -23,12 +27,14 @@
     <Compile Include="Host.fs" />
     <Compile Include="Program.fs" />
     <Folder Include="WebRoot" />
+    <Content Include="Css\tailwind.css" />
+    <Content Include="package.json" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
   <ItemGroup>
-    <Watch Include="**\*.fs" Exclude="bin\**\*;obj\**\*;Views\**\*"/>
+    <Watch Include="**\*.fs" Exclude="bin\**\*;obj\**\*;Views\**\*" />
   </ItemGroup>
 </Project>
