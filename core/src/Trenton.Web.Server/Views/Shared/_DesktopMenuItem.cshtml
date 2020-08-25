@@ -1,7 +1,7 @@
 @model ViewModels.MenuItem
 @{
     var isActive = Context.Request.Path == Model.Href;
-    var textGray800 = isActive ? "text-gray-800" : null;
+    var textGray800 = isActive ? "text-gray-800 dark:text-gray-100" : null;
 }
 
 <li class="relative px-6 py-3">

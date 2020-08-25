@@ -26,6 +26,7 @@
     <Content Include="Views\Shared\_Layout.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\_ViewImports.cshtml" />
     <Content Include="paket.references" />
     <Compile Include="Config.fs" />

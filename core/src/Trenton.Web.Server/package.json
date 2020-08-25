@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf WebRoot/dist",
-    "build": "npm run-s clean && parcel build --no-minify --public-url /dist Assets/bundle.js --out-dir WebRoot/dist/"
+    "build": "npm run-s clean && parcel build  --public-url /dist Assets/bundle.js --out-dir WebRoot/dist/"
   },
   "author": "bromanko",
   "license": "UNLICENSED",
