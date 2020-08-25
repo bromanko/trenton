@@ -10,6 +10,8 @@
     <Compile Include="Constants.fs" />
     <Compile Include="Icons.fs" />
     <Compile Include="ViewModels.fs" />
+    <Content Include="Assets\js\focus-trap.js" />
+    <Content Include="Assets\js\main.js" />
     <Content Include="Views\Error.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
