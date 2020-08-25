@@ -1,5 +1,4 @@
 @using Trenton.Web.Server
-@using Trenton.Web.Server.Routes
 
 <!DOCTYPE html>
 <html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
@@ -10,7 +9,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
         rel="stylesheet"/>
-    <link rel="stylesheet" href="dist/css/main.css"/>
+    <link rel="stylesheet" href="~/dist/bundle.css" asp-append-version="true"/>
+    <script src="~/dist/bundle.js" asp-append-version="true"></script>
 </head>
 <body>
 <div

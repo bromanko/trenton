@@ -4,17 +4,21 @@
   "description": "Trenton web client app",
   "main": "index.js",
   "scripts": {
-    "build": "tailwindcss build Css/tailwind.css -o WebRoot/dist/css/main.css"
+    "clean": "rm -rf WebRoot/dist",
+    "build": "npm run-s clean && parcel build Assets/bundle.js --out-dir WebRoot/dist/"
   },
   "author": "bromanko",
   "license": "UNLICENSED",
-  "dependencies": {},
+  "dependencies": {
+    "turbolinks": "^5.2.0"
+  },
   "devDependencies": {
     "@tailwindcss/custom-forms": "^0.2.1",
     "autoprefixer": "^9.8.6",
     "color": "^3.1.2",
     "cssnano": "^4.1.10",
-    "postcss-cli": "^7.1.1",
+    "parcel-bundler": "^1.12.4",
+    "postcss-modules": "^3.2.2",
     "tailwindcss": "^1.7.0",
     "tailwindcss-multi-theme": "^1.0.3"
   }
