@@ -10,3 +10,4 @@ Serilog.Sinks.Console
 Serilog.Formatting.Compact
 Serilog.AspNetCore
 Google.Cloud.Firestore
+Westwind.AspnetCore.LiveReload

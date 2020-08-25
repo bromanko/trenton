@@ -556,3 +556,4 @@ NUGET
       System.Reflection.Emit.Lightweight (>= 4.3)
       System.Threading.Tasks.Extensions (>= 4.4)
       System.ValueTuple (>= 4.4)
+    Westwind.AspnetCore.LiveReload (0.2.8)

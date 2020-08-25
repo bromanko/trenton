@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Trenton.Web.Server</RootNamespace>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
-    <RunWorkingDirectory>$(MSBuildThisFileDirectory)</RunWorkingDirectory> 
+    <RunWorkingDirectory>$(MSBuildThisFileDirectory)</RunWorkingDirectory>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Constants.fs" />
@@ -33,8 +33,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj" />
   </ItemGroup>
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
   <ItemGroup>
     <Watch Include="**\*.fs" Exclude="bin\**\*;obj\**\*;Views\**\*" />
   </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

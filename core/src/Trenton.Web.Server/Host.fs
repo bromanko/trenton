@@ -13,6 +13,7 @@ open Serilog
 open Trenton.Web.Server
 open Trenton.Web.Server.Config
 open Trenton.Web.Server.Health
+open Westwind.AspNetCore.LiveReload
 
 module Host =
     let private route (path: PathString) = Routing.route path.Value
@@ -20,12 +21,14 @@ module Host =
     let private webApp _ _ = choose [ Routes.Dashboard.handler ]
 
     let private configureServices _
-                                  _
+                                  cfg
                                   (context: WebHostBuilderContext)
                                   (services: IServiceCollection)
                                   =
-//        services.AddMvc().AddRazorRuntimeCompilation()
-//        |> ignore
+        if cfg.Server.IsDevelopment then
+            services.AddLiveReload(fun rc ->
+                rc.ClientFileExtensions <- String.concat "," [ ".css"; ".js"; ".cshtml" ])
+            |> ignore
 
         services.AddGiraffe() |> ignore
 
@@ -43,6 +46,7 @@ module Host =
 
 
     let private configureApp compRoot cfg (app: IApplicationBuilder) =
+        app.UseLiveReload() |> ignore
         app.UseAuthentication() |> ignore
         app.UseStaticFiles() |> ignore
         app.UseRouting() |> ignore
