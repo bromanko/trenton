@@ -27,6 +27,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Shared\_Header.cshtml" />
+    <Content Include="Views\Shared\_ProfileMenu.cshtml" />
     <Content Include="Views\_ViewImports.cshtml" />
     <Content Include="paket.references" />
     <Compile Include="Config.fs" />
@@ -39,7 +40,7 @@
     <Compile Include="CompositionRoot.fs" />
     <Compile Include="Host.fs" />
     <Compile Include="Program.fs" />
-    <Folder Include="WebRoot" />
+    <Folder Include="WebRoot\images" />
     <Content Include="package.json" />
     <Content Include="postcss.config.js" />
     <Content Include="tailwind.config.js" />
