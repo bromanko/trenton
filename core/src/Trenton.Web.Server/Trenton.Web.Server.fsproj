@@ -1,60 +1,57 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>Trenton.Web.Server</RootNamespace>
-    <EnableDefaultContentItems>false</EnableDefaultContentItems>
-    <RunWorkingDirectory>$(MSBuildThisFileDirectory)</RunWorkingDirectory>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Constants.fs" />
-    <Compile Include="Icons.fs" />
-    <Compile Include="ViewModels.fs" />
-    <Content Include="Assets\js\focus-trap.js" />
-    <Content Include="Assets\js\main.js" />
-    <Content Include="Views\Error.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Dashboard.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Health.cshtml" />
-    <Content Include="Views\Settings.cshtml" />
-    <Content Include="Views\Shared\_Sidebar.cshtml" />
-    <Content Include="Views\Shared\_MobileMenuItem.cshtml" />
-    <Content Include="Views\Shared\_DesktopMenuItem.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Views\Shared\_Header.cshtml" />
-    <Content Include="Views\Shared\_ProfileMenu.cshtml" />
-    <Content Include="Views\_ViewImports.cshtml" />
-    <Content Include="paket.references" />
-    <Compile Include="Config.fs" />
-    <Compile Include="Serilog.fs" />
-    <Compile Include="ErrorHandler.fs" />
-    <Compile Include="Routes\Dashboard.fs" />
-    <Compile Include="Routes\Health.fs" />
-    <Compile Include="Routes\Settings.fs" />
-    <Compile Include="Health.fs" />
-    <Compile Include="CompositionRoot.fs" />
-    <Compile Include="Host.fs" />
-    <Compile Include="Program.fs" />
-    <Folder Include="WebRoot\images" />
-    <Content Include="package.json" />
-    <Content Include="postcss.config.js" />
-    <Content Include="tailwind.config.js" />
-    <Content Include="Assets\css\main.css" />
-    <Content Include="Assets\bundle.js" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Watch Include="**\*.fs" Exclude="bin\**\*;obj\**\*;Views\**\*" />
-  </ItemGroup>
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
-  <Target Name="ParcelBeforePublish" BeforeTargets="BeforeBuild">
-    <Exec Command="npm run build" />
-  </Target>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>Trenton.Web.Server</RootNamespace>
+        <EnableDefaultContentItems>false</EnableDefaultContentItems>
+        <RunWorkingDirectory>$(MSBuildThisFileDirectory)</RunWorkingDirectory>
+    </PropertyGroup>
+    <ItemGroup>
+        <Content Include="paket.references"/>
+        <Content Include="package.json"/>
+        <Content Include=".prettierignore"/>
+        <Content Include=".prettierrc.json"/>
+        <Content Include="tailwind.config.js"/>
+        <Content Include="postcss.config.prod.js"/>
+        <Content Include="postcss.config.dev.js"/>
+        <Compile Include="Constants.fs"/>
+        <Compile Include="Icons.fs"/>
+        <Compile Include="ViewModels.fs"/>
+        <Content Include="Assets\js\focus-trap.js"/>
+        <Content Include="Assets\js\main.js"/>
+        <Content Include="Assets\css\main.css"/>
+        <Content Include="Assets\bundle.js"/>
+        <Content Include="Views\Error.cshtml"/>
+        <Content Include="Views\Dashboard.cshtml"/>
+        <Content Include="Views\Health.cshtml"/>
+        <Content Include="Views\Settings.cshtml"/>
+        <Content Include="Views\Shared\_Sidebar.cshtml"/>
+        <Content Include="Views\Shared\_MobileMenuItem.cshtml"/>
+        <Content Include="Views\Shared\_DesktopMenuItem.cshtml"/>
+        <Content Include="Views\Shared\_Layout.cshtml"/>
+        <Content Include="Views\Shared\_Header.cshtml"/>
+        <Content Include="Views\Shared\_ProfileMenu.cshtml"/>
+        <Content Include="Views\_ViewImports.cshtml"/>
+        <Compile Include="Config.fs"/>
+        <Compile Include="Serilog.fs"/>
+        <Compile Include="ErrorHandler.fs"/>
+        <Compile Include="Routes\Dashboard.fs"/>
+        <Compile Include="Routes\Health.fs"/>
+        <Compile Include="Routes\Settings.fs"/>
+        <Compile Include="Health.fs"/>
+        <Compile Include="CompositionRoot.fs"/>
+        <Compile Include="Host.fs"/>
+        <Compile Include="Program.fs"/>
+        <Folder Include="WebRoot\images"/>
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Watch Include="**\*.fs" Exclude="bin\**\*;obj\**\*;Views\**\*"/>
+    </ItemGroup>
+    <Import Project="..\..\.paket\Paket.Restore.targets"/>
+    <Target Name="ParcelBeforePublish" BeforeTargets="BeforeBuild">
+        <Exec Command="npm run build"/>
+    </Target>
 </Project>
