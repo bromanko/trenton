@@ -52,6 +52,7 @@
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets"/>
     <Target Name="ParcelBeforePublish" BeforeTargets="BeforeBuild">
-        <Exec Command="npm run build"/>
+        <Exec ConsoleToMSBuild="true" Command="npm run build-prod"/>
+        <Exec ConsoleToMSBuild="true" Command="npm run build-dev" Condition="'$(Configuration)' == 'Debug'"/>
     </Target>
 </Project>
