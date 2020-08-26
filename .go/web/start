@@ -22,7 +22,7 @@ done
 
 docker run --rm \
   --name server \
-  -p 5000:5000 \
+  -p 5002:5002 \
   --network "${DOCKER_COMPOSE_NETWORK}" \
   --env-file .env \
   ${detach} \
