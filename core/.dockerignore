@@ -3,10 +3,11 @@
 .kubernetes
 docs
 packages
-Dockerfile
+docker
 .paket
 paket-files
 src/**/bin
 src/**/obj
 test/**/bin
 test/**/obj
+src/**/node_modules
