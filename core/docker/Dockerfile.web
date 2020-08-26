@@ -7,6 +7,12 @@ RUN apt-get update && \
     musl
 COPY --from=jwilder/dockerize:0.6.0 /usr/local/bin/dockerize /usr/local/bin
 
+# Install Node.Js
+RUN apt-get update --allow-releaseinfo-change && \
+    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt-get install -y nodejs && \
+    node -v
+
 WORKDIR /usr/src/app/
 ENTRYPOINT ["/usr/src/app/scripts/dev-entrypoint.sh"]
 
@@ -14,12 +20,18 @@ ENTRYPOINT ["/usr/src/app/scripts/dev-entrypoint.sh"]
 ##################################
 FROM fsharp:10.7.0-netcore as build
 
-WORKDIR /usr/src/app
+# Install Node.Js
+RUN apt-get update --allow-releaseinfo-change && \
+    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+    apt-get install -y nodejs && \
+    node -v
+
+WORKDIR /usr/src/app/
 
 COPY . .
 
 RUN dotnet tool restore && dotnet paket restore
-RUN dotnet publish -c DEBUG -o out
+# RUN dotnet publish -c Release -o out src/Trenton.Web.Server/Trenton.Web.Server.fsproj
 
 
 ##################################

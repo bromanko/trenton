@@ -7,52 +7,49 @@
         <RunWorkingDirectory>$(MSBuildThisFileDirectory)</RunWorkingDirectory>
     </PropertyGroup>
     <ItemGroup>
-        <Content Include="paket.references" />
-        <Content Include="package.json" />
-        <Content Include=".prettierignore" />
-        <Content Include=".prettierrc.json" />
-        <Content Include="tailwind.config.js" />
-        <Content Include="postcss.config.prod.js" />
-        <Content Include="postcss.config.dev.js" />
-        <Compile Include="Constants.fs" />
-        <Compile Include="Icons.fs" />
-        <Compile Include="ViewModels.fs" />
-        <Content Include="Assets\js\focus-trap.js" />
-        <Content Include="Assets\js\main.js" />
-        <Content Include="Assets\css\tailwind.css" />
-        <Content Include="Assets\bundle.js" />
-        <Content Include="Views\Error.cshtml" />
-        <Content Include="Views\Dashboard.cshtml" />
-        <Content Include="Views\Health.cshtml" />
-        <Content Include="Views\Settings.cshtml" />
-        <Content Include="Views\Shared\_Sidebar.cshtml" />
-        <Content Include="Views\Shared\_MobileMenuItem.cshtml" />
-        <Content Include="Views\Shared\_DesktopMenuItem.cshtml" />
-        <Content Include="Views\Shared\_Layout.cshtml" />
-        <Content Include="Views\Shared\_Header.cshtml" />
-        <Content Include="Views\Shared\_ProfileMenu.cshtml" />
-        <Content Include="Views\_ViewImports.cshtml" />
-        <Compile Include="Config.fs" />
-        <Compile Include="Serilog.fs" />
-        <Compile Include="ErrorHandler.fs" />
-        <Compile Include="Routes\Dashboard.fs" />
-        <Compile Include="Routes\Health.fs" />
-        <Compile Include="Routes\Settings.fs" />
-        <Compile Include="Health.fs" />
-        <Compile Include="CompositionRoot.fs" />
-        <Compile Include="Host.fs" />
-        <Compile Include="Program.fs" />
-        <Folder Include="WebRoot\images" />
+        <Content Include="paket.references"/>
+        <Content Include="package.json"/>
+        <Content Include=".prettierignore"/>
+        <Content Include=".prettierrc.json"/>
+        <Content Include="tailwind.config.js"/>
+        <Content Include="postcss.config.prod.js"/>
+        <Content Include="postcss.config.dev.js"/>
+        <Compile Include="Constants.fs"/>
+        <Compile Include="Icons.fs"/>
+        <Compile Include="ViewModels.fs"/>
+        <Content Include="Assets\js\focus-trap.js"/>
+        <Content Include="Assets\js\main.js"/>
+        <Content Include="Assets\css\tailwind.css"/>
+        <Content Include="Assets\bundle.js"/>
+        <Compile Include="Config.fs"/>
+        <Compile Include="Serilog.fs"/>
+        <Compile Include="ErrorHandler.fs"/>
+        <Compile Include="Routes\Dashboard.fs"/>
+        <Compile Include="Routes\Health.fs"/>
+        <Compile Include="Routes\Settings.fs"/>
+        <Compile Include="Health.fs"/>
+        <Compile Include="CompositionRoot.fs"/>
+        <Compile Include="Host.fs"/>
+        <Compile Include="Program.fs"/>
+        <Content Include="Views\**\*.cshtml" CopyToPublishDirectory="Always"/>
+        <Content Include="WebRoot\**\*.*" CopyToPublishDirectory="Always" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj" />
+        <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj"/>
     </ItemGroup>
     <ItemGroup>
-        <Watch Include="**\*.fs;Assets\**\*" Exclude="bin\**\*;obj\**\*;Views\**\*;WebRoot\**;" />
+        <Watch Include="**\*.fs;Assets\**\*" Exclude="bin\**\*;obj\**\*;Views\**\*;WebRoot\**;"/>
     </ItemGroup>
-    <Import Project="..\..\.paket\Paket.Restore.targets" />
-    <Target Name="ParcelBeforePublish" BeforeTargets="BeforeBuild">
-        <Exec ConsoleToMSBuild="true" Command="npm run build-prod" Condition="'$(Configuration)' != 'Debug'"/>
-        <Exec ConsoleToMSBuild="true" Command="npm run build-dev" Condition="'$(Configuration)' == 'Debug'" />
+    <Target Name="ClearDistDir" BeforeTargets="Clean">
+        <RemoveDir Directories="Webroot\dist"/>
     </Target>
+    <Target Name="EnsureNpmRestored" BeforeTargets="BeforeBuild">
+        <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..."/>
+        <Exec ConsoleToMSBuild="true" Command="npm install"/>
+    </Target>
+    <Target Name="ParcelBeforePublish" AfterTargets="EnsureNpmRestored">
+        <Exec ConsoleToMSBuild="true" Command="npm run build-prod" Condition="'$(Configuration)' != 'Debug'"/>
+        <Exec ConsoleToMSBuild="true" Command="npm run build-dev" Condition="'$(Configuration)' == 'Debug'"/>
+    </Target>
+    <Import Project="..\..\.paket\Paket.Restore.targets"/>
 </Project>

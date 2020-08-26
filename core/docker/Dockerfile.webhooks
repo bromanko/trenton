@@ -19,7 +19,7 @@ WORKDIR /usr/src/app
 COPY . .
 
 RUN dotnet tool restore && dotnet paket restore
-RUN dotnet publish -c DEBUG -o out
+RUN dotnet publish -c Release -o out src/Trenton.Webhooks.Server/Trenton.Webhooks.Server.fsproj
 
 
 ##################################
