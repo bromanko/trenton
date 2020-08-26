@@ -4,7 +4,7 @@
   "description": "Trenton web client app",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -rf WebRoot/dist",
+    "clean": "rm -rf WebRoot/dist && rm -rf .cache",
     "build": "parcel build --public-url /dist Assets/bundle.js --out-dir WebRoot/dist/",
     "build-dev": "cp postcss.config.dev.js postcss.config.js && npm run-s build",
     "build-prod": "cp postcss.config.prod.js postcss.config.js && npm run-s build"

@@ -16,6 +16,10 @@ open Trenton.Web.Server.Health
 open Westwind.AspNetCore.LiveReload
 
 module Host =
+    let private contentRootPath = Directory.GetCurrentDirectory()
+
+    let private webRootPath = Path.Combine(contentRootPath, "WebRoot")
+
     let private webApp _ _ =
         choose [ Routes.Dashboard.handler
                  Routes.Health.handler
@@ -28,6 +32,7 @@ module Host =
                                   =
         if cfg.Server.IsDevelopment then
             services.AddLiveReload(fun rc ->
+                rc.FolderToMonitor <- webRootPath
                 rc.ClientFileExtensions <-
                     String.concat "," [ ".css"; ".js"; ".cshtml" ])
             |> ignore
@@ -60,13 +65,11 @@ module Host =
         app.UseGiraffe(webApp compRoot cfg) |> ignore
 
     let createHostBuilder argv config compRoot =
-        let contentRoot = Directory.GetCurrentDirectory()
 
         Host.CreateDefaultBuilder(argv)
             .ConfigureWebHostDefaults(fun wb ->
-            wb.UseContentRoot(contentRoot) |> ignore
-            wb.UseWebRoot(Path.Combine(contentRoot, "WebRoot"))
-            |> ignore
+            wb.UseContentRoot(contentRootPath) |> ignore
+            wb.UseWebRoot(webRootPath) |> ignore
             wb.UseStaticWebAssets() |> ignore
             wb.UseSerilog() |> ignore
             wb.ConfigureServices(configureServices compRoot config)
