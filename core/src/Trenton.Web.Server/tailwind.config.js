@@ -3,7 +3,12 @@ const plugin = require('tailwindcss/plugin')
 const Color = require('color')
 
 module.exports = {
-    purge: ['Views/**/*.cshtml'],
+    // Parcel is not properly setting NODE_ENV in development. This means that
+    // purge runs in all environments. Disabling purge here.
+    // Rather, there are separate postcss configs being used depending on the
+    // Desired purge settings
+    // See: https://github.com/parcel-bundler/parcel/issues/4550
+    purge: {enabled: false},
     theme: {
         themeVariants: ['dark'],
         customForms: (theme) => ({
@@ -192,7 +197,7 @@ module.exports = {
     plugins: [
         require('tailwindcss-multi-theme'),
         require('@tailwindcss/custom-forms'),
-        plugin(({addUtilities, e, theme, variants}) => {
+        plugin(({addUtilities, _, theme, variants}) => {
             const newUtilities = {}
             Object.entries(theme('colors')).map(([name, value]) => {
                 if (name === 'transparent' || name === 'current') return
