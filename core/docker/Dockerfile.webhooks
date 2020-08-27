@@ -1,20 +1,11 @@
 ##################################
-FROM fsharp:10.7.0-netcore as dev
+FROM us-central1-docker.pkg.dev/trenton-production-c5cb9af5/trenton/fsharp-dev:33dda6b7be8f4313d0f0cfd4a6580fdef4f52069 as dev
 
-# Install Dockerize and requirements
-RUN apt-get update && \
-    apt-get --no-install-recommends install -y \
-    musl
-COPY --from=jwilder/dockerize:0.6.0 /usr/local/bin/dockerize /usr/local/bin
-
-WORKDIR /usr/src/app/
 ENTRYPOINT ["/usr/src/app/scripts/dev-entrypoint.sh"]
 
 
 ##################################
-FROM fsharp:10.7.0-netcore as build
-
-WORKDIR /usr/src/app
+FROM us-central1-docker.pkg.dev/trenton-production-c5cb9af5/trenton/fsharp-dev:33dda6b7be8f4313d0f0cfd4a6580fdef4f52069 as build
 
 COPY . .
 

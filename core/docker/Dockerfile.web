@@ -1,30 +1,12 @@
 ##################################
-FROM fsharp:10.7.0-netcore as dev
-
-# Install Dockerize and requirements
-RUN apt-get update && \
-    apt-get --no-install-recommends install -y \
-    musl
-COPY --from=jwilder/dockerize:0.6.0 /usr/local/bin/dockerize /usr/local/bin
-
-# Install Node.Js
-RUN apt-get update --allow-releaseinfo-change && \
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs && \
-    node -v
+FROM us-central1-docker.pkg.dev/trenton-production-c5cb9af5/trenton/fsharp-dev:33dda6b7be8f4313d0f0cfd4a6580fdef4f52069 as build
 
 WORKDIR /usr/src/app/
 ENTRYPOINT ["/usr/src/app/scripts/dev-entrypoint.sh"]
 
 
 ##################################
-FROM fsharp:10.7.0-netcore as build
-
-# Install Node.Js
-RUN apt-get update --allow-releaseinfo-change && \
-    curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
-    apt-get install -y nodejs && \
-    node -v
+FROM us-central1-docker.pkg.dev/trenton-production-c5cb9af5/trenton/fsharp-dev:33dda6b7be8f4313d0f0cfd4a6580fdef4f52069 as build
 
 WORKDIR /usr/src/app/
 
