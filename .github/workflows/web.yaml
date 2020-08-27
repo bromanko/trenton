@@ -5,6 +5,8 @@ on:
     - 'core/**'
     - '.go/core/**'
     - '.github/workflows/web.yaml'
+    - 'helm/web/**'
+    - 'helm_vars/web/**'
 
 env:
   GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}

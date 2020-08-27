@@ -5,6 +5,8 @@ on:
     - 'core/**'
     - '.go/core/**'
     - '.github/workflows/webhooks.yaml'
+    - 'helm/webhooks/**'
+    - 'helm_vars/webhooks/**'
 
 env:
   GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
