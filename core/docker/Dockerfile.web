@@ -1,14 +1,11 @@
 ##################################
-FROM us-central1-docker.pkg.dev/trenton-production-c5cb9af5/trenton/fsharp-dev:33dda6b7be8f4313d0f0cfd4a6580fdef4f52069 as build
+FROM us-central1-docker.pkg.dev/trenton-production-c5cb9af5/trenton/fsharp-dev:33dda6b7be8f4313d0f0cfd4a6580fdef4f52069 as dev
 
-WORKDIR /usr/src/app/
 ENTRYPOINT ["/usr/src/app/scripts/dev-entrypoint.sh"]
 
 
 ##################################
 FROM us-central1-docker.pkg.dev/trenton-production-c5cb9af5/trenton/fsharp-dev:33dda6b7be8f4313d0f0cfd4a6580fdef4f52069 as build
-
-WORKDIR /usr/src/app/
 
 COPY . .
 
