@@ -17,10 +17,6 @@
         <Compile Include="Constants.fs"/>
         <Compile Include="Icons.fs"/>
         <Compile Include="ViewModels.fs"/>
-        <Content Include="Assets\js\focus-trap.js"/>
-        <Content Include="Assets\js\main.js"/>
-        <Content Include="Assets\css\tailwind.css"/>
-        <Content Include="Assets\bundle.js"/>
         <Compile Include="Config.fs"/>
         <Compile Include="Serilog.fs"/>
         <Compile Include="ErrorHandler.fs"/>
@@ -31,8 +27,9 @@
         <Compile Include="CompositionRoot.fs"/>
         <Compile Include="Host.fs"/>
         <Compile Include="Program.fs"/>
-        <Content Include="Views\**\*.cshtml" CopyToPublishDirectory="Always"/>
-        <Content Include="WebRoot\**\*.*" CopyToPublishDirectory="Always" />
+        <Content Include="Assets\**\*"/>
+        <Content Include="Views\**\*.cshtml" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always"/>
+        <Content Include="WebRoot\**\*" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj"/>
