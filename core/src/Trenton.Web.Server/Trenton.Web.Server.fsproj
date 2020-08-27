@@ -37,9 +37,6 @@
     <ItemGroup>
         <Watch Include="**\*.fs;Assets\**\*" Exclude="bin\**\*;obj\**\*;Views\**\*;WebRoot\**;"/>
     </ItemGroup>
-    <Target Name="ClearDistDir" BeforeTargets="Clean">
-        <RemoveDir Directories="Webroot\dist"/>
-    </Target>
     <Target Name="EnsureNpmRestored" BeforeTargets="BeforeBuild">
         <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..."/>
         <Exec ConsoleToMSBuild="true" Command="npm install"/>

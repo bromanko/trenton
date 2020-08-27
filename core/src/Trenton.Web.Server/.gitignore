@@ -115,7 +115,7 @@ dist
 
 
 # Client build output
-wwwroot/dist
+WebRoot/dist/**/*
 
 # postcss config since we use environment specific versions
 postcss.config.js
