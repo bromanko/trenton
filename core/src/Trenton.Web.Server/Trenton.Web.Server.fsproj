@@ -20,6 +20,7 @@
         <Compile Include="Config.fs" />
         <Compile Include="Serilog.fs" />
         <Compile Include="ErrorHandler.fs" />
+        <Compile Include="Health\Checks.fs" />
         <Compile Include="Health\Extensions.fs" />
         <Compile Include="Routes\Dashboard.fs" />
         <Compile Include="Routes\Health.fs" />
@@ -33,6 +34,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj" />
+        <ProjectReference Include="..\Trenton.Health\Trenton.Health.fsproj" />
     </ItemGroup>
     <ItemGroup>
         <Watch Include="**\*.fs;Assets\**\*" Exclude="bin\**\*;obj\**\*;Views\**\*;WebRoot\**;" />

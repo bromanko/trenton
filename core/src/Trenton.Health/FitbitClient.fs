@@ -17,8 +17,11 @@ module FitbitClient =
         | Error of string
         | Exception of exn
 
+    [<Literal>]
+    let FitbitApiBaseUrl = "https://api.fitbit.com"
+
     let defaultConfig clientId clientSecret =
-        { BaseUrl = "https://api.fitbit.com"
+        { BaseUrl = FitbitApiBaseUrl
           ClientId = clientId
           ClientSecret = clientSecret }
 

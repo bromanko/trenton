@@ -58,7 +58,8 @@ module Host =
         app.UseStaticFiles() |> ignore
         app.UseRouting() |> ignore
         app.UseSerilogRequestLogging() |> ignore
-        app.UseTrentonHealthChecks(PathString "/healthz")
+        app.UseTrentonHealthChecks
+            (PathString "/healthz/readiness", PathString "/healthz/liveness")
         |> ignore
         app.UseGiraffeErrorHandler(giraffeErrHandler cfg.Server)
         |> ignore
