@@ -20,10 +20,10 @@ module Host =
 
     let private webRootPath = Path.Combine(contentRootPath, "WebRoot")
 
-    let private webApp _ _ =
+    let private webApp _ cfg =
         choose [ Routes.Dashboard.handler
                  Routes.Health.handler
-                 Routes.Settings.handler ]
+                 Routes.Settings.viewHandler cfg ]
 
     let private configureServices _
                                   cfg

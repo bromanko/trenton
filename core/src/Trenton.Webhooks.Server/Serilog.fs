@@ -1,4 +1,4 @@
-namespace Trenton.Webhooks
+namespace Trenton.Webhooks.Server
 
 open System
 open System.Net
@@ -7,7 +7,7 @@ open Serilog.Events
 open Serilog.Formatting.Compact
 open Serilog.Sinks.SystemConsole.Themes
 open Trenton.Common
-open Trenton.Webhooks.Config
+open Trenton.Webhooks.Server.Config
 
 module Serilog =
     [<Literal>]

@@ -1,10 +1,10 @@
-﻿namespace Trenton.Webhooks
+﻿namespace Trenton.Webhooks.Server
 
 open Microsoft.Extensions.Hosting
 open Serilog
 open Trenton.Common.Config
-open Trenton.Webhooks.Config
-open Trenton.Webhooks.Host
+open Trenton.Webhooks.Server.Config
+open Trenton.Webhooks.Server.Host
 
 module Program =
     [<EntryPoint>]

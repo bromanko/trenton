@@ -1,12 +1,12 @@
-namespace Trenton.Webhooks.Routes
+namespace Trenton.Webhooks.Server.Routes
 
 open FSharp.Control.Tasks.V2.ContextInsensitive
 open Giraffe
 open Microsoft.AspNetCore.Http
 open System.Threading.Tasks
 open Trenton.Health.FitbitClient
-open Trenton.Webhooks.Config
-open Trenton.Webhooks
+open Trenton.Webhooks.Server.Config
+open Trenton.Webhooks.Server
 
 module Fitbit =
     let private earlyReturn: HttpFunc = Some >> Task.FromResult
@@ -26,11 +26,6 @@ module Fitbit =
         let private getRedirectUri serverBaseUrl (ctx: HttpContext) =
             sprintf "%s%s" serverBaseUrl (ctx.Request.Path.ToString())
 
-        let private createSubscription fitbitClient =
-            fun (next: HttpFunc) (ctx: HttpContext) -> task { fitbitClient }
-
-        let private respond accessToken = json accessToken
-
         let private respondErr =
             function
             | FitbitApiError.Error e -> badRequestErr e earlyReturn
@@ -47,7 +42,7 @@ module Fitbit =
                 task {
                     let! tokenRes = fitbitClient.GetAccessToken req
                     return! match tokenRes with
-                            | Ok token -> respond token next ctx
+                            | Ok token -> json token next ctx
                             | Result.Error err -> respondErr err ctx
                 }
 

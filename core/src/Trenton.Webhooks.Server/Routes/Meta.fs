@@ -1,4 +1,4 @@
-namespace Trenton.Webhooks.Routes
+namespace Trenton.Webhooks.Server.Routes
 
 open Giraffe
 open System

@@ -1,10 +1,10 @@
-namespace Trenton.Webhooks
+namespace Trenton.Webhooks.Server
 
 open Giraffe
 open Microsoft.Extensions.Logging
 open System
 open Trenton.Common
-open Trenton.Webhooks.Config
+open Trenton.Webhooks.Server.Config
 
 [<CLIMutable>]
 type ErrorResponse =

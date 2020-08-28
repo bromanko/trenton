@@ -3,6 +3,7 @@
     <PropertyGroup>
         <EnableDefaultContentItems>false</EnableDefaultContentItems>
         <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>Trenton.Webhooks.Sever</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
         <Content Include="paket.references" />

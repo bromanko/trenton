@@ -1,4 +1,4 @@
-namespace Trenton.Webhooks
+namespace Trenton.Webhooks.Server
 
 open FsConfig
 open Trenton.Common

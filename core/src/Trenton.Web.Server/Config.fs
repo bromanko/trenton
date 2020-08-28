@@ -25,13 +25,20 @@ module Config =
         member this.Urls =
             let httpUrl =
                 [| sprintf "http://%s:%d" this.Address this.HttpPort |]
+
             match this.HttpsPort with
             | None -> httpUrl
             | Some port ->
-                Array.append httpUrl
+                Array.append
+                    httpUrl
                     [| sprintf "https://%s:%d" this.Address port |]
+
+    type FitbitConfig =
+        { ClientId: string
+          ClientSecret: string }
 
     [<Convention("TRENTON_WEB")>]
     type AppConfig =
         { Logging: LoggingConfig
-          Server: ServerConfig }
+          Server: ServerConfig
+          Fitbit: FitbitConfig }

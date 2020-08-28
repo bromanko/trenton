@@ -1,7 +1,7 @@
-namespace Trenton.Webhooks
+namespace Trenton.Webhooks.Server
 
 open Trenton.Health
-open Trenton.Webhooks.Config
+open Trenton.Webhooks.Server.Config
 
 type CompositionRoot =
     { FitbitClient: FitbitClient.T }

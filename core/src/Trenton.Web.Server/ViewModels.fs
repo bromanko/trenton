@@ -5,3 +5,6 @@ module ViewModels =
         { Title: string
           Href: string
           Icon: Icon }
+
+    type Settings =
+        { FitbitAuthUri: string }

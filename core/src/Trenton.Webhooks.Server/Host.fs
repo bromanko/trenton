@@ -1,4 +1,4 @@
-namespace Trenton.Webhooks
+namespace Trenton.Webhooks.Server
 
 open Giraffe
 open Giraffe.Serialization
@@ -8,8 +8,8 @@ open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Serilog
-open Trenton.Webhooks.Config
-open Trenton.Webhooks.Health
+open Trenton.Webhooks.Server.Config
+open Trenton.Webhooks.Server.Health
 
 module Host =
     let private route (path: PathString) =
