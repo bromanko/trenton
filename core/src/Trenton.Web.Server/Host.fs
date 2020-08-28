@@ -12,7 +12,7 @@ open Microsoft.Extensions.Hosting
 open Serilog
 open Trenton.Web.Server
 open Trenton.Web.Server.Config
-open Trenton.Web.Server.Health
+open Trenton.Web.Server.Health.Extensions
 open Westwind.AspNetCore.LiveReload
 
 module Host =

@@ -7,43 +7,43 @@
         <RunWorkingDirectory>$(MSBuildThisFileDirectory)</RunWorkingDirectory>
     </PropertyGroup>
     <ItemGroup>
-        <Content Include="paket.references"/>
-        <Content Include="package.json"/>
-        <Content Include=".prettierignore"/>
-        <Content Include=".prettierrc.json"/>
-        <Content Include="tailwind.config.js"/>
-        <Content Include="postcss.config.prod.js"/>
-        <Content Include="postcss.config.dev.js"/>
-        <Compile Include="Constants.fs"/>
-        <Compile Include="Icons.fs"/>
-        <Compile Include="ViewModels.fs"/>
-        <Compile Include="Config.fs"/>
-        <Compile Include="Serilog.fs"/>
-        <Compile Include="ErrorHandler.fs"/>
-        <Compile Include="Routes\Dashboard.fs"/>
-        <Compile Include="Routes\Health.fs"/>
-        <Compile Include="Routes\Settings.fs"/>
-        <Compile Include="Health.fs"/>
-        <Compile Include="CompositionRoot.fs"/>
-        <Compile Include="Host.fs"/>
-        <Compile Include="Program.fs"/>
-        <Content Include="Assets\**\*"/>
-        <Content Include="Views\**\*.cshtml" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always"/>
+        <Content Include="paket.references" />
+        <Content Include="package.json" />
+        <Content Include=".prettierignore" />
+        <Content Include=".prettierrc.json" />
+        <Content Include="tailwind.config.js" />
+        <Content Include="postcss.config.prod.js" />
+        <Content Include="postcss.config.dev.js" />
+        <Compile Include="Constants.fs" />
+        <Compile Include="Icons.fs" />
+        <Compile Include="ViewModels.fs" />
+        <Compile Include="Config.fs" />
+        <Compile Include="Serilog.fs" />
+        <Compile Include="ErrorHandler.fs" />
+        <Compile Include="Health\Extensions.fs" />
+        <Compile Include="Routes\Dashboard.fs" />
+        <Compile Include="Routes\Health.fs" />
+        <Compile Include="Routes\Settings.fs" />
+        <Compile Include="CompositionRoot.fs" />
+        <Compile Include="Host.fs" />
+        <Compile Include="Program.fs" />
+        <Content Include="Assets\**\*" />
+        <Content Include="Views\**\*.cshtml" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
         <Content Include="WebRoot\**\*" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj"/>
+        <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj" />
     </ItemGroup>
     <ItemGroup>
-        <Watch Include="**\*.fs;Assets\**\*" Exclude="bin\**\*;obj\**\*;Views\**\*;WebRoot\**;"/>
+        <Watch Include="**\*.fs;Assets\**\*" Exclude="bin\**\*;obj\**\*;Views\**\*;WebRoot\**;" />
     </ItemGroup>
     <Target Name="EnsureNpmRestored" BeforeTargets="BeforeBuild">
-        <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..."/>
-        <Exec ConsoleToMSBuild="true" Command="npm install"/>
+        <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+        <Exec ConsoleToMSBuild="true" Command="npm install" />
     </Target>
     <Target Name="ParcelBeforePublish" AfterTargets="EnsureNpmRestored">
-        <Exec ConsoleToMSBuild="true" Command="npm run build-prod" Condition="'$(Configuration)' != 'Debug'"/>
-        <Exec ConsoleToMSBuild="true" Command="npm run build-dev" Condition="'$(Configuration)' == 'Debug'"/>
+        <Exec ConsoleToMSBuild="true" Command="npm run build-prod" Condition="'$(Configuration)' != 'Debug'" />
+        <Exec ConsoleToMSBuild="true" Command="npm run build-dev" Condition="'$(Configuration)' == 'Debug'" />
     </Target>
-    <Import Project="..\..\.paket\Paket.Restore.targets"/>
+    <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

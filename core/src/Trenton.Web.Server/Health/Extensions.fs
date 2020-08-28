@@ -1,4 +1,4 @@
-namespace Trenton.Web.Server
+namespace Trenton.Web.Server.Health
 
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Diagnostics.HealthChecks
@@ -10,7 +10,7 @@ open System.Net.Mime
 open System.Threading.Tasks
 open System.Text.Json
 
-module Health =
+module Extensions =
     type IServiceCollection with
         member this.AddTrentonHealthChecks() = this.AddHealthChecks()
 
