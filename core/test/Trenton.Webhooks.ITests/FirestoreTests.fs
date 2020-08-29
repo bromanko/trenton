@@ -7,7 +7,7 @@ open Google.Cloud.Firestore
 open Grpc.Core
 open System
 open Trenton.Health.FitbitClient
-open Trenton.Webhooks.Firestore.Fitbit
+open Trenton.Webhooks.Server.Firestore.Fitbit
 
 module FirestoreTests =
     let getNow () = DateTime.Now

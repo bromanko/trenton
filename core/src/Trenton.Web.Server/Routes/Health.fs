@@ -4,9 +4,8 @@ open Giraffe
 open Giraffe.Razor
 
 module Health =
-    let path = "/health"
-
-    let handler<'a> =
-        GET
-        >=> route path
-        >=> razorHtmlView "Health" None None None
+    module View =
+        let handler<'a> =
+            GET
+            >=> route Paths.Health.View
+            >=> razorHtmlView "Health" None None None

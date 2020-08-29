@@ -20,10 +20,11 @@ module Host =
 
     let private webRootPath = Path.Combine(contentRootPath, "WebRoot")
 
-    let private webApp _ cfg =
-        choose [ Routes.Dashboard.handler
-                 Routes.Health.handler
-                 Routes.Settings.viewHandler cfg ]
+    let private webApp compRoot cfg =
+        choose [ Routes.Dashboard.View.handler
+                 Routes.Health.View.handler
+                 Routes.Fitbit.AuthCallback.handler compRoot.FitbitClient
+                 Routes.Settings.View.handler cfg ]
 
     let private configureServices _
                                   cfg
