@@ -12,6 +12,7 @@
     <Compile Include="Assertions.fs" />
     <Compile Include="MetaTests.fs" />
     <Compile Include="DashboardTests.fs" />
+    <Compile Include="FitbitTests.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />

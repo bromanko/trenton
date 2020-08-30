@@ -1,25 +1,27 @@
 namespace Trenton.Web.Server
 
 open Giraffe
+open Giraffe.Razor
 open Microsoft.Extensions.Logging
 open System
 open Trenton.Common
 open Trenton.Web.Server.Config
-
-[<CLIMutable>]
-type ErrorResponse =
-    { Message: string }
+open Trenton.Web.Server.ViewModels
 
 [<AutoOpen>]
 module ErrorHandler =
     let badRequestErr msg =
-        RequestErrors.BAD_REQUEST { Message = msg }
+        RequestErrors.badRequest
+        <| razorHtmlView "Error" (Some { Message = msg }) None None
 
     let internalError msg =
-        ServerErrors.INTERNAL_ERROR { Message = msg }
+        ServerErrors.internalError
+        <| razorHtmlView "Error" (Some { Message = msg }) None None
 
     let giraffeErrHandler config (ex: Exception) (logger: ILogger) =
-        logErrL logger ex
+        logErrL
+            logger
+            ex
             "An unhandled exception occurred while processing request."
 
         let msg =
@@ -28,5 +30,3 @@ module ErrorHandler =
             else "An unhandled exception occurred while processing request."
 
         clearResponse >=> internalError msg
-
-
