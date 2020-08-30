@@ -61,7 +61,7 @@ jobs:
     - name: Write .env file
       run: |
         cd core && sops -d .config/ci.enc.env > .env
-        sed -i "s/TEST_SERVER_HOST\=server\:5000/TEST_SERVER_HOST\=server\:5002" .env
+        sed -i "s/TEST_SERVER_HOST\=server\:5000/TEST_SERVER_HOST\=server\:5002/" .env
     - name: Build development server
       run: ./go web build
     - name: Start development server
