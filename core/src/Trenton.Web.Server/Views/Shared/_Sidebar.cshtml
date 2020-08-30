@@ -2,9 +2,9 @@
 @{
     var menuItems = new[]
     {
-        new ViewModels.MenuItem("Dashboard", Dashboard.path, Icons.House),
-        new ViewModels.MenuItem("Health", Health.path, Icons.Clipboard),
-        new ViewModels.MenuItem("Settings", Settings.viewPath, Icons.Gear)
+        new ViewModels.MenuItem("Dashboard", Paths.Dashboard.View, Icons.House),
+        new ViewModels.MenuItem("Health", Paths.Health.View, Icons.Clipboard),
+        new ViewModels.MenuItem("Settings", Paths.Settings.View, Icons.Gear)
     };
 }
 
@@ -14,7 +14,7 @@
     <div class="py-4 text-gray-500 dark:text-gray-400">
         <a
             class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200"
-            href="@Dashboard.path">
+            href="@Paths.Dashboard.View">
             @Constants.AppName
         </a>
         <ul class="mt-6">
@@ -51,7 +51,7 @@
     <div class="py-4 text-gray-500 dark:text-gray-400">
         <a
             class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200"
-            href="@Dashboard.path">
+            href="@Paths.Dashboard.View">
             @Constants.AppName
         </a>
         <ul class="mt-6">

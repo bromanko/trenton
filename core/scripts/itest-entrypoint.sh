@@ -5,6 +5,10 @@ set -euo pipefail
 script_path="$( cd "$(dirname "$0")" ; pwd -P )"
 cd "${script_path}"
 
+project=${1?Must provide the itest project name}
+project="../test/$project/$project.fsproj"
+[[ -f "$project" ]] || (echo "Could not find project $1" && exit 1)
+
 ./dev-entrypoint.sh \
   -wait "http://${TEST_SERVER_HOST}" \
-  -- dotnet run --project test/Trenton.Webhooks.ITests/Trenton.Webhooks.ITests.fsproj
+  -- dotnet run --project "$project"

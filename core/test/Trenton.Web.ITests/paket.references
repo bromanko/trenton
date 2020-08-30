@@ -1,0 +1,12 @@
+FSharp.Core
+Logary.Adapters.Facade
+Bogus
+Expecto
+Expecto.BenchmarkDotNet
+Expecto.FsCheck
+Expecto.Hopac
+FsConfig
+Microsoft.AspNetCore.TestHost
+TaskBuilder.fs
+FSharpx.Async
+Google.Cloud.Firestore

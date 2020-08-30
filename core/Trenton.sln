@@ -26,6 +26,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Webhooks.ITests", "
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Web.Server", "src\Trenton.Web.Server\Trenton.Web.Server.fsproj", "{3DFD8712-0E87-4C5D-82FC-E97121055AB8}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Web.ITests", "test\Trenton.Web.ITests\Trenton.Web.ITests.fsproj", "{271B7621-4F24-41E2-80D0-C8C5482EBE3B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,10 +62,15 @@ Global
 		{3DFD8712-0E87-4C5D-82FC-E97121055AB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DFD8712-0E87-4C5D-82FC-E97121055AB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DFD8712-0E87-4C5D-82FC-E97121055AB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{271B7621-4F24-41E2-80D0-C8C5482EBE3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{271B7621-4F24-41E2-80D0-C8C5482EBE3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{271B7621-4F24-41E2-80D0-C8C5482EBE3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{271B7621-4F24-41E2-80D0-C8C5482EBE3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1B9A79F6-0B3E-407D-9110-5D2D8899E611} = {19F67596-458B-4046-9D3E-024DA7699DEF}
 		{E48E50D8-2E01-4AF4-B154-4A93209A9DAC} = {19F67596-458B-4046-9D3E-024DA7699DEF}
 		{D8B03A63-F5CF-4D97-8199-878701F34089} = {19F67596-458B-4046-9D3E-024DA7699DEF}
+		{271B7621-4F24-41E2-80D0-C8C5482EBE3B} = {19F67596-458B-4046-9D3E-024DA7699DEF}
 	EndGlobalSection
 EndGlobal

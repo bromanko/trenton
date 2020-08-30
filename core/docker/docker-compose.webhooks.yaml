@@ -30,6 +30,7 @@ services:
     env_file:
       - ${DOCKER_COMPOSE_ENV_OVERRIDE:-../.env}
     entrypoint: ./scripts/itest-entrypoint.sh
+    command: Trenton.Webhooks.ITests
     volumes:
       - itests_packages:/root/.nuget/packages
       - ..:/usr/src/app
