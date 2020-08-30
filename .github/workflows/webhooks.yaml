@@ -61,7 +61,6 @@ jobs:
     - name: Write .env file
       run: |
         cd core && sops -d .config/ci.enc.env > .env
-        cat .env
     - name: Build development server
       run: ./go webhooks build
     - name: Start development server
