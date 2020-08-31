@@ -2,16 +2,10 @@ namespace Trenton.Health.Tests.Unit
 
 open FsConfig
 
-type FitbitConfig =
-    { BaseUrl: string option
-      ClientId: string
-      ClientSecret: string }
-
 [<Convention("TEST")>]
 type Config = {
     [<DefaultValue("false")>]
     LoggingEnabled: bool
-    Fitbit: FitbitConfig
 }
 
 module Config =
