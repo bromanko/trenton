@@ -11,7 +11,7 @@ COPY . .
 
 RUN dotnet tool restore && dotnet paket restore
 RUN dotnet publish -c Release -o out src/Trenton.Web.Server/Trenton.Web.Server.fsproj
-RUN mv src/Trenton.Web.Server/WebRoot/dist out/WebRoot
+RUN rm -rf out/WebRoot/dist && mv src/Trenton.Web.Server/WebRoot/dist out/WebRoot
 RUN ls -al out/WebRoot
 
 
