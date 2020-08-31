@@ -2,3 +2,5 @@ ingress:
   annotations: {}
   host: trenton.localhost
 
+config:
+  TRENTON_WEB_FITBIT_CLIENT_ID: 22CNRY

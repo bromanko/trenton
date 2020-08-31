@@ -30,8 +30,8 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "web.fullname" . }}
-{{/*            - secretRef:*/}}
-{{/*                name: {{ include "web.fullname" . }}*/}}
+            - secretRef:
+                name: {{ include "web.fullname" . }}
           livenessProbe:
             httpGet:
               path: /healthz/liveness

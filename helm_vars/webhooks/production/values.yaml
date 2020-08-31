@@ -5,6 +5,5 @@ ingress:
   host: webhooks.trenton.seemy.app
 
 config:
-  TRENTON_SERVER_BASE_URL: https://webhooks.trenton.seemy.app
-  TRENTON_FITBIT_CLIENT_ID: 22CNRY
-  TRENTON_FITBIT_SUBSCRIBER_ID: webhooks.trenton.seemy.app
+  TRENTON_WEBHOOKS_FITBIT_CLIENT_ID: 22CNRY
+  TRENTON_WEBHOOKS_FITBIT_SUBSCRIBER_ID: webhooks.trenton.seemy.app

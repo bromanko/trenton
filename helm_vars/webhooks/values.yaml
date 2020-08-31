@@ -9,4 +9,4 @@ service:
   port: 5000
 
 config:
-  TRENTON_LOGGING_LOG_TARGET: Json
+  TRENTON_WEBHOOKS_LOGGING_LOG_TARGET: Json
