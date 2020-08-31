@@ -3,6 +3,5 @@ ingress:
   host: webhooks.trenton.localhost
 
 config:
-  TRENTON_WEBHOOKS_SERVER_BASE_URL: http://webhooks.trenton.localhost
   TRENTON_WEBHOOKS_FITBIT_CLIENT_ID: 22CNRY
   TRENTON_WEBHOOKS_FITBIT_SUBSCRIBER_ID: localhost
