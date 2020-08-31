@@ -17,8 +17,7 @@ module Config =
           Address: string
           [<DefaultValue("5000")>]
           HttpPort: int
-          HttpsPort: int option
-          BaseUrl: string }
+          HttpsPort: int option }
 
         member this.Environment =
             if this.IsDevelopment then "Development" else "Deployed"
@@ -26,10 +25,12 @@ module Config =
         member this.Urls =
             let httpUrl =
                 [| sprintf "http://%s:%d" this.Address this.HttpPort |]
+
             match this.HttpsPort with
             | None -> httpUrl
             | Some port ->
-                Array.append httpUrl
+                Array.append
+                    httpUrl
                     [| sprintf "https://%s:%d" this.Address port |]
 
     type FitbitSubscriberConfig =
@@ -42,7 +43,7 @@ module Config =
           ClientSecret: string
           Subscriber: FitbitSubscriberConfig }
 
-    [<Convention("TRENTON")>]
+    [<Convention("TRENTON_WEBHOOKS")>]
     type AppConfig =
         { Logging: LoggingConfig
           Server: ServerConfig
