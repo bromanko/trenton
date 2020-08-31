@@ -20,7 +20,7 @@ while getopts "d" options; do
   esac
 done
 
-docker run --rm \
+docker run \
   --name server \
   -p 5002:5002 \
   --network "${DOCKER_COMPOSE_NETWORK}" \
