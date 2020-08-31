@@ -23,7 +23,7 @@ module Host =
     let private webApp compRoot cfg =
         choose [ Routes.Dashboard.View.handler
                  Routes.Health.View.handler
-                 Routes.Fitbit.AuthCallback.handler compRoot.FitbitClient
+                 Routes.Fitbit.AuthCallback.handler compRoot.FitbitService
                  Routes.Settings.View.handler cfg ]
 
     let private configureServices _

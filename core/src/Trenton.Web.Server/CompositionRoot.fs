@@ -2,9 +2,10 @@ namespace Trenton.Web.Server
 
 open Trenton.Web.Server.Config
 open Trenton.Health
+open System
+open Google.Cloud.Firestore
 
-type CompositionRoot =
-    { FitbitClient: FitbitClient.T }
+type CompositionRoot = { FitbitService: FitbitService.T }
 
 [<AutoOpen>]
 module ComponentRoot =
@@ -12,6 +13,14 @@ module ComponentRoot =
         FitbitClient.defaultConfig cfg.ClientId cfg.ClientSecret
         |> FitbitClient.getClient
 
-    let defaultRoot (config: AppConfig) =
-        { FitbitClient = getFitbitClient config.Fitbit }
+    let private getNow () = DateTime.Now
 
+    let private getFitbitAuthRepo =
+        FitbitAuthRepository.firestoreAuthRepository
+            (FirestoreDbBuilder())
+            getNow
+
+    let defaultRoot (config: AppConfig) =
+        let fitbitClient = getFitbitClient config.Fitbit
+        let fitbitAuthRepo = getFitbitAuthRepo
+        { FitbitService = FitbitService.defaultSvc fitbitClient fitbitAuthRepo }

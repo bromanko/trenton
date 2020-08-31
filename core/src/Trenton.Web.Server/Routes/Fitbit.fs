@@ -3,7 +3,7 @@ namespace Trenton.Web.Server.Routes
 open FSharp.Control.Tasks.V2.ContextInsensitive
 open Microsoft.AspNetCore.Http
 open Giraffe
-open Trenton.Health.FitbitClient
+open Trenton.Health.FitbitService
 open Trenton.Web.Server.ErrorHandler
 open Trenton.Web.Server.Routes.Common
 open System
@@ -29,28 +29,24 @@ module Fitbit =
 
         let private respondErr =
             function
-            | FitbitApiError.Error e -> badRequestErr e earlyReturn
+            | FitbitApiError e -> badRequestErr e earlyReturn
             | Exception e -> internalError e.Message earlyReturn
 
-        let private getAccessToken fitbitClient query: HttpHandler =
+        let private getAndStoreAccessToken fitbitSvc query: HttpHandler =
             fun (next: HttpFunc) (ctx: HttpContext) ->
-                let req =
-                    AuthorizationCodeWithPkce
-                        { Code = query.code
-                          RedirectUri = getRedirectUri ctx.Request |> Some
-                          State = None
-                          CodeVerifier = None }
-
                 task {
-                    let! tokenRes = fitbitClient.GetAccessToken req
+                    let! res =
+                        fitbitSvc.GetAndStoreAccessToken
+                            query.code
+                            (getRedirectUri ctx.Request)
 
-                    return! match tokenRes with
-                            | Ok token -> json token next ctx
+                    return! match res with
+                            | Ok _ -> next ctx
                             | Result.Error err -> respondErr err ctx
                 }
 
-        let handler<'a> fitbitClient =
+        let handler fitbitSvc =
             GET
             >=> route path
-            >=> bindQueryOrErr<Query> (getAccessToken fitbitClient)
+            >=> bindQueryOrErr<Query> (getAndStoreAccessToken fitbitSvc)
             >=> redirectTo false Paths.Settings.View

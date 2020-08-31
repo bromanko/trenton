@@ -243,8 +243,8 @@ module FitbitClient =
           Authenticated: string -> FitbitAuthenticatedApi }
 
     let getClient cfg =
-        { GetAccessToken = getAccessToken cfg
-          RefreshAccessToken = refreshAccessToken cfg
-          Authenticated =
+        { T.GetAccessToken = getAccessToken cfg
+          T.RefreshAccessToken = refreshAccessToken cfg
+          T.Authenticated =
               fun accessToken ->
                   { IntrospectToken = introspectToken cfg accessToken } }

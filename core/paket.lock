@@ -63,6 +63,8 @@ NUGET
     FSharpx.Async (1.14.1)
       FSharp.Control.AsyncSeq (>= 2.0.21)
       FSharp.Core (>= 4.6.2)
+    FsToolkit.ErrorHandling (1.4.3)
+      FSharp.Core (>= 4.3.4)
     Giraffe (4.1)
       FSharp.Core (>= 4.7)
       Microsoft.IO.RecyclableMemoryStream (>= 1.2.2)

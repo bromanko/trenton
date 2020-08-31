@@ -1,3 +1,5 @@
 Hopac
 Http.Fs
 FSharp.Data
+Google.Cloud.Firestore
+FsToolkit.ErrorHandling

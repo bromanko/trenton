@@ -9,6 +9,7 @@ nuget Http.Fs
 nuget FSharp.Core
 nuget FsConfig
 nuget FSharp.Data
+nuget FsToolkit.ErrorHandling
 nuget Giraffe
 nuget Giraffe.Razor
 nuget Microsoft.AspNetCore.Diagnostics.HealthChecks
