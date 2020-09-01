@@ -6,3 +6,4 @@ Expecto.BenchmarkDotNet
 Expecto.FsCheck
 Expecto.Hopac
 FsConfig
+Google.Cloud.Firestore

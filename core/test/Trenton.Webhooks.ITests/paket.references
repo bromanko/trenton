@@ -9,4 +9,3 @@ FsConfig
 Microsoft.AspNetCore.TestHost
 TaskBuilder.fs
 FSharpx.Async
-Google.Cloud.Firestore

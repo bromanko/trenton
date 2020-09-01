@@ -23,8 +23,8 @@ module FitbitAuthRepository =
 
     [<RequireQualifiedAccess>]
     type T =
-        { tryGetAccessToken: string -> Async<AccessTokenDto option>
-          upsertAccessToken: AccessTokenDto -> ActiveTokenStateDto -> Async<Result<unit, FitbitAuthRepositoryError>> }
+        { TryGetAccessToken: string -> Async<AccessTokenDto option>
+          UpsertAccessToken: AccessTokenDto -> ActiveTokenStateDto -> Async<Result<unit, FitbitAuthRepositoryError>> }
 
     let private parseAccessToken (token: AccessTokenDto) (now: DateTime) =
         { AccessToken.AccessToken = token.AccessToken
@@ -79,5 +79,5 @@ module FitbitAuthRepository =
         }
 
     let firestoreAuthRepository dbBuilder getNow =
-        { T.tryGetAccessToken = tryGetAccessToken dbBuilder
-          T.upsertAccessToken = upsertAccessToken dbBuilder getNow }
+        { T.TryGetAccessToken = tryGetAccessToken dbBuilder
+          T.UpsertAccessToken = upsertAccessToken dbBuilder getNow }

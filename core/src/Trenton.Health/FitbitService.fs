@@ -52,7 +52,7 @@ module FitbitService =
 
     let private upsertToken (repository: FitbitAuthRepository.T) token state =
         async {
-            let! res = repository.upsertAccessToken token state
+            let! res = repository.UpsertAccessToken token state
 
             return match res with
                    | Ok _ -> Ok()

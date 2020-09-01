@@ -5,9 +5,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Config.fs" />
-    <Compile Include="Program.fs" />
     <Content Include="paket.references" />
+    <Compile Include="Config.fs" />
+    <Compile Include="FitbitAuthRepositoryTests.fs" />
+    <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Trenton.Health\Trenton.Health.fsproj" />

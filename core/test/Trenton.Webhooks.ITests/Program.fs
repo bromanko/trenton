@@ -17,12 +17,13 @@ module Program =
                 |> Config.processing
                     (Events.events |> Events.sink [ "console" ])
                 |> Config.build
-                |> Hopac.run
+                |> run
+
             LogaryFacadeAdapter.initialise<Expecto.Logging.Logger> logary
 
     [<EntryPoint>]
     let main argv =
-        let testCfg = Config.loadConfig()
+        let testCfg = Config.loadConfig ()
         configLogging testCfg
 
         Tests.runTestsInAssembly defaultConfig argv
