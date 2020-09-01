@@ -37,8 +37,12 @@ module Config =
         { ClientId: string
           ClientSecret: string }
 
+    type GoogleCloudConfig =
+        { ProjectId: string }
+
     [<Convention("TRENTON_WEB")>]
     type AppConfig =
         { Logging: LoggingConfig
           Server: ServerConfig
-          Fitbit: FitbitConfig }
+          Fitbit: FitbitConfig
+          GoogleCloud: GoogleCloudConfig }

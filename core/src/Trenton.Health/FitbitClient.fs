@@ -148,7 +148,7 @@ module FitbitClient =
             |> execReq
 
         let introspectToken config accessToken req =
-            sprintf "%s/oauth2/introspect" config.BaseUrl
+            sprintf "%s/1.1/oauth2/introspect" config.BaseUrl
             |> Http.httpPost
             |> Http.setUserAuthHeader accessToken
             |> Request.body (BodyForm [ NameValue("token", req.Token) ])

@@ -15,12 +15,12 @@ module ComponentRoot =
 
     let private getNow () = DateTime.Now
 
-    let private getFitbitAuthRepo =
+    let private getFitbitAuthRepo cfg =
         FitbitAuthRepository.firestoreAuthRepository
-            (FirestoreDbBuilder())
+            (FirestoreDbBuilder(ProjectId = cfg.ProjectId))
             getNow
 
     let defaultRoot (config: AppConfig) =
         let fitbitClient = getFitbitClient config.Fitbit
-        let fitbitAuthRepo = getFitbitAuthRepo
+        let fitbitAuthRepo = getFitbitAuthRepo config.GoogleCloud
         { FitbitService = FitbitService.defaultSvc fitbitClient fitbitAuthRepo }

@@ -16,3 +16,7 @@ ingress:
 # The application is configured via environment variables. See core/README.md
 # for details.
 config: {}
+
+# Google Cloud configuration
+google:
+  serviceAccountKey: ""
