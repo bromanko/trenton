@@ -3,6 +3,7 @@ namespace Trenton.Web.Server.Routes
 open System.Threading.Tasks
 open Giraffe
 open Microsoft.AspNetCore.Http
+open Trenton.Iam
 open Trenton.Web.Server
 
 module Common =
@@ -14,3 +15,7 @@ module Common =
             match result with
             | Ok o -> f o next ctx
             | Result.Error r -> badRequestErr r earlyReturn ctx
+
+
+    let getUserId _ =
+        Bromanko.user.UserId

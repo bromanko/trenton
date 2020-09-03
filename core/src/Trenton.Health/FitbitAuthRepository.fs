@@ -1,15 +1,17 @@
 namespace Trenton.Health
 
+open FsToolkit.ErrorHandling
 open Google.Cloud.Firestore
 open System
 open Trenton.Health.FitbitClient
+open Trenton.Iam
 
 module FitbitAuthRepository =
     [<Literal>]
     let private AccessTokenCollectionName = "fitbit-access-tokens"
 
     [<FirestoreData; CLIMutable>]
-    type private AccessToken =
+    type PersistedAccessTokenDto =
         { [<FirestoreProperty>]
           AccessToken: string
           [<FirestoreProperty>]
@@ -17,66 +19,88 @@ module FitbitAuthRepository =
           [<FirestoreProperty>]
           RefreshToken: string
           [<FirestoreProperty>]
-          CreatedAt: DateTime }
+          CreatedAt: DateTime
+          [<FirestoreProperty>]
+          UpdatedAt: DateTime }
 
     type FitbitAuthRepositoryError = Exception of exn
 
     [<RequireQualifiedAccess>]
     type T =
-        { TryGetAccessToken: string -> Async<AccessTokenDto option>
-          UpsertAccessToken: AccessTokenDto -> ActiveTokenStateDto -> Async<Result<unit, FitbitAuthRepositoryError>> }
+        { TryGetAccessToken: UserId.T -> Async<PersistedAccessTokenDto option>
+          UpsertAccessToken: UserId.T -> AccessTokenDto -> Async<Result<unit, FitbitAuthRepositoryError>> }
 
-    let private parseAccessToken (token: AccessTokenDto) (now: DateTime) =
-        { AccessToken.AccessToken = token.AccessToken
+    let private parseAccessToken (token: AccessTokenDto)
+                                 (createdAt: DateTime)
+                                 (updatedAt: DateTime)
+                                 =
+        { AccessToken = token.AccessToken
           ExpiresInSeconds = token.ExpiresInSeconds
           RefreshToken = token.RefreshToken
-          CreatedAt = now.ToUniversalTime() }
+          CreatedAt = createdAt.ToUniversalTime()
+          UpdatedAt = updatedAt.ToUniversalTime() }
 
-    let private toAccessTokenDto (token: AccessToken) =
-        { AccessTokenDto.AccessToken = token.AccessToken
-          ExpiresInSeconds = token.ExpiresInSeconds
-          RefreshToken = token.RefreshToken }
+    let private parseFitbitClientAccessToken (token: PersistedAccessTokenDto) =
+        { AccessToken = token.AccessToken
+          RefreshToken = token.RefreshToken
+          ExpiresInSeconds = token.ExpiresInSeconds }
+
+    let private accessTokenDocRef (db: FirestoreDb) userId =
+        UserId.value userId
+        |> db.Collection(AccessTokenCollectionName).Document
+
+    let tryGetDoc (docRef: DocumentReference) =
+        async {
+            let! s = docRef.GetSnapshotAsync() |> Async.AwaitTask
+
+            return match s.Exists with
+                   | false -> None
+                   | true -> Some s
+        }
 
     let private upsertAccessToken (dbBuilder: FirestoreDbBuilder)
                                   getNow
+                                  userId
                                   token
-                                  tokenState
                                   =
-        async {
+        asyncResult {
             let! db = dbBuilder.BuildAsync() |> Async.AwaitTask
+            let docRef = accessTokenDocRef db userId
 
-            let docRef =
-                db.Collection(AccessTokenCollectionName)
-                  .Document(tokenState.UserId)
+            let! atDoc = docRef.GetSnapshotAsync() |> Async.AwaitTask
+
+            let updatedAt = getNow ()
+
+            let createdAt =
+                if atDoc.Exists
+                then atDoc.ConvertTo<PersistedAccessTokenDto>().CreatedAt
+                else updatedAt
 
             try
-                do! getNow ()
-                    |> parseAccessToken token
+                do! parseAccessToken token createdAt updatedAt
                     |> docRef.SetAsync
                     |> Async.AwaitTask
                     |> Async.Ignore
 
-                return Ok()
+                return! Ok()
             with e ->
-                return Result.Error
-                       <| FitbitAuthRepositoryError.Exception e
+                return! Result.Error
+                        <| FitbitAuthRepositoryError.Exception e
         }
 
 
     let private tryGetAccessToken (dbBuilder: FirestoreDbBuilder) userId =
-        async {
-            let! db = dbBuilder.BuildAsync() |> Async.AwaitTask
+        asyncOption {
+            let! db =
+                dbBuilder.BuildAsync()
+                |> Async.AwaitTask
+                |> Async.map Some
 
-            let docRef =
-                db.Collection(AccessTokenCollectionName).Document(userId)
+            let! doc = accessTokenDocRef db userId |> tryGetDoc
 
-            match! docRef.GetSnapshotAsync() |> Async.AwaitTask with
-            | s when s.Exists ->
-                return s.ConvertTo<AccessToken>()
-                       |> toAccessTokenDto
-                       |> Some
-            | _ -> return None
+            return doc.ConvertTo<PersistedAccessTokenDto>()
         }
+
 
     let firestoreAuthRepository dbBuilder getNow =
         { T.TryGetAccessToken = tryGetAccessToken dbBuilder

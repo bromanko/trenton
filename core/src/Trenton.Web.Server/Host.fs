@@ -24,26 +24,21 @@ module Host =
         choose [ Routes.Dashboard.View.handler
                  Routes.Health.View.handler
                  Routes.Fitbit.AuthCallback.handler compRoot.FitbitService
-                 Routes.Settings.View.handler cfg ]
+                 Routes.Settings.View.handler cfg compRoot.FitbitService ]
 
-    let private configureServices _
-                                  cfg
-                                  (context: WebHostBuilderContext)
-                                  (services: IServiceCollection)
-                                  =
+    let private isWebRootFile = fun f -> String.startsWith webRootPath f
+
+    let private configureServices _ cfg _ (services: IServiceCollection) =
         if cfg.Server.IsDevelopment then
             services.AddLiveReload(fun rc ->
-                rc.FolderToMonitor <- webRootPath
+                rc.FolderToMonitor <- contentRootPath
+                rc.FileIncludeFilter <- System.Func<string, bool> isWebRootFile
                 rc.ClientFileExtensions <-
                     String.concat "," [ ".css"; ".js"; ".cshtml" ])
             |> ignore
 
         services.AddGiraffe() |> ignore
-
-        Path.Combine(context.HostingEnvironment.ContentRootPath, "Views")
-        |> services.AddRazorEngine
-        |> ignore
-
+        services.AddRazorEngine webRootPath |> ignore
         services.AddAuthorization() |> ignore
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie()

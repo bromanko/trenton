@@ -4,10 +4,12 @@ open Microsoft.AspNetCore.Http
 open FSharp.Control.Tasks.V2.ContextInsensitive
 open Giraffe
 open Giraffe.Razor
+open Trenton.Health
 open Trenton.Web.Server.ViewModels
 open Trenton.Common.HttpUtils
 open Trenton.Web.Server.Config
 open System
+open Trenton.Web.Server.Routes.Common
 
 module Settings =
     module View =
@@ -42,20 +44,33 @@ module Settings =
             uri.ToString()
 
 
-        let handler cfg =
+        let private getModel cfg (fitbitSvc: FitbitService.T) (ctx: HttpContext) =
+            async {
+                let redirectUri = getRedirectUri ctx.Request
+                let userId = getUserId ctx
+
+                let! f = fitbitSvc.TryGetLastTokenUpdateDate userId
+
+                return match f with
+                       | None ->
+                           Disconnected
+                               { AuthUri =
+                                     getFitbitAuthUri cfg.Fitbit redirectUri }
+                       | Some lu -> Connected { LastUpdated = lu }
+            }
+
+
+        let handler cfg (fitbitSvc: FitbitService.T) =
             GET
             >=> route Paths.Settings.View
             >=> fun (next: HttpFunc) (ctx: HttpContext) ->
                     task {
-                        let redirectUri = getRedirectUri ctx.Request
-
-                        let model =
-                            { FitbitAuthUri =
-                                  getFitbitAuthUri cfg.Fitbit redirectUri }
+                        let! model = getModel cfg fitbitSvc ctx
+                        let model = Some { Fitbit = model }
 
                         return! razorHtmlView
-                                    "Settings"
-                                    (Some model)
+                                    "Settings/Index"
+                                    model
                                     None
                                     None
                                     next

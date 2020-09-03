@@ -4,6 +4,9 @@ open Trenton.Health.FitbitAuthRepository
 open Trenton.Health.FitbitClient
 open Trenton.Health
 open FsToolkit.ErrorHandling
+open FsToolkit.ErrorHandling.Operator.AsyncResult
+open System
+open Trenton.Iam
 
 module FitbitService =
     type Error =
@@ -11,64 +14,55 @@ module FitbitService =
         | Exception of exn
 
     type T =
-        { GetAndStoreAccessToken: string -> string -> Async<Result<unit, Error>> }
+        { GetAndStoreAccessToken: UserId.T -> string -> string -> Async<Result<unit, Error>>
+          TryGetLastTokenUpdateDate: UserId.T -> Async<DateTime option> }
 
-    let private mapFitbitApiResp res =
-        match res with
-        | Ok t -> Ok t
-        | Result.Error err ->
-            match err with
-            | FitbitApiError.Error e -> Error.FitbitApiError e |> Result.Error
-            | FitbitApiError.Exception e -> Error.Exception e |> Result.Error
+    let private mapFitbitApiErr =
+        function
+        | FitbitApiError.Error e -> Error.FitbitApiError e
+        | FitbitApiError.Exception e -> Error.Exception e
 
     let private getAccessToken fitbitClient code redirectUri =
-        async {
-            let! res =
-                AuthorizationCodeWithPkce
-                    { Code = code
-                      RedirectUri = Some redirectUri
-                      State = None
-                      CodeVerifier = None }
-                |> fitbitClient.GetAccessToken
-
-            return mapFitbitApiResp res
+        asyncResult {
+            return! (AuthorizationCodeWithPkce
+                         { Code = code
+                           RedirectUri = Some redirectUri
+                           State = None
+                           CodeVerifier = None })
+                    |> fitbitClient.GetAccessToken
+                    |> AsyncResult.mapError mapFitbitApiErr
         }
 
-    let private getTokenState fitbitClient token =
-        async {
-            let aClient = fitbitClient.Authenticated token
-            let! res = aClient.IntrospectToken { Token = token }
-
-            return match mapFitbitApiResp res with
-                   | Result.Error e -> Result.Error e
-                   | Ok r ->
-                       match r with
-                       | Active t -> Ok t
-                       | Inactive _ ->
-                           Error.FitbitApiError
-                               "The token specified is inactive."
-                           |> Result.Error
-        }
+    let private mapAuthRepositoryError =
+        function
+        | FitbitAuthRepositoryError.Exception e -> Error.Exception e
 
     let private upsertToken (repository: FitbitAuthRepository.T) token state =
-        async {
-            let! res = repository.UpsertAccessToken token state
-
-            return match res with
-                   | Ok _ -> Ok()
-                   | Result.Error e ->
-                       match e with
-                       | FitbitAuthRepositoryError.Exception e ->
-                           Error.Exception e |> Result.Error
+        asyncResult {
+            return! repository.UpsertAccessToken token state
+                    |> AsyncResult.mapError mapAuthRepositoryError
         }
 
-    let private getAndStoreAccessToken fitbitClient repository code redirectUri =
+    let private getAndStoreAccessToken fitbitClient
+                                       repository
+                                       userId
+                                       code
+                                       redirectUri
+                                       =
         asyncResult {
-            let! token = getAccessToken fitbitClient code redirectUri
-            let! state = getTokenState fitbitClient token.AccessToken
-            return! upsertToken repository token state
+            return! getAccessToken fitbitClient code redirectUri
+                    >>= upsertToken repository userId
+        }
+
+    let private tryGetLastTokenUpdateDate (repository: FitbitAuthRepository.T)
+                                          userId
+                                          =
+        asyncOption {
+            let! at = repository.TryGetAccessToken userId
+            return at.UpdatedAt
         }
 
     let defaultSvc fitbitClient repository =
         { T.GetAndStoreAccessToken =
-              getAndStoreAccessToken fitbitClient repository }
+              getAndStoreAccessToken fitbitClient repository
+          T.TryGetLastTokenUpdateDate = tryGetLastTokenUpdateDate repository }

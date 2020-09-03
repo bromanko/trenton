@@ -3,7 +3,7 @@ namespace Trenton.Common
 open FsConfig
 
 module Config =
-    let private failInvalidConfig error =
+    let failInvalidConfig error =
         match error with
         | NotFound envVarName ->
             failwithf "Environment variable %s not found" envVarName

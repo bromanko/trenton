@@ -2,14 +2,13 @@
 
 open Microsoft.Extensions.Hosting
 open Serilog
-open Trenton.Common.Config
 open Trenton.Web.Server.Config
 open Trenton.Web.Server.Host
 
 module Program =
     [<EntryPoint>]
     let main argv =
-        let config = loadAppConfig<AppConfig> ()
+        let config = loadAppConfig ()
         Log.Logger <-
             getSerilog config.Logging.LogTarget config.Logging.LogLevel
         Log.Logger.Information("Configured with {@AppConfig}", config)

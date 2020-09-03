@@ -1,0 +1,24 @@
+@model ViewModels.Settings
+@{
+    Layout = "_Layout";
+}
+<h2
+    class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+    Settings
+</h2>
+<h4
+    class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+    Fitbit
+</h4>
+<div
+    class="max-w-2xl px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
+    @switch (Model.Fitbit)
+    {
+        case ViewModels.FitbitSettings.Disconnected d:
+            <partial name="_FitbitDisconnected" model="d.Item"/>
+            break;
+        case ViewModels.FitbitSettings.Connected c:
+            <partial name="_FitbitConnected" model="c.Item"/>
+            break;
+    }
+</div>

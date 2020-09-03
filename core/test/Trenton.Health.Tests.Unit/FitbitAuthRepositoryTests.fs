@@ -8,6 +8,7 @@ open Grpc.Core
 open System
 open Trenton.Health
 open Trenton.Health.FitbitClient
+open Trenton.Iam
 
 module FitbitAuthRepositoryTests =
     let getNow () = DateTime.Now
@@ -17,7 +18,8 @@ module FitbitAuthRepositoryTests =
           ExpiresInSeconds = 200
           RefreshToken = Guid.NewGuid().ToString() }
 
-    let fakeAccessTokenState () = { UserId = Guid.NewGuid().ToString() }
+    let fakeUserId () =
+        (UserId.create <| Guid.NewGuid().ToString()).Value
 
     let firestoreRepo () =
         let config = loadConfig ()
@@ -36,20 +38,20 @@ module FitbitAuthRepositoryTests =
             "FitbitAuthRepository for Firestore"
             [ testAsync "Stores access token" {
                   let token = fakeAccessToken ()
-                  let tokenState = fakeAccessTokenState ()
+                  let userId = fakeUserId ()
                   let repo = firestoreRepo ()
 
-                  let! result = repo.UpsertAccessToken token tokenState
+                  let! result = repo.UpsertAccessToken userId token
                   Expect.isOk result "Result was not Ok"
               }
               testAsync "Retrieves access token" {
                   let token = fakeAccessToken ()
-                  let tokenState = fakeAccessTokenState ()
+                  let userId = fakeUserId ()
                   let repo = firestoreRepo ()
 
-                  do! repo.UpsertAccessToken token tokenState
+                  do! repo.UpsertAccessToken userId token
                       |> Async.Ignore
-                  match! repo.TryGetAccessToken tokenState.UserId with
+                  match! repo.TryGetAccessToken userId with
                   | None -> failtestf "Should have retrieved the access token"
                   | Some a ->
                       Expect.equal

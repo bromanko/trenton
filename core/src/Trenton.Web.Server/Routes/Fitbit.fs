@@ -37,6 +37,7 @@ module Fitbit =
                 task {
                     let! res =
                         fitbitSvc.GetAndStoreAccessToken
+                            (getUserId ctx)
                             query.code
                             (getRedirectUri ctx.Request)
 

@@ -43,7 +43,8 @@ module Serilog =
 
     let private destructureAppConfig =
         Func<AppConfig, obj>(fun config ->
-            {| Server = config.Server |} :> obj)
+            {| Server = config.Server
+               GoogleCloudConfig = config.GoogleCloud |} :> obj)
 
     let getSerilog format (minLevel: LogLevel) =
         let lc =
