@@ -9,7 +9,7 @@ open Grpc.Core
 type CompositionRoot = { FitbitService: FitbitService.T }
 
 [<AutoOpen>]
-module ComponentRoot =
+module CompositionRoot =
     let private getFitbitClient cfg =
         FitbitClient.defaultConfig cfg.ClientId cfg.ClientSecret
         |> FitbitClient.getClient

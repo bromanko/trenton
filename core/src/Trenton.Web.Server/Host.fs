@@ -29,13 +29,13 @@ module Host =
     let private isWebRootFile = fun f -> String.startsWith webRootPath f
 
     let private configureServices _ cfg _ (services: IServiceCollection) =
-        if cfg.Server.IsDevelopment then
-            services.AddLiveReload(fun rc ->
-                rc.FolderToMonitor <- contentRootPath
-                rc.FileIncludeFilter <- System.Func<string, bool> isWebRootFile
-                rc.ClientFileExtensions <-
-                    String.concat "," [ ".css"; ".js"; ".cshtml" ])
-            |> ignore
+//        if cfg.Server.IsDevelopment then
+//            services.AddLiveReload(fun rc ->
+//                rc.FolderToMonitor <- contentRootPath
+//                rc.FileIncludeFilter <- System.Func<string, bool> isWebRootFile
+//                rc.ClientFileExtensions <-
+//                    String.concat "," [ ".css"; ".js"; ".cshtml" ])
+//            |> ignore
 
         services.AddGiraffe() |> ignore
         services.AddRazorEngine webRootPath |> ignore
@@ -47,7 +47,7 @@ module Host =
         services.AddHttpContextAccessor() |> ignore
 
     let private configureApp compRoot cfg (app: IApplicationBuilder) =
-        if cfg.Server.IsDevelopment then app.UseLiveReload() |> ignore
+//        if cfg.Server.IsDevelopment then app.UseLiveReload() |> ignore
 
         app.UseAuthentication() |> ignore
         app.UseStaticFiles() |> ignore

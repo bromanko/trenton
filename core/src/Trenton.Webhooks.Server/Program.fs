@@ -2,7 +2,6 @@
 
 open Microsoft.Extensions.Hosting
 open Serilog
-open Trenton.Common.Config
 open Trenton.Webhooks.Server.Config
 open Trenton.Webhooks.Server.Host
 
@@ -16,7 +15,7 @@ module Program =
 
         try
             try
-                let compRoot = getCompRoot config
+                let compRoot = defaultRoot config
                 (createHostBuilder argv config compRoot).Build().Run()
             with ex -> Log.Logger.Fatal(ex, "Server startup failed")
         finally
