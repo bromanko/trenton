@@ -1,7 +1,10 @@
 namespace Trenton.Webhooks.Server
 
 open FsConfig
+open FsToolkit.ErrorHandling
+open FsToolkit.ErrorHandling.Operator.Result
 open Trenton.Common
+open Trenton.Common.Config
 
 module Config =
     type LoggingConfig =
@@ -43,8 +46,43 @@ module Config =
           ClientSecret: string
           Subscriber: FitbitSubscriberConfig }
 
+    type FirestoreEmulatorConfig = { Host: string }
+
+    type FirestoreConfig =
+        | Emulator of FirestoreEmulatorConfig
+        | Cloud
+
+    type GoogleCloudConfig =
+        { ProjectId: string
+          [<DefaultValue("Emulator")>]
+          Firestore: FirestoreConfig }
+
     [<Convention("TRENTON_WEBHOOKS")>]
     type AppConfig =
         { Logging: LoggingConfig
           Server: ServerConfig
-          Fitbit: FitbitConfig }
+          Fitbit: FitbitConfig
+          GoogleCloud: GoogleCloudConfig }
+
+    let private envConfigGetOrFail (key: string) =
+        EnvConfig.Get<'T>(key)
+        |> Result.valueOr failInvalidConfig
+
+    let private loadFirestoreConfig config =
+        match config.GoogleCloud.Firestore with
+        | Cloud -> Ok config
+        | Emulator _ ->
+            let host =
+                envConfigGetOrFail
+                    "TRENTON_WEBHOOKS_GOOGLE_CLOUD_FIRESTORE_EMULATOR_HOST"
+
+            let gcc =
+                { config.GoogleCloud with
+                      Firestore = Emulator { Host = host } }
+
+            Ok { config with GoogleCloud = gcc }
+
+    let loadAppConfig () =
+        EnvConfig.Get<AppConfig>()
+        >>= loadFirestoreConfig
+        |> Result.valueOr failInvalidConfig

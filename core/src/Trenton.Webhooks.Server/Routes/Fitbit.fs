@@ -19,27 +19,33 @@ module Fitbit =
 
     module VerifySubscriber =
         [<CLIMutable>]
-        type VerifySubscriberQuery =
-            { verify: string }
+        type VerifySubscriberQuery = { verify: string }
 
         let private verifySubscriber subscriberCfg query =
             fun (next: HttpFunc) (ctx: HttpContext) ->
                 match subscriberCfg.VerificationCode = query.verify with
                 | true -> Successful.NO_CONTENT next ctx
                 | false ->
-                    RequestErrors.NOT_FOUND "Verify code is incorrect" earlyReturn
+                    RequestErrors.NOT_FOUND
+                        "Verify code is incorrect"
+                        earlyReturn
                         ctx
 
         let handler<'a> subscriberCfg =
-            GET >=> route "/fitbit"
-            >=> bindQueryOrErr<VerifySubscriberQuery> (verifySubscriber subscriberCfg)
+            GET
+            >=> route Paths.Fitbit.VerifySubscriber
+            >=> bindQueryOrErr<VerifySubscriberQuery>
+                    (verifySubscriber subscriberCfg)
 
     module Webhook =
-        let private publishEvent =
+        let private handleFitbitHook fitbitSvc =
             fun (next: HttpFunc) (ctx: HttpContext) ->
                 task {
-                    // take the body and enqueue it to GC pubsub
-                    return! Successful.NO_CONTENT next ctx }
+                    // use the fitbitservice to
+                    return! Successful.NO_CONTENT next ctx
+                }
 
-        let handler<'a> =
-            POST >=> route "/fitbit" >=> publishEvent
+        let handler<'a> fitbitSvc =
+            POST
+            >=> route Paths.Fitbit.Webhook
+            >=> handleFitbitHook fitbitSvc

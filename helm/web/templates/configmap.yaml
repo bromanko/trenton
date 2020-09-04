@@ -6,6 +6,7 @@ metadata:
     {{- include "web.labels" . | nindent 4 }}
 data:
   TRENTON_WEB_GOOGLE_CLOUD_PROJECT_ID: {{ .Values.config.TRENTON_WEB_GOOGLE_CLOUD_PROJECT_ID }}
+  TRENTON_WEB_GOOGLE_CLOUD_FIRESTORE: {{ .Values.config.TRENTON_WEB_GOOGLE_CLOUD_FIRESTORE }}
   TRENTON_WEB_LOGGING_LOG_TARGET: {{ .Values.config.TRENTON_WEB_LOGGING_LOG_TARGET }}
   TRENTON_WEB_FITBIT_CLIENT_ID: {{ .Values.config.TRENTON_WEB_FITBIT_CLIENT_ID }}
   GOOGLE_APPLICATION_CREDENTIALS: /etc/secrets/google/credentials.json

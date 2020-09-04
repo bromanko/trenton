@@ -1,14 +1,14 @@
 namespace Trenton.Web.Server.Routes
 
 module Paths =
-    let Dashboard =
-        {| View = "/" |}
+    let Dashboard = {| View = "/" |}
 
-    let Health =
-        {| View = "/health" |}
+    let Healthz =
+        {| Liveness = "/healthz/liveness"
+           Readiness = "/healthz/readiness" |}
 
-    let Settings =
-        {| View = "/settings" |}
+    let Health = {| View = "/health" |}
 
-    let Fitbit =
-        {| AuthCallback = "/fitbit/callback" |}
+    let Settings = {| View = "/settings" |}
+
+    let Fitbit = {| AuthCallback = "/fitbit/callback" |}

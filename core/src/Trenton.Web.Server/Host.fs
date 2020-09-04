@@ -43,26 +43,25 @@ module Host =
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie()
         |> ignore
-
         services.AddTrentonHealthChecks() |> ignore
         services.AddHttpContextAccessor() |> ignore
 
-
     let private configureApp compRoot cfg (app: IApplicationBuilder) =
-        app.UseLiveReload() |> ignore
+        if cfg.Server.IsDevelopment then app.UseLiveReload() |> ignore
+
         app.UseAuthentication() |> ignore
         app.UseStaticFiles() |> ignore
         app.UseRouting() |> ignore
         app.UseSerilogRequestLogging() |> ignore
         app.UseTrentonHealthChecks
-            (PathString "/healthz/readiness", PathString "/healthz/liveness")
+            (PathString Routes.Paths.Healthz.Readiness,
+             PathString Routes.Paths.Healthz.Liveness)
         |> ignore
         app.UseGiraffeErrorHandler(giraffeErrHandler cfg.Server)
         |> ignore
         app.UseGiraffe(webApp compRoot cfg) |> ignore
 
     let createHostBuilder argv config compRoot =
-
         Host.CreateDefaultBuilder(argv)
             .ConfigureWebHostDefaults(fun wb ->
             wb.UseContentRoot(contentRootPath) |> ignore

@@ -12,26 +12,16 @@ open Trenton.Webhooks.Server.Config
 open Trenton.Webhooks.Server.Health
 
 module Host =
-    let private route (path: PathString) =
-        Routing.route path.Value
-
     let private webApp compRoot cfg =
-        choose
-            [ Routes.Index.handler
-              Routes.Fitbit.VerifySubscriber.handler cfg.Fitbit.Subscriber
-              Routes.Fitbit.Webhook.handler ]
-
-    let private addHealthChecks (services: IServiceCollection) =
-        services.AddTrentonHealthChecks() |> ignore
+        choose [ Routes.Index.handler
+                 Routes.Fitbit.VerifySubscriber.handler cfg.Fitbit.Subscriber
+                 Routes.Fitbit.Webhook.handler compRoot.FitbitService ]
 
     let private configureServices (services: IServiceCollection) =
-        addHealthChecks services
-        services
-            .AddGiraffe()
-            .AddHttpContextAccessor()
-            .AddSingleton<IJsonSerializer>
-            (Utf8JsonSerializer(Utf8JsonSerializer.DefaultResolver)) |> ignore
-        ()
+        services.AddTrentonHealthChecks() |> ignore
+        services.AddGiraffe().AddHttpContextAccessor().AddSingleton<IJsonSerializer>
+            (Utf8JsonSerializer(Utf8JsonSerializer.DefaultResolver))
+        |> ignore
 
     let private configureApp compRoot cfg =
         fun (app: IApplicationBuilder) ->
@@ -46,4 +36,5 @@ module Host =
             wb.UseSerilog().ConfigureServices(configureServices)
               .UseUrls(config.Server.Urls)
               .UseEnvironment(config.Server.Environment)
-              .Configure(configureApp compRoot config) |> ignore)
+              .Configure(configureApp compRoot config)
+            |> ignore)

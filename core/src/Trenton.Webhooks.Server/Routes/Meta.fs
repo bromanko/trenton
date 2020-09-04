@@ -5,5 +5,6 @@ open System
 
 module Index =
     let handler<'a> =
-        GET >=> route "/"
+        GET
+        >=> route Paths.Root
         >=> warbler (fun _ -> json {| now = DateTime.UtcNow |})
