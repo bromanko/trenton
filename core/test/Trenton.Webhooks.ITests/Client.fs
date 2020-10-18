@@ -1,4 +1,5 @@
 namespace Trenton.Webhooks.ITests
+
 open FSharpx.Control
 open System.Net.Http
 open System.Text
@@ -31,14 +32,20 @@ module Client =
         req.Content <- content
         makeRequest client req
 
+    /// Creates a Json serialized string content
+    let jsonContent content =
+        new StringContent(JsonSerializer.Serialize content,
+                          Encoding.UTF8,
+                          "application/json")
+
     /// Issues an HTTP POST request serialising the body as Json
     let inline postJson<'Content> (client: HttpClient) path content =
-        new StringContent(JsonSerializer.Serialize content, Encoding.UTF8,
-                          "application/json") |> post client path
+        jsonContent content |> post client path
 
     /// Reads an HTTP response as a string
     let readText (response: HttpResponseMessage) =
-        response.Content.ReadAsStringAsync() |> Async.AwaitTask
+        response.Content.ReadAsStringAsync()
+        |> Async.AwaitTask
 
     /// Reads a Json HTTP response and deserializes it into an object
     let readJson<'T> (response: HttpResponseMessage) =
@@ -48,5 +55,9 @@ module Client =
                 JsonSerializer.Deserialize<'T>(text, null)
             with e ->
                 JsonException
-                    (sprintf "Could not convert JSON value of %s to %O"
-                         text (typeof<'T>), e) |> raise)
+                    (sprintf
+                        "Could not convert JSON value of %s to %O"
+                         text
+                         (typeof<'T>),
+                     e)
+                |> raise)

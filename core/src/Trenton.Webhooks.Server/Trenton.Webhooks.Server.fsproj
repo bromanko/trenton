@@ -3,7 +3,7 @@
     <PropertyGroup>
         <EnableDefaultContentItems>false</EnableDefaultContentItems>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>Trenton.Webhooks.Sever</RootNamespace>
+        <RootNamespace>Trenton.Webhooks.Server</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
         <Content Include="paket.references" />
@@ -11,8 +11,10 @@
         <Compile Include="Serilog.fs" />
         <Compile Include="ErrorHandler.fs" />
         <Compile Include="Routes\Paths.fs" />
+        <Compile Include="Routes\Respond.fs" />
         <Compile Include="Routes\Meta.fs" />
         <Compile Include="Routes\Fitbit.fs" />
+        <Compile Include="Routes\Location.fs" />
         <Compile Include="Health.fs" />
         <Compile Include="CompositionRoot.fs" />
         <Compile Include="Host.fs" />
@@ -21,6 +23,7 @@
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Trenton.Health\Trenton.Health.fsproj" />
+      <ProjectReference Include="..\Trenton.Location\Trenton.Location.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

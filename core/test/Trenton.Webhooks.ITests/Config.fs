@@ -9,12 +9,15 @@ type ServerConfig =
 
 type FitbitConfig = { SubscriberVerificationCode: string }
 
+type LocationConfig = { AccessToken: string }
+
 [<Convention("TEST")>]
 type Config =
     { [<DefaultValue("false")>]
       LoggingEnabled: bool
       Server: ServerConfig
-      Fitbit: FitbitConfig }
+      Fitbit: FitbitConfig
+      Location: LocationConfig }
 
 module Config =
     let private failWithInvalidConfig error =

@@ -30,6 +30,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Web.ITests", "test\
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Iam", "src\Trenton.Iam\Trenton.Iam.fsproj", "{3A9A18EE-E7F2-4CFC-8D49-29FB53313D77}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Trenton.Location", "src\Trenton.Location\Trenton.Location.fsproj", "{F156838F-41FB-4778-AAC2-727CE4E40CFF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,10 @@ Global
 		{3A9A18EE-E7F2-4CFC-8D49-29FB53313D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A9A18EE-E7F2-4CFC-8D49-29FB53313D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A9A18EE-E7F2-4CFC-8D49-29FB53313D77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F156838F-41FB-4778-AAC2-727CE4E40CFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F156838F-41FB-4778-AAC2-727CE4E40CFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F156838F-41FB-4778-AAC2-727CE4E40CFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F156838F-41FB-4778-AAC2-727CE4E40CFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{1B9A79F6-0B3E-407D-9110-5D2D8899E611} = {19F67596-458B-4046-9D3E-024DA7699DEF}

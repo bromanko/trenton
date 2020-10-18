@@ -18,6 +18,9 @@ module ErrorHandler =
     let internalError msg =
         ServerErrors.INTERNAL_ERROR { Message = msg }
 
+    let unauthorizedErr scheme realm msg =
+        RequestErrors.UNAUTHORIZED scheme realm { Message = msg }
+
     let giraffeErrHandler config (ex: Exception) (logger: ILogger) =
         logErrL logger ex
             "An unhandled exception occurred while processing request."

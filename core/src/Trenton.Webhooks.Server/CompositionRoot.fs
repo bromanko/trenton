@@ -1,12 +1,15 @@
 namespace Trenton.Webhooks.Server
 
 open Trenton.Health
+open Trenton.Location
 open Trenton.Webhooks.Server.Config
 open Google.Cloud.Firestore
 open System
 open Grpc.Core
 
-type CompositionRoot = { FitbitService: FitbitService.T }
+type CompositionRoot =
+    { FitbitService: FitbitService.T
+      LocationService: LocationService.T }
 
 [<AutoOpen>]
 module CompositionRoot =
@@ -33,4 +36,5 @@ module CompositionRoot =
     let defaultRoot (config: AppConfig) =
         let fitbitClient = getFitbitClient config.Fitbit
         let fitbitAuthRepo = getFitbitAuthRepo config.GoogleCloud
-        { FitbitService = FitbitService.defaultSvc fitbitClient fitbitAuthRepo }
+        { FitbitService = FitbitService.defaultSvc fitbitClient fitbitAuthRepo
+          LocationService = LocationService.defaultSvc }

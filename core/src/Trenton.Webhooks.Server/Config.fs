@@ -45,6 +45,9 @@ module Config =
           ClientSecret: string
           Subscriber: FitbitSubscriberConfig }
 
+    type LocationConfig =
+        { AccessToken: string }
+
     type FirestoreEmulatorConfig = { Host: string }
 
     type FirestoreConfig =
@@ -61,6 +64,7 @@ module Config =
         { Logging: LoggingConfig
           Server: ServerConfig
           Fitbit: FitbitConfig
+          Location: LocationConfig
           GoogleCloud: GoogleCloudConfig }
 
     let private envConfigGetOrFail (key: string) =

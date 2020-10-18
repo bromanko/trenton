@@ -8,3 +8,5 @@ module Paths =
     let Fitbit =
         {| VerifySubscriber = "/fitbit"
            Webhook = "/fitbit" |}
+
+    let Location = {| Webhook = "/locations" |}

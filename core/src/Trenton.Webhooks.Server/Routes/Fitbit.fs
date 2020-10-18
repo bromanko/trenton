@@ -3,13 +3,11 @@ namespace Trenton.Webhooks.Server.Routes
 open FSharp.Control.Tasks.V2.ContextInsensitive
 open Giraffe
 open Microsoft.AspNetCore.Http
-open System.Threading.Tasks
 open Trenton.Webhooks.Server.Config
 open Trenton.Webhooks.Server
+open Trenton.Webhooks.Server.Routes
 
 module Fitbit =
-    let private earlyReturn: HttpFunc = Some >> Task.FromResult
-
     let bindQueryOrErr<'T> f =
         fun (next: HttpFunc) (ctx: HttpContext) ->
             let result = ctx.TryBindQueryString<'T>()
