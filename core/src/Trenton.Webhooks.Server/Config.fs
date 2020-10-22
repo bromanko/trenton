@@ -46,7 +46,8 @@ module Config =
           Subscriber: FitbitSubscriberConfig }
 
     type LocationConfig =
-        { AccessToken: string }
+        { AccessToken: string
+          BucketName: string }
 
     type FirestoreEmulatorConfig = { Host: string }
 

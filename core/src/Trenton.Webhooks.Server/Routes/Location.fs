@@ -1,8 +1,11 @@
 namespace Trenton.Webhooks.Server.Routes
 
+open System
+open FsToolkit.ErrorHandling
 open Giraffe
 open Trenton.Webhooks.Server
 open Trenton.Webhooks.Server.Routes
+open Trenton.Location.LocationService
 open Microsoft.AspNetCore.Http
 open FSharp.Control.Tasks.V2.ContextInsensitive
 
@@ -18,11 +21,33 @@ module Location =
             fun (next: HttpFunc) (ctx: HttpContext) ->
                 match ctx.GetRequestHeader "Authorization" with
                 | Ok o when o = expectedAuthHeader preSharedToken -> next ctx
-                | _ -> unauthorizedErr Bearer "Locations" "Unauthorized" earlyReturn ctx
+                | _ ->
+                    unauthorizedErr
+                        Bearer
+                        "Locations"
+                        "Unauthorized"
+                        earlyReturn
+                        ctx
 
-        let private handleWebhook fitbitSvc =
+        let private timeNow () = DateTime.UtcNow
+
+        let private fileName timeNow =
+            (timeNow () |> DateTimeOffset).ToUnixTimeMilliseconds()
+            |> sprintf "%d.json"
+
+        let private handleWebhook locSvc =
             fun (next: HttpFunc) (ctx: HttpContext) ->
-                task { return! Successful.OK {| Result = "ok" |} next ctx }
+                task {
+                    let fName = fileName timeNow
+
+                    let! response =
+                        locSvc.StoreLocationData fName ctx.Request.Body
+                        |> AsyncResult.foldResult (fun _ ->
+                            Successful.OK {| Result = "ok" |}) (fun e ->
+                               (internalError <| e.ToString()))
+
+                    return! response next ctx
+                }
 
         let handler<'a> accessToken locSvc =
             POST

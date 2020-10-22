@@ -19,6 +19,7 @@ nuget Serilog.Sinks.Console
 nuget Serilog.Formatting.Compact
 nuget Serilog.AspNetCore
 nuget Google.Cloud.Firestore
+nuget Google.Cloud.Storage.V1
 nuget TaskBuilder.fs
 nuget FSharpx.Async
 nuget Westwind.AspnetCore.LiveReload

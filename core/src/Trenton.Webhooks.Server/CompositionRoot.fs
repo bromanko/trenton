@@ -37,4 +37,4 @@ module CompositionRoot =
         let fitbitClient = getFitbitClient config.Fitbit
         let fitbitAuthRepo = getFitbitAuthRepo config.GoogleCloud
         { FitbitService = FitbitService.defaultSvc fitbitClient fitbitAuthRepo
-          LocationService = LocationService.defaultSvc }
+          LocationService = LocationService.gcsSvc config.Location.BucketName }
