@@ -36,8 +36,7 @@ module Config =
                     httpUrl
                     [| sprintf "https://%s:%d" this.Address port |]
 
-    type FitbitSubscriberConfig =
-        { VerificationCode: string }
+    type FitbitSubscriberConfig = { VerificationCode: string }
 
     type FitbitConfig =
         { BaseUrl: string option

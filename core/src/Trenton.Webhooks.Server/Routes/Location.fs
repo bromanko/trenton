@@ -1,6 +1,8 @@
 namespace Trenton.Webhooks.Server.Routes
 
 open System
+open System.IO
+open Trenton.Common
 open FsToolkit.ErrorHandling
 open Giraffe
 open Trenton.Webhooks.Server
@@ -39,12 +41,12 @@ module Location =
             fun (next: HttpFunc) (ctx: HttpContext) ->
                 task {
                     let fName = fileName timeNow
-
+                    let l = ctx.GetLogger()
                     let! response =
                         locSvc.StoreLocationData fName ctx.Request.Body
                         |> AsyncResult.foldResult (fun _ ->
-                            Successful.OK {| Result = "ok" |}) (fun e ->
-                               (internalError <| e.ToString()))
+                            Successful.OK {| Result = "ok" |})
+                               (internalErrorEx l)
 
                     return! response next ctx
                 }

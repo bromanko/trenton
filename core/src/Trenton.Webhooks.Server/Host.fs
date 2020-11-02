@@ -28,7 +28,7 @@ module Host =
         fun (app: IApplicationBuilder) ->
             app.UseSerilogRequestLogging()
                .UseTrentonHealthChecks(PathString Routes.Paths.Healthz)
-               .UseGiraffeErrorHandler(giraffeErrHandler cfg.Server)
+               .UseGiraffeErrorHandler(giraffeErrHandler)
                .UseGiraffe(webApp compRoot cfg)
 
     let createHostBuilder argv config compRoot =

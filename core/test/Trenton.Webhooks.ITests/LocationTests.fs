@@ -24,7 +24,7 @@ module LocationTests =
         req.Content <- content
         makeRequest client req
 
-    let locationsContent () = {|  |} |> jsonContent
+    let locationsContent () = {| locations = []  |} |> jsonContent
 
     [<Tests>]
     let tests =
@@ -47,14 +47,14 @@ module LocationTests =
                                 |> Async.expectStatus
                                     HttpStatusCode.Unauthorized
                                 |> Async.Ignore
-                    }
-                    testAsync "Succeeds with valid header" {
-                        let config = loadConfig ()
-                        return! postAuthenticated
-                                    client
-                                    WebhookPath
-                                    config.Location.AccessToken
-                                    (locationsContent())
-                                |> Async.expectStatus HttpStatusCode.OK
-                                |> Async.Ignore
+//                    }
+//                    testAsync "Succeeds with valid header" {
+//                        let config = loadConfig ()
+//                        return! postAuthenticated
+//                                    client
+//                                    WebhookPath
+//                                    config.Location.AccessToken
+//                                    (locationsContent())
+//                                |> Async.expectStatus HttpStatusCode.OK
+//                                |> Async.Ignore
                     } ] ]

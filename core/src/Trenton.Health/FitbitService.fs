@@ -23,25 +23,21 @@ module FitbitService =
         | FitbitApiError.Exception e -> Error.Exception e
 
     let private getAccessToken fitbitClient code redirectUri =
-        asyncResult {
-            return! (AuthorizationCodeWithPkce
-                         { Code = code
-                           RedirectUri = Some redirectUri
-                           State = None
-                           CodeVerifier = None })
-                    |> fitbitClient.GetAccessToken
-                    |> AsyncResult.mapError mapFitbitApiErr
-        }
+        (AuthorizationCodeWithPkce
+            { Code = code
+              RedirectUri = Some redirectUri
+              State = None
+              CodeVerifier = None })
+        |> fitbitClient.GetAccessToken
+        |> AsyncResult.mapError mapFitbitApiErr
 
     let private mapAuthRepositoryError =
         function
         | FitbitAuthRepositoryError.Exception e -> Error.Exception e
 
     let private upsertToken (repository: FitbitAuthRepository.T) token state =
-        asyncResult {
-            return! repository.UpsertAccessToken token state
-                    |> AsyncResult.mapError mapAuthRepositoryError
-        }
+        repository.UpsertAccessToken token state
+        |> AsyncResult.mapError mapAuthRepositoryError
 
     let private getAndStoreAccessToken fitbitClient
                                        repository
@@ -49,10 +45,8 @@ module FitbitService =
                                        code
                                        redirectUri
                                        =
-        asyncResult {
-            return! getAccessToken fitbitClient code redirectUri
-                    >>= upsertToken repository userId
-        }
+        getAccessToken fitbitClient code redirectUri
+        >>= upsertToken repository userId
 
     let private tryGetLastTokenUpdateDate (repository: FitbitAuthRepository.T)
                                           userId

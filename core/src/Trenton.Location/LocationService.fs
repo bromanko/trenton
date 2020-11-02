@@ -5,20 +5,14 @@ open Google.Cloud.Storage.V1
 open System.IO
 
 module LocationService =
-    type Error = Exception of exn
-
     type T =
-        { StoreLocationData: string -> Stream -> Async<Result<unit, Error>> }
+        { StoreLocationData: string -> Stream -> Async<Result<unit, exn>> }
 
     let private storeLocationData (client: StorageClient) bucket fName stream =
-        asyncResult {
-            let! res =
-                client.UploadObjectAsync(bucket, fName, "text/json", stream)
-                |> Async.AwaitTask
+        client.UploadObjectAsync(bucket, fName, "text/json", stream)
+        |> AsyncResult.ofTask
+        |> AsyncResult.foldResult (fun _ -> Ok()) (fun e ->
+               Result.Error e)
 
-            return! Ok()
-        }
-
-    let gcsSvc bucket =
-        let client = StorageClient.Create()
+    let gcsSvc client bucket =
         { T.StoreLocationData = storeLocationData client bucket }
