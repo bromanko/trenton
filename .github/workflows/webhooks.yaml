@@ -18,7 +18,7 @@ jobs:
     # There is an issue running msbuild in Docker on the latest ubuntu kernel.
     runs-on: ubuntu-16.04
     env:
-      GOOGLE_APPLICATION_CREDENTIALS: ${{ GITHUB_WORKSPACE }}/gcp-service-account-credentials.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-service-account-credentials.json
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
@@ -44,7 +44,7 @@ jobs:
     # There is an issue running msbuild in Docker on the latest ubuntu kernel.
     runs-on: ubuntu-16.04
     env:
-      GOOGLE_APPLICATION_CREDENTIALS: ${{ GITHUB_WORKSPACE }}/gcp-service-account-credentials.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-service-account-credentials.json
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
@@ -99,7 +99,7 @@ jobs:
     if: endsWith(github.ref, 'master')
     runs-on: self-hosted
     env:
-      GOOGLE_APPLICATION_CREDENTIALS: ${{ GITHUB_WORKSPACE }}/gcp-service-account-credentials.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/gcp-service-account-credentials.json
     steps:
     - name: Checkout code
       uses: actions/checkout@v1
