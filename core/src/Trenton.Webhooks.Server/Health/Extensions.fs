@@ -1,4 +1,4 @@
-namespace Trenton.Webhooks.Server
+namespace Trenton.Webhooks.Server.Health
 
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Diagnostics.HealthChecks
