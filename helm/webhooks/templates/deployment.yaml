@@ -35,13 +35,13 @@ spec:
                 name: {{ include "webhooks.fullname" . }}
           livenessProbe:
             httpGet:
-              path: /healthz
+              path: /healthz/liveness
               port: {{ .Values.service.port }}
             initialDelaySeconds: 15
             periodSeconds: 3
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /healthz/readiness
               port: {{ .Values.service.port }}
             initialDelaySeconds: 15
             periodSeconds: 3
