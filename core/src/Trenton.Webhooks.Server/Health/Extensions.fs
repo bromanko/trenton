@@ -9,10 +9,31 @@ open System
 open System.Net.Mime
 open System.Threading.Tasks
 open Giraffe
+open Trenton.Webhooks.Server
+open Trenton.Webhooks.Server.Config
 
-module Health =
+module Extensions =
+    [<Literal>]
+    let private Readiness = "readiness"
+
+    [<Literal>]
+    let private Liveness = "liveness"
+
+    let private readinessTags = [ Readiness ]
+    let private livenessTags = [ Liveness ]
+
     type IServiceCollection with
-        member this.AddTrentonHealthChecks() = this.AddHealthChecks()
+        member this.AddTrentonHealthChecks(compRoot: CompositionRoot,
+                                           cfg: AppConfig) =
+            let csCheck =
+                Checks.googleCloudStorage
+                    compRoot.GoogleCloudStorageClient
+                    cfg.Location.BucketName
+
+            this.AddHealthChecks()
+                .AddAsyncCheck("googleCloudStorage",
+                               csCheck,
+                               tags = Seq.append readinessTags livenessTags)
 
     type IApplicationBuilder with
 
@@ -22,6 +43,15 @@ module Health =
                 ctx.Response.ContentType <- MediaTypeNames.Application.Json
                 ctx.WriteJsonAsync body :> Task)
 
-        member this.UseTrentonHealthChecks(path) =
+        member this.UseTrentonHealthChecks(readinessPath, livenessPath) =
             this.UseHealthChecks
-                (path, HealthCheckOptions(ResponseWriter = this.JsonWriter))
+                (readinessPath,
+                 HealthCheckOptions
+                     (ResponseWriter = this.JsonWriter,
+                      Predicate = fun check -> check.Tags.Contains Readiness))
+            |> ignore
+            this.UseHealthChecks
+                (livenessPath,
+                 HealthCheckOptions
+                     (ResponseWriter = this.JsonWriter,
+                      Predicate = fun check -> check.Tags.Contains Liveness))

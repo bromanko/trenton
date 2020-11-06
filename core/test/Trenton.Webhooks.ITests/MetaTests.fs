@@ -9,39 +9,54 @@ module MetaTests =
     let IndexPath = "/"
 
     [<CLIMutable>]
-    type IndexResponse =
-        { now: string }
+    type IndexResponse = { now: string }
 
     [<Literal>]
-    let HealthPath = "/healthz"
+    let LivenessPath = "/healthz/liveness"
+
+    [<Literal>]
+    let ReadinessPath = "/healthz/readiness"
 
     [<CLIMutable>]
-    type HealthSuccessResponse =
-        { status: string }
+    type HealthSuccessResponse = { status: string }
 
     let client = createClient ()
 
     [<Tests>]
     let tests =
-        testList "Meta"
-            [ testList "Index"
+        testList
+            "Meta"
+            [ testList
+                "Index"
                   [ testAsync "Returns information" {
                         return! get client IndexPath
                                 |> Async.expectStatus HttpStatusCode.OK
                                 |> Async.bind readJson
-                                |> Async.map
-                                    (fun actual ->
-                                        Expect.isNotEmpty actual.now
-                                            "Response is empty")
+                                |> Async.map (fun actual ->
+                                    Expect.isNotEmpty
+                                        actual.now
+                                        "Response is empty")
                     } ]
 
-              testList "Health Checks"
-                  [ testAsync "Returns information" {
-                        return! get client HealthPath
+              testList
+                  "Health Checks"
+                  [ testAsync "Liveness returns information" {
+                        return! get client LivenessPath
                                 |> Async.expectStatus HttpStatusCode.OK
                                 |> Async.bind readJson
-                                |> Async.map
-                                    (fun actual ->
-                                        Expect.equal actual.status "Healthy"
-                                            "Status was not healthy")
+                                |> Async.map (fun actual ->
+                                    Expect.equal
+                                        actual.status
+                                        "Healthy"
+                                        "Status was not healthy")
+                    }
+                    testAsync "Readiness returns information" {
+                        return! get client ReadinessPath
+                                |> Async.expectStatus HttpStatusCode.OK
+                                |> Async.bind readJson
+                                |> Async.map (fun actual ->
+                                    Expect.equal
+                                        actual.status
+                                        "Healthy"
+                                        "Status was not healthy")
                     } ] ]

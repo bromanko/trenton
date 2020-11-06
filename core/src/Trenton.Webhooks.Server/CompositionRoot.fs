@@ -10,6 +10,7 @@ open Grpc.Core
 
 type CompositionRoot =
     { FitbitService: FitbitService.T
+      GoogleCloudStorageClient: StorageClient
       LocationService: LocationService.T }
 
 [<AutoOpen>]
@@ -18,8 +19,7 @@ module CompositionRoot =
         FitbitClient.defaultConfig cfg.ClientId cfg.ClientSecret
         |> FitbitClient.getClient
 
-    let private getCloudStorageClient _ =
-        StorageClientBuilder().Build()
+    let private getCloudStorageClient _ = StorageClientBuilder().Build()
 
     let private getNow () = DateTime.Now
 
@@ -43,5 +43,6 @@ module CompositionRoot =
         let csClient = getCloudStorageClient config.GoogleCloud
 
         { FitbitService = FitbitService.defaultSvc fitbitClient fitbitAuthRepo
+          GoogleCloudStorageClient = csClient
           LocationService =
               LocationService.gcsSvc csClient config.Location.BucketName }

@@ -10,13 +10,14 @@
         <Compile Include="Config.fs" />
         <Compile Include="Serilog.fs" />
         <Compile Include="ErrorHandler.fs" />
+        <Compile Include="CompositionRoot.fs" />
+        <Compile Include="Health\Checks.fs" />
+        <Compile Include="Health\Extensions.fs" />
         <Compile Include="Routes\Paths.fs" />
         <Compile Include="Routes\Respond.fs" />
         <Compile Include="Routes\Meta.fs" />
         <Compile Include="Routes\Fitbit.fs" />
         <Compile Include="Routes\Location.fs" />
-        <Compile Include="Health.fs" />
-        <Compile Include="CompositionRoot.fs" />
         <Compile Include="Host.fs" />
         <Compile Include="Program.fs" />
         <Content Include="README.md" />
