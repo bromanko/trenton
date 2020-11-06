@@ -16,7 +16,7 @@ services:
       - ..:/usr/src/app
       - ${HOME}/.config/gcloud/application_default_credentials.json:/root/.config/gcloud/application_default_credentials.json:ro
       # These credentials are used in CI
-      - ${PWD}/gcp-service-account-credentials.json:/etc/secrets/google/credentials.json
+      - ${GOOGLE_APPLICATION_CREDENTIALS}:/etc/secrets/google/credentials.json
     ports:
       - 5000:5000
       - 5001:5001
