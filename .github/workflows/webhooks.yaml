@@ -64,7 +64,7 @@ jobs:
     - name: Build development server
       run: ./go webhooks build
     - name: Start development server
-      run: ./go webhooks start -d > .server-container
+      run: ./go webhooks start -d -g ${GOOGLE_APPLICATION_CREDENTIALS} > .server-container
     - name: Run integration tests
       run: ./go webhooks itest
     - name: Gather server logs

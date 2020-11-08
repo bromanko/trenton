@@ -13,9 +13,11 @@ SCRIPT_PATH="$(
 cd "${SCRIPT_PATH}/../../core"
 
 detach=""
-while getopts "d" options; do
+gcp_vol=""
+while getopts "dg:" options; do
   case ${options} in
     d) detach="--detach" ; shift $((OPTIND-1)) ;;
+    g) gcp_vol="-v ${OPTARG}:/etc/secrets/google/credentials.json:ro"; shift $((OPTIND-1)) ;;
     *) error "Unknown option: -${OPTARG}"; exit 1 ;;
   esac
 done
@@ -26,4 +28,5 @@ docker run \
   --network "${DOCKER_COMPOSE_NETWORK}" \
   --env-file .env \
   ${detach} \
+  ${gcp_vol} \
   "${COMMON_DOCKER_IMAGE_BASE}/${IMAGE_NAME}:${COMMON_COMMIT_SHA}"
