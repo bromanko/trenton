@@ -23,7 +23,7 @@ module Checks =
         task {
             try
                 storageClient.ListObjects(bucketName)
-                |> Seq.head
+                |> Seq.first
                 |> ignore
 
                 return HealthCheckResult.Healthy()
