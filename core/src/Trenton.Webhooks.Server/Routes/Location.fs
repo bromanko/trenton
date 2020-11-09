@@ -1,8 +1,6 @@
 namespace Trenton.Webhooks.Server.Routes
 
 open System
-open System.IO
-open Trenton.Common
 open FsToolkit.ErrorHandling
 open Giraffe
 open Trenton.Webhooks.Server
@@ -35,7 +33,7 @@ module Location =
 
         let private fileName timeNow =
             (timeNow () |> DateTimeOffset).ToUnixTimeMilliseconds()
-            |> sprintf "%d.json"
+            |> sprintf "locations/%d.json"
 
         let private handleWebhook locSvc =
             fun (next: HttpFunc) (ctx: HttpContext) ->
