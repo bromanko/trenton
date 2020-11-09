@@ -14,11 +14,10 @@ cd "${SCRIPT_PATH}/../../core"
 
 detach=""
 gcp_vol=""
-set -x
 while getopts "dg:" options; do
   case ${options} in
-    d) detach="--detach" ; shift $((OPTIND-1)) ;;
-    g) gcp_vol="-v ${OPTARG}:/etc/secrets/google/credentials.json:ro"; shift $((OPTIND-1)) ;;
+    d) detach="--detach" ;;
+    g) gcp_vol="-v ${OPTARG}:/etc/secrets/google/credentials.json:ro";;
     *) error "Unknown option: -${OPTARG}"; exit 1 ;;
   esac
 done
