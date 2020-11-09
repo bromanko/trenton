@@ -50,4 +50,4 @@ spec:
       volumes:
         - name: google-service-account
           secret:
-            secretName: google-service-account-key
+            secretName: {{ include "web.fullname" . }} -google-service-account-key
