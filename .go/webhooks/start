@@ -14,17 +14,15 @@ cd "${SCRIPT_PATH}/../../core"
 
 detach=""
 gcp_vol=""
+set -x
 while getopts "dg:" options; do
   case ${options} in
     d) detach="--detach" ; shift $((OPTIND-1)) ;;
-    g)
-      cat $OPTARG | wc -c
-      gcp_vol="-v ${OPTARG}:/etc/secrets/google/credentials.json:ro"; shift $((OPTIND-1)) ;;
+    g) gcp_vol="-v ${OPTARG}:/etc/secrets/google/credentials.json:ro"; shift $((OPTIND-1)) ;;
     *) error "Unknown option: -${OPTARG}"; exit 1 ;;
   esac
 done
 
-set -x
 docker run \
   --name server \
   -p 5000:5000 \
