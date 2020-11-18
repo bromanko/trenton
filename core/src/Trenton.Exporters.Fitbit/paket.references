@@ -1,0 +1,4 @@
+FSharp.Core
+Http.Fs
+Microsoft.Extensions.Logging
+FsConfig

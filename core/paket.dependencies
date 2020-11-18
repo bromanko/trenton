@@ -3,6 +3,7 @@ source https://api.nuget.org/v3/index.json
 storage: none
 framework: netcore3.1
 
+nuget Argu
 nuget Destructurama.FSharp prerelease
 nuget Hopac
 nuget Http.Fs
