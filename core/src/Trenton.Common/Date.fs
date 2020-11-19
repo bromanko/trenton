@@ -97,4 +97,4 @@ module Date =
     let tryParse (s: string) =
         match DateTime.TryParse s with
         | (false, _) -> None
-        | (true, d) -> Some d
+        | (true, d) -> T.FromDateTime d |> Some
