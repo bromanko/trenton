@@ -22,15 +22,17 @@ module Main =
         eprintfn "ERROR: %s" msg
         printUsage ()
 
-    let private printException ex =
-        eprintfn "ERROR: An exception has occurred."
+    let private printError ex =
+        eprintfn "ERROR: An error has occurred."
         eprintfn "%O" ex
 
     let private execCommand results =
         match results with
         | [ Version ] -> Version.exec ()
         | [ Export r ] -> Export.exec r
-        | _ -> Result.Error <| UnknownVerb "A command must be specified."
+        | _ ->
+            Result.Error
+            <| UnknownVerb "A command must be specified."
 
     [<EntryPoint>]
     let main argv =
@@ -39,11 +41,8 @@ module Main =
         |> function
         | Error e ->
             match e with
-            | UnknownVerb m ->
-                printUnknown m
-                1
-            | Exception ex ->
-                printException ex
-                1
-        | Ok _ ->
-            0
+            | UnknownVerb m -> printUnknown m
+            | ArgParseError e -> printError e
+            | Exception ex -> printError ex
+            1
+        | Ok _ -> 0
