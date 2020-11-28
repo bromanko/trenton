@@ -2,6 +2,7 @@
 
 open System
 open Argu
+open Trenton.Cli
 open Trenton.Cli.Verbs
 open FsToolkit.ErrorHandling.Operator.Result
 
@@ -36,16 +37,14 @@ module Main =
         | [ Version ] -> Version.exec ()
         | [ Export r ] -> Export.exec config r
         | _ ->
-            Error
-            <| UnknownVerb "A command must be specified."
+            UnknownVerb "A command must be specified." |> Error
 
     let loadConfig () =
         Config.load Config.DefaultConfigRoot Config.DefaultConfigFilename
-        |> Result.mapError ConfigParseError
 
     let parseCommandLine argv =
-        Ok
-        <| parser.ParseCommandLine(argv).GetAllResults()
+        parser.ParseCommandLine(argv).GetAllResults()
+        |> Ok
 
     [<EntryPoint>]
     let main argv =
@@ -56,6 +55,7 @@ module Main =
         | Error e ->
             match e with
             | UnknownVerb m -> printUnknown m
+            | ConfigFileNotFound -> printError "Config file not found."
             | ConfigParseError e -> printConfigError e
             | ArgParseError e -> printError e
             | Exception ex -> printError ex

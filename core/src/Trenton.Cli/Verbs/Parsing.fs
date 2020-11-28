@@ -1,6 +1,7 @@
 namespace Trenton.Cli.Verbs
 
 open Trenton.Common
+open Trenton.Cli
 open FsToolkit.ErrorHandling
 
 [<AutoOpen>]

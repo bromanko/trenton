@@ -2,7 +2,7 @@ namespace Trenton.Cli
 
 open System.IO
 open FsConfig
-open FsToolkit.ErrorHandling
+open FsToolkit.ErrorHandling.Operator.Result
 open Microsoft.Extensions.Configuration
 open System
 
@@ -24,15 +24,18 @@ module Config =
     [<Literal>]
     let DefaultConfigFilename = "config.json"
 
-    let private getAppConfig path filename =
+    let private loadConfigFile path filename =
         if File.Exists <| Path.Combine(path, filename) then
             ConfigurationBuilder().SetBasePath(path)
                 .AddJsonFile(filename, optional = true).Build()
             |> AppConfig
-            |> Some
+            |> Ok
         else
-            None
+            Error ConfigFileNotFound
+
+    let parseConfig (c: FsConfig.AppConfig) =
+        c.Get<AppConfig>()
+        |> Result.mapError ConfigParseError
 
     let load path filename =
-        getAppConfig path filename
-        |> Option.traverseResult (fun c -> c.Get<AppConfig>())
+        loadConfigFile path filename >>= parseConfig

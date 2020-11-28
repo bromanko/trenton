@@ -8,5 +8,5 @@ module Export =
         match args.GetAllResults() with
         | [ Fitbit args ] -> ExportFitbit.exec cfg args
         | _ ->
-            Error
-            <| UnknownVerb "An export command must be specified."
+            UnknownVerb "An export command must be specified."
+            |> Error
