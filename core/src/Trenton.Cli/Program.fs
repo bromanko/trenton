@@ -3,6 +3,7 @@
 open System
 open Argu
 open Trenton.Cli.Verbs
+open FsToolkit.ErrorHandling.Operator.Result
 
 module Main =
     let private errorHandler =
@@ -26,22 +27,36 @@ module Main =
         eprintfn "ERROR: An error has occurred."
         eprintfn "%O" ex
 
-    let private execCommand results =
-        match results with
+    let private printConfigError e =
+        sprintf "The config file could not be parsed.\n%O" e
+        |> printError
+
+    let private execCommand config args =
+        match args with
         | [ Version ] -> Version.exec ()
-        | [ Export r ] -> Export.exec r
+        | [ Export r ] -> Export.exec config r
         | _ ->
-            Result.Error
+            Error
             <| UnknownVerb "A command must be specified."
+
+    let loadConfig () =
+        Config.load Config.DefaultConfigRoot Config.DefaultConfigFilename
+        |> Result.mapError ConfigParseError
+
+    let parseCommandLine argv =
+        Ok
+        <| parser.ParseCommandLine(argv).GetAllResults()
 
     [<EntryPoint>]
     let main argv =
-        parser.ParseCommandLine(argv).GetAllResults()
-        |> execCommand
+        execCommand
+        <!> loadConfig ()
+        <*> parseCommandLine argv
         |> function
         | Error e ->
             match e with
             | UnknownVerb m -> printUnknown m
+            | ConfigParseError e -> printConfigError e
             | ArgParseError e -> printError e
             | Exception ex -> printError ex
             1

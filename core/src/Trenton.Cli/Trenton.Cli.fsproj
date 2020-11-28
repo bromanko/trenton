@@ -7,6 +7,8 @@
     </PropertyGroup>
     <ItemGroup>
         <Content Include="paket.references" />
+        <Compile Include="Config.fs" />
+        <Compile Include="Arguments\Config.fs" />
         <Compile Include="Arguments\Export.fs" />
         <Compile Include="Arguments\Main.fs" />
         <Compile Include="Verbs\Common.fs" />

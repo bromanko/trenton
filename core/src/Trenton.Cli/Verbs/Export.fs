@@ -4,7 +4,9 @@ open Argu
 open Trenton.Cli
 
 module Export =
-    let exec (args: ParseResults<ExportArgs>) =
+    let exec cfg (args: ParseResults<ExportArgs>) =
         match args.GetAllResults() with
-        | [ Fitbit args ] -> ExportFitbit.exec args
-        | _ -> Error <| UnknownVerb "An export command must be specified."
+        | [ Fitbit args ] -> ExportFitbit.exec cfg args
+        | _ ->
+            Error
+            <| UnknownVerb "An export command must be specified."

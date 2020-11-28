@@ -7,14 +7,15 @@ nuget Argu
 nuget Destructurama.FSharp prerelease
 nuget Hopac
 nuget Http.Fs
-nuget FSharp.Core
 nuget FsConfig
+nuget FSharp.Core
 nuget FSharp.Data
 nuget FsToolkit.ErrorHandling
 nuget Giraffe
 nuget Giraffe.Razor
 nuget Microsoft.AspNetCore.Diagnostics.HealthChecks
 nuget Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
+nuget Microsoft.Extensions.Configuration.Json
 nuget Serilog
 nuget Serilog.Sinks.Console
 nuget Serilog.Formatting.Compact

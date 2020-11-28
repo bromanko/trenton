@@ -4,6 +4,8 @@ open Argu
 open Trenton.Cli
 open Trenton.Cli.Verbs
 open Trenton.Common
+open Trenton.Health.FitbitService
+open FsToolkit.ErrorHandling
 open FsToolkit.ErrorHandling.Operator.Result
 
 module ExportFitbit =
@@ -19,7 +21,19 @@ module ExportFitbit =
           StartDate = startDate
           EndDate = endDate }
 
-    let private parseConfig (args: ParseResults<FitbitExportArgs>) =
+    let parseClientId cfg (args: ParseResults<FitbitExportArgs>) =
+        let argVal = args.TryGetResult ClientId
+        let cfgVal = cfg.Fitbit
+        ()
+
+    //         match cfg with
+//         | None ->
+    // check args
+
+    let private parseCfg (cfg: AppConfig option)
+                         (args: ParseResults<FitbitExportArgs>)
+                         =
+        printfn "%O" cfg
         mkConfig
         <!> (parseNes "Access token must be specified."
              <| args.GetResult AccessToken)
@@ -30,5 +44,7 @@ module ExportFitbit =
         <*> (parseOptionalDate "End date must be a valid date."
              <| args.TryGetResult EndDate)
 
-    let exec (args: ParseResults<FitbitExportArgs>) =
-        parseConfig args >>= (fun _ -> Ok())
+    let private export cfg args = Ok()
+
+    let exec (cfg: AppConfig option) (args: ParseResults<FitbitExportArgs>) =
+        parseCfg cfg args >>= export cfg

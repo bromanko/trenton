@@ -1,3 +1,5 @@
-FSharp.Core
 Argu
+FsConfig
+FSharp.Core
 FsToolkit.ErrorHandling
+Microsoft.Extensions.Configuration.Json
