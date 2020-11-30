@@ -35,7 +35,8 @@ module Main =
     let private execCommand args config =
         match args with
         | [ Version ] -> Version.exec ()
-        | [ Export r ] -> Export.exec config r
+        | [ Auth s ] -> Auth.exec config s
+        | [ Export s ] -> Export.exec config s
         | _ ->
             UnknownVerb "A valid command must be specified."
             |> Error

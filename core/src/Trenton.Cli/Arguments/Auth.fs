@@ -7,4 +7,4 @@ type AuthArgs =
     interface IArgParserTemplate with
         member x.Usage =
             match x with
-            | Fitbit -> "Exports data from Fitbit."
+            | Fitbit -> "Authenticates with Fitbit."
