@@ -48,7 +48,7 @@ function ensureNetwork() {
   if [[ $? != 0 ]]; then
     set -e
     warn "Creating shared Docker network."
-    docker network create "$DOCKER_COMPOSE_NETWORK" >/dev/null 2>&1
+    docker network create "$DOCKER_COMPOSE_NETWORK" >/dev/null
   fi
   set -e
 }

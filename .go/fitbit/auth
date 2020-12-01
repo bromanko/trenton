@@ -11,5 +11,6 @@ script_path="$(
 
 client_id=22CNRY
 redirect_uri="http://localhost:5000/fitbit/callback"
-scopes="activity heartrate location nutrition profile settings sleep social weight"
+scopes="activity%20heartrate%20location%20nutrition%20profile%20settings%20sleep%20social%20weight"
 open "https://www.fitbit.com/oauth2/authorize?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}&scope=${scopes}&expires_in=2592000000"
+
