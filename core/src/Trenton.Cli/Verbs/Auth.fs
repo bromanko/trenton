@@ -6,7 +6,7 @@ open Trenton.Cli
 module Auth =
     let exec cfg (args: ParseResults<AuthArgs>) =
         match args.GetAllResults() with
-        | [ AuthArgs.Fitbit ] -> AuthFitbit.exec cfg
+        | [ AuthArgs.Fitbit ] -> AuthFitbitExecution.exec cfg
         | _ ->
             UnknownVerb "An auth command must be specified."
             |> Error

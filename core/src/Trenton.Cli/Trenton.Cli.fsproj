@@ -15,7 +15,10 @@
         <Compile Include="Arguments\Main.fs" />
         <Compile Include="Verbs\Parsing.fs" />
         <Compile Include="Verbs\Version.fs" />
-        <Compile Include="Verbs\AuthFitbit.fs" />
+        <Compile Include="Verbs\AuthFitbit\Host.fs" />
+        <Compile Include="Verbs\AuthFitbit\ConfigFileAuthRepository.fs" />
+        <Compile Include="Verbs\AuthFitbit\AcessTokenProcessor.fs" />
+        <Compile Include="Verbs\AuthFitbit\AuthFitbitExecution.fs" />
         <Compile Include="Verbs\Auth.fs" />
         <Compile Include="Verbs\ExportFitbit.fs" />
         <Compile Include="Verbs\Export.fs" />

@@ -12,7 +12,13 @@ type FitbitConfig =
       AccessToken: string option
       RefreshToken: string option }
 
-type AppConfig = { Fitbit: FitbitConfig }
+type ServerConfig =
+    { [<DefaultValue("9032")>]
+      Port: int }
+
+type AppConfig =
+    { Fitbit: FitbitConfig
+      Server: ServerConfig }
 
 [<RequireQualifiedAccess>]
 module Config =
