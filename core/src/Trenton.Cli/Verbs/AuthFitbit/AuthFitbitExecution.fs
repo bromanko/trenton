@@ -95,19 +95,22 @@ module AuthFitbitExecution =
         { ProcessAccessToken = atAgent.Process }
         |> createHostBuilder { Port = cfg.ServerPort }
 
-    let exec cfg =
-        let K x = Result.map (fun _ -> x)
-
+    let private startServer cfg =
         use cts = new CancellationTokenSource()
+        let atAgent = startAccessTokenProcessor cfg cts
+
+        let server = (mkServer cfg atAgent).Build()
+        server.RunAsync cts.Token
+        |> Async.AwaitTask
+        |> Async.RunSynchronously
+
+        Ok()
+
+
+    let exec cfg =
+        let K f x = f x |> Result.map (fun _ -> x)
 
         Config.parse cfg
-        >>= (fun cfg -> Browser.launchUrl cfg |> K cfg)
-        >>= (fun cfg ->
-            let atAgent = startAccessTokenProcessor cfg cts
-
-            let server = (mkServer cfg atAgent).Build()
-            server.RunAsync cts.Token
-            |> Async.AwaitTask
-            |> Async.RunSynchronously
-
-            Ok())
+        >>= K Browser.launchUrl
+        >>= K startServer
+        |> Result.map (fun _ -> ())
