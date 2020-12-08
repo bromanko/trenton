@@ -10,11 +10,11 @@ open Microsoft.Extensions.Hosting
 open Microsoft.AspNetCore.Http
 open System.Threading.Tasks
 open FSharp.Control.Tasks.V2.ContextInsensitive
+open Trenton.Cli.Verbs.AuthFitbit
 
 type ServerConfig = { Port: int }
 
-type CompositionRoot =
-    { ProcessAccessToken: string -> unit }
+type CompositionRoot = { ProcessAccessToken: AccessTokenCode -> unit }
 
 module Routes =
     let earlyReturn: HttpFunc = Some >> Task.FromResult
@@ -31,10 +31,24 @@ module Routes =
         [<CLIMutable>]
         type Query = { code: string }
 
-        let processAccessToken (atProcessor: string -> unit) qry =
+
+        let private getRedirectUri (req: HttpRequest) =
+            let uri =
+                Uri
+                    (sprintf
+                        "%s://%s%s"
+                         req.Scheme
+                         (req.Host.ToString())
+                         (req.Path.ToString()))
+
+            uri.ToString()
+
+        let private processAccessToken (atProcessor: AccessTokenCode -> unit) qry =
             fun (next: HttpFunc) (ctx: HttpContext) ->
                 task {
-                    atProcessor qry.code
+                    atProcessor
+                        { Code = qry.code
+                          RedirectUri = getRedirectUri ctx.Request }
                     return! next ctx
                 }
 
@@ -57,8 +71,7 @@ module Host =
         >=> ServerErrors.INTERNAL_ERROR(text ex.Message)
 
     let private webApp _ compRoot =
-        choose
-            [ Routes.Fitbit.authCallbackHandler compRoot.ProcessAccessToken ]
+        choose [ Routes.Fitbit.authCallbackHandler compRoot.ProcessAccessToken ]
 
     let private configureServices _ (services: IServiceCollection) =
         services.AddGiraffe() |> ignore

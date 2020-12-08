@@ -4,6 +4,7 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Trenton.Cli</RootNamespace>
+        <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     </PropertyGroup>
     <ItemGroup>
         <Content Include="paket.references" />
@@ -15,9 +16,9 @@
         <Compile Include="Arguments\Main.fs" />
         <Compile Include="Verbs\Parsing.fs" />
         <Compile Include="Verbs\Version.fs" />
+        <Compile Include="Verbs\AuthFitbit\AcessTokenProcessor.fs" />
         <Compile Include="Verbs\AuthFitbit\Host.fs" />
         <Compile Include="Verbs\AuthFitbit\ConfigFileAuthRepository.fs" />
-        <Compile Include="Verbs\AuthFitbit\AcessTokenProcessor.fs" />
         <Compile Include="Verbs\AuthFitbit\AuthFitbitExecution.fs" />
         <Compile Include="Verbs\Auth.fs" />
         <Compile Include="Verbs\ExportFitbit.fs" />
