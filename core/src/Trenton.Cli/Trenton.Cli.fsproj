@@ -4,13 +4,12 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Trenton.Cli</RootNamespace>
-        <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+        <ServerGarbageCollection>true</ServerGarbageCollection>
     </PropertyGroup>
     <ItemGroup>
         <Content Include="paket.references" />
         <Compile Include="Common.fs" />
         <Compile Include="Config.fs" />
-        <Compile Include="Arguments\Config.fs" />
         <Compile Include="Arguments\Export.fs" />
         <Compile Include="Arguments\Auth.fs" />
         <Compile Include="Arguments\Main.fs" />

@@ -32,25 +32,27 @@ module Main =
         sprintf "The config file could not be parsed.\n%O" e
         |> printError
 
-    let private execCommand args config =
-        match args with
+    let private execCommand argv config =
+        let parsed = parser.ParseCommandLine(argv)
+        let res =  parsed.GetAllResults()
+        match res with
         | [ Version ] -> Version.exec ()
-        | [ Auth s ] -> Auth.exec config s
-        | [ Export s ] -> Export.exec config s
         | _ ->
-            UnknownVerb "A valid command must be specified."
-            |> Error
+            let gOpts = GlobalOptions.FromParseResults res
+            match parsed.GetSubCommand() with
+            | Auth s -> Auth.exec config gOpts s
+            | Export s -> Export.exec config s
+            | _ ->
+                UnknownVerb "A valid command must be specified."
+                |> Error
 
     let loadConfig () =
         Config.load Config.DefaultConfigRoot Config.DefaultConfigFilename
 
-    let parseCommandLine argv =
-        parser.ParseCommandLine(argv).GetAllResults()
-
     [<EntryPoint>]
     let main argv =
         loadConfig ()
-        >>= (execCommand <| parseCommandLine argv)
+        >>= execCommand argv
         |> function
         | Error e ->
             match e with

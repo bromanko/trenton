@@ -4,14 +4,22 @@ open Argu
 
 type MainArgs =
     | Version
-    | [<CliPrefix(CliPrefix.None)>] Auth of ParseResults<AuthArgs>
-    | [<CliPrefix(CliPrefix.None)>] Config of ParseResults<ConfigArgs>
-    | [<CliPrefix(CliPrefix.None)>] Export of ParseResults<ExportArgs>
+    | [<Inherit>] Debug
+    | [<SubCommand; CliPrefix(CliPrefix.None)>] Auth of ParseResults<AuthArgs>
+    | [<SubCommand; CliPrefix(CliPrefix.None)>] Export of ParseResults<ExportArgs>
 
     interface IArgParserTemplate with
         member x.Usage =
             match x with
             | Version -> "Prints the version and exits."
+            | Debug -> "Output debug logging during command execution."
             | Auth _ -> "Configures authentication for services."
-            | Config _ -> "Configures the application."
             | Export _ -> "Exports data from services."
+
+type GlobalOptions =
+    { Debug: bool }
+
+    static member FromParseResults(res: MainArgs list) =
+        match res with
+        | x when Seq.contains Debug x -> { Debug = true }
+        | _ -> { Debug = false }

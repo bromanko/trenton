@@ -12,9 +12,10 @@ open System.Threading.Tasks
 open FSharp.Control.Tasks.V2.ContextInsensitive
 open Trenton.Cli.Verbs.AuthFitbit
 
-type ServerConfig = { Port: int }
+type ServerConfig = { Port: int; LogLevel: LogLevel }
 
-type CompositionRoot = { ProcessAccessToken: AccessTokenCode -> unit }
+type CompositionRoot =
+    { ProcessAccessToken: AccessTokenCode -> unit }
 
 module Routes =
     let earlyReturn: HttpFunc = Some >> Task.FromResult
@@ -43,7 +44,9 @@ module Routes =
 
             uri.ToString()
 
-        let private processAccessToken (atProcessor: AccessTokenCode -> unit) qry =
+        let private processAccessToken (atProcessor: AccessTokenCode -> unit)
+                                       qry
+                                       =
             fun (next: HttpFunc) (ctx: HttpContext) ->
                 task {
                     atProcessor
@@ -83,6 +86,7 @@ module Host =
 
     let createHostBuilder cfg compRoot =
         Host.CreateDefaultBuilder()
+            .ConfigureLogging(fun l -> l.SetMinimumLevel cfg.LogLevel |> ignore)
             .ConfigureWebHostDefaults(fun wb ->
             wb.ConfigureServices(configureServices cfg)
             |> ignore

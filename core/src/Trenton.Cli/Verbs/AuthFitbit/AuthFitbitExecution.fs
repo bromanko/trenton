@@ -1,6 +1,7 @@
 namespace Trenton.Cli.Verbs
 
 open System.Threading
+open Microsoft.Extensions.Logging
 open Trenton.Common
 open Microsoft.Extensions.Hosting
 open Trenton.Cli
@@ -18,15 +19,22 @@ module AuthFitbitExecution =
         type AuthConfig =
             { ClientId: NonEmptyString.T
               ClientSecret: NonEmptyString.T
-              ServerPort: int }
+              ServerPort: int
+              ServerLogLevel: Microsoft.Extensions.Logging.LogLevel }
 
-        let mkConfig port clientId clientSecret =
+        let parseLogLevel (gOpts: GlobalOptions) =
+            if gOpts.Debug
+            then Microsoft.Extensions.Logging.LogLevel.Debug
+            else LogLevel.None
+
+        let mkConfig port logLevel clientId clientSecret =
             { ClientId = clientId
               ClientSecret = clientSecret
-              ServerPort = port }
+              ServerPort = port
+              ServerLogLevel = logLevel }
 
-        let parse (cfg: AppConfig) =
-            mkConfig cfg.Server.Port
+        let parse (cfg: AppConfig) gOpts =
+            mkConfig cfg.Server.Port (parseLogLevel gOpts)
             <!> (parseNes
                      "ClientId must be specified in app configuration file."
                  <| cfg.Fitbit.ClientId)
@@ -93,7 +101,9 @@ module AuthFitbitExecution =
                          (atAgent: AccessTokenProcessor)
                          =
         { ProcessAccessToken = atAgent.Process }
-        |> createHostBuilder { Port = cfg.ServerPort }
+        |> createHostBuilder
+            { Port = cfg.ServerPort
+              LogLevel = cfg.ServerLogLevel }
 
     let private startServer cfg =
         use cts = new CancellationTokenSource()
@@ -107,10 +117,10 @@ module AuthFitbitExecution =
         Ok()
 
 
-    let exec cfg =
+    let exec cfg gOpts _ =
         let K f x = f x |> Result.map (fun _ -> x)
 
-        Config.parse cfg
+        Config.parse cfg gOpts
         >>= K Browser.launchUrl
         >>= K startServer
         |> Result.map (fun _ -> ())

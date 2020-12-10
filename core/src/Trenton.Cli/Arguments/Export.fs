@@ -19,7 +19,7 @@ type FitbitExportArgs =
             | EndDate _ -> "Export data ending on this date."
 
 type ExportArgs =
-    | [<CliPrefix(CliPrefix.None)>] Fitbit of ParseResults<FitbitExportArgs>
+    | [<SubCommand; CliPrefix(CliPrefix.None)>] Fitbit of ParseResults<FitbitExportArgs>
     interface IArgParserTemplate with
         member x.Usage =
             match x with
