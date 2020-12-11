@@ -6,4 +6,4 @@ ingress:
 
 config:
   TRENTON_WEBHOOKS_FITBIT_CLIENT_ID: 22CNRY
-  TRENTON_WEBHOOKS_LOCATION_BUCKET_NAME: trenton-production-data
+  TRENTON_WEBHOOKS_LOCATION_BUCKET_NAME: data.trenton.seemy.app
