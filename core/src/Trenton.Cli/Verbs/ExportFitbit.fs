@@ -9,13 +9,28 @@ open FsToolkit.ErrorHandling
 open FsToolkit.ErrorHandling.Operator.Result
 
 module ExportFitbit =
+    type FitbitUserAuth =
+        { AccessToken: NonEmptyString.T
+          ExpiresInSeconds: int32
+          RefreshToken: NonEmptyString.T }
+
     type private ExportConfig =
         { ClientId: NonEmptyString.T
           ClientSecret: NonEmptyString.T
-          AccessToken: NonEmptyString.T
-          RefreshToken: NonEmptyString.T option
+          UserAuth: FitbitUserAuth option
           StartDate: Date.T
           EndDate: Date.T option }
+
+
+        let parseExpiresIn e = if e < 0 then Ok 0 else Ok e
+
+        let parseUserAuth (cfg: FitbitConfig) =
+            ResultOption.bind (fun (a: FitbitAuthConfig) ->
+                mkUserAuth
+                <!> (parseNes "Access token is not valid." a.AccessToken)
+                <*> (parseExpiresIn a.ExpiresInSeconds)
+                <*> (parseNes "Refresh token is not valid." a.RefreshToken))
+                (Ok cfg.Auth)
 
     let private mkConfig clientId
                          clientSecret

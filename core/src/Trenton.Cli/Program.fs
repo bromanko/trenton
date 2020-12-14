@@ -41,7 +41,7 @@ module Main =
             let gOpts = GlobalOptions.FromParseResults res
             match parsed.GetSubCommand() with
             | Auth s -> Auth.exec config gOpts s
-            | Export s -> Export.exec config s
+//            | Export s -> Export.exec config s
             | _ ->
                 UnknownVerb "A valid command must be specified."
                 |> Error

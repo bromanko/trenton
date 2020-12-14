@@ -1,5 +1,7 @@
 namespace Trenton.Cli.Verbs
 
+open System.Diagnostics
+open System.Runtime.InteropServices
 open System.Threading
 open Microsoft.Extensions.Logging
 open Trenton.Common
@@ -7,12 +9,9 @@ open Microsoft.Extensions.Hosting
 open Trenton.Cli
 open Trenton.Cli.Verbs.AuthFitbit
 open Trenton.Cli.Verbs.AuthFitbit.Host
-open Trenton.Cli.Verbs.AuthFitbit.ConfigFileAuthRepository
 open Trenton.Health
 open FsToolkit.ErrorHandling
 open FsToolkit.ErrorHandling.Operator.Result
-open System.Diagnostics
-open System.Runtime.InteropServices
 
 module AuthFitbitExecution =
     module private Config =
@@ -79,7 +78,8 @@ module AuthFitbitExecution =
             with ex -> ExecError.Exception ex |> Result.Error
 
 
-    let private startAccessTokenProcessor (cfg: Config.AuthConfig)
+    let private startAccessTokenProcessor appCfg
+                                          (cfg: Config.AuthConfig)
                                           (cts: CancellationTokenSource)
                                           =
         let fitbitClient =
@@ -88,12 +88,9 @@ module AuthFitbitExecution =
                 (NonEmptyString.value cfg.ClientSecret)
             |> FitbitClient.getClient
 
-        let fitbitAuthRepo = configFileAuthRepository
+        let atp =
+            AccessTokenProcessor(fitbitClient, appCfg, cts)
 
-        let svc =
-            FitbitService.defaultSvc fitbitClient fitbitAuthRepo
-
-        let atp = AccessTokenProcessor(svc, cts)
         atp.Start()
         atp
 
@@ -105,11 +102,12 @@ module AuthFitbitExecution =
             { Port = cfg.ServerPort
               LogLevel = cfg.ServerLogLevel }
 
-    let private startServer cfg =
+    let private startServer appCfg cfg =
         use cts = new CancellationTokenSource()
-        let atAgent = startAccessTokenProcessor cfg cts
+        let atAgent = startAccessTokenProcessor appCfg cfg cts
 
         let server = (mkServer cfg atAgent).Build()
+
         server.RunAsync cts.Token
         |> Async.AwaitTask
         |> Async.RunSynchronously
@@ -122,5 +120,5 @@ module AuthFitbitExecution =
 
         Config.parse cfg gOpts
         >>= K Browser.launchUrl
-        >>= K startServer
+        >>= K (startServer cfg)
         |> Result.map (fun _ -> ())

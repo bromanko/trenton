@@ -1,16 +1,21 @@
 namespace Trenton.Cli
 
 open System.IO
+open System.Text.Json
 open FsConfig
 open FsToolkit.ErrorHandling.Operator.Result
 open Microsoft.Extensions.Configuration
 open System
 
+type FitbitAuthConfig =
+    { AccessToken: string
+      RefreshToken: string
+      ExpiresInSeconds: int32 }
+
 type FitbitConfig =
     { ClientId: string
       ClientSecret: string
-      AccessToken: string option
-      RefreshToken: string option }
+      Auth: FitbitAuthConfig option }
 
 type ServerConfig =
     { [<DefaultValue("9032")>]
@@ -45,3 +50,6 @@ module Config =
 
     let load path filename =
         loadConfigFile path filename >>= parseConfig
+
+    let save cfg path =
+        File.WriteAllText(path, JsonSerializer.Serialize cfg)

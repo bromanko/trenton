@@ -1,19 +1,37 @@
 namespace Trenton.Cli.Verbs.AuthFitbit
 
 open System.Threading
+open Trenton.Cli
 open Trenton.Health
-open Trenton.Iam
+open FsToolkit.ErrorHandling
+open FsToolkit.ErrorHandling.Operator.AsyncResult
 
 type AccessTokenCode = { Code: string; RedirectUri: string }
 
 type private AccessTokenMessage = AccessTokenRetrieved of AccessTokenCode
 
-type AccessTokenProcessor(fitBitSvc: FitbitService.T,
+type AccessTokenProcessor(fitbitClient: FitbitClient.T,
+                          cfg: AppConfig,
                           cts: CancellationTokenSource) =
-    let userId = (UserId.create "bromanko").Value
+    let getAccessToken code =
+        (FitbitClient.AuthorizationCodeWithPkce
+            { Code = code.Code
+              RedirectUri = Some code.RedirectUri
+              State = None
+              CodeVerifier = None })
+        |> fitbitClient.GetAccessToken
+
+    let logResult =
+        AsyncResult.foldResult
+            (fun _ -> printfn "Your access token has been saved.")
+            (fun e ->
+                printfn "An unexpected error occurred."
+                printfn ""
+                printfn "%O" e)
 
     let getAndStoreAccessToken code =
-        fitBitSvc.GetAndStoreAccessToken userId code.Code code.RedirectUri
+        getAccessToken code
+        |> logResult
 
     let body =
         (fun (inbox: MailboxProcessor<AccessTokenMessage>) ->
@@ -21,9 +39,9 @@ type AccessTokenProcessor(fitBitSvc: FitbitService.T,
                 async {
                     match! inbox.Receive() with
                     | AccessTokenRetrieved code ->
-                        match! getAndStoreAccessToken code with
-                        | Error e -> printfn "An error has occurred.\n\n%O" e
-                        | Ok _ -> printfn "Access token saved."
+                        getAndStoreAccessToken code
+                        |> Async.RunSynchronously
+
                         cts.Cancel()
                 }
 
