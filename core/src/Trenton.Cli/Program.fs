@@ -20,10 +20,6 @@ module Main =
 
     let private printUsage () = parser.PrintUsage() |> printf "%s"
 
-    let private printUnknown msg =
-        eprintfn "ERROR: %s" msg
-        printUsage ()
-
     let private printError ex =
         eprintfn "ERROR: An error has occurred."
         eprintfn "%O" ex
@@ -32,34 +28,49 @@ module Main =
         sprintf "The config file could not be parsed.\n%O" e
         |> printError
 
+    let private reportError =
+        function
+        | UnknownVerb m ->
+            printError m
+            printUsage ()
+        | ArgParseError e ->
+            printError e
+            printUsage ()
+        | Exception ex -> printError ex
+        | ConfigLoadError c ->
+            match c with
+            | LoadException e -> printError e
+            | NotFound ->
+                sprintf "Config file not found at %s." Config.DefaultConfigPath
+                |> printError
+            | ParseError e ->
+                sprintf "The config file could not be parsed.\n%O" e
+                |> printError
+
     let private execCommand argv config =
         let parsed = parser.ParseCommandLine(argv)
-        let res =  parsed.GetAllResults()
+        let res = parsed.GetAllResults()
+
         match res with
         | [ Version ] -> Version.exec ()
         | _ ->
             let gOpts = GlobalOptions.FromParseResults res
+
             match parsed.GetSubCommand() with
             | Auth s -> Auth.exec config gOpts s
-//            | Export s -> Export.exec config s
             | _ ->
                 UnknownVerb "A valid command must be specified."
                 |> Error
 
-    let loadConfig () =
-        Config.load Config.DefaultConfigRoot Config.DefaultConfigFilename
+    let loadConfig () = Config.load Config.DefaultConfigPath
 
     [<EntryPoint>]
     let main argv =
         loadConfig ()
+        |> Result.mapError ExecError.ConfigLoadError
         >>= execCommand argv
         |> function
-        | Error e ->
-            match e with
-            | UnknownVerb m -> printUnknown m
-            | ConfigFileNotFound -> printError "Config file not found."
-            | ConfigParseError e -> printConfigError e
-            | ArgParseError e -> printError e
-            | Exception ex -> printError ex
-            1
         | Ok _ -> 0
+        | Error e ->
+            reportError e
+            1

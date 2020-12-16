@@ -78,7 +78,7 @@ module AuthFitbitExecution =
             with ex -> ExecError.Exception ex |> Result.Error
 
 
-    let private startAccessTokenProcessor appCfg
+    let private startAccessTokenProcessor appCfgPath
                                           (cfg: Config.AuthConfig)
                                           (cts: CancellationTokenSource)
                                           =
@@ -89,7 +89,7 @@ module AuthFitbitExecution =
             |> FitbitClient.getClient
 
         let atp =
-            AccessTokenProcessor(fitbitClient, appCfg, cts)
+            AccessTokenProcessor(fitbitClient, appCfgPath, cts)
 
         atp.Start()
         atp
@@ -102,9 +102,11 @@ module AuthFitbitExecution =
             { Port = cfg.ServerPort
               LogLevel = cfg.ServerLogLevel }
 
-    let private startServer appCfg cfg =
+    let private startServer appCfgPath cfg =
         use cts = new CancellationTokenSource()
-        let atAgent = startAccessTokenProcessor appCfg cfg cts
+
+        let atAgent =
+            startAccessTokenProcessor appCfgPath cfg cts
 
         let server = (mkServer cfg atAgent).Build()
 
@@ -120,5 +122,5 @@ module AuthFitbitExecution =
 
         Config.parse cfg gOpts
         >>= K Browser.launchUrl
-        >>= K (startServer cfg)
+        >>= K(startServer gOpts.ConfigFilePath)
         |> Result.map (fun _ -> ())

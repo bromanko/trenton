@@ -4,14 +4,19 @@ open System.Threading
 open Trenton.Cli
 open Trenton.Health
 open FsToolkit.ErrorHandling
-open FsToolkit.ErrorHandling.Operator.AsyncResult
+open FsToolkit.ErrorHandling.Operator.Result
 
 type AccessTokenCode = { Code: string; RedirectUri: string }
 
 type private AccessTokenMessage = AccessTokenRetrieved of AccessTokenCode
 
+type private ProcessingError =
+    | FitbitApiError of string
+    | ConfigLoadError of ConfigLoadError
+    | Exception of exn
+
 type AccessTokenProcessor(fitbitClient: FitbitClient.T,
-                          cfg: AppConfig,
+                          cfgPath,
                           cts: CancellationTokenSource) =
     let getAccessToken code =
         (FitbitClient.AuthorizationCodeWithPkce
@@ -20,17 +25,46 @@ type AccessTokenProcessor(fitbitClient: FitbitClient.T,
               State = None
               CodeVerifier = None })
         |> fitbitClient.GetAccessToken
+        |> AsyncResult.mapError (function
+            | FitbitClient.Error e -> FitbitApiError e
+            | FitbitClient.Exception e -> Exception e)
+
+    let loadConfig cfgPath =
+        Config.load cfgPath
+        |> Result.mapError ConfigLoadError
+
+    let saveConfig cfgPath cfg =
+        Config.save cfgPath cfg
+        |> Result.mapError ProcessingError.Exception
+
+    let updateConfig (dto: FitbitClient.AccessTokenDto) (cfg: AppConfig) =
+        { cfg with
+              Fitbit =
+                  { cfg.Fitbit with
+                        Auth =
+                            Some
+                                { FitbitAuthConfig.AccessToken = dto.AccessToken
+                                  RefreshToken = dto.RefreshToken
+                                  ExpiresInSeconds = dto.ExpiresInSeconds } } }
+        |> Ok
+
+    let saveAccessToken dto =
+        loadConfig cfgPath
+        >>= updateConfig dto
+        >>= saveConfig cfgPath
 
     let logResult =
-        AsyncResult.foldResult
-            (fun _ -> printfn "Your access token has been saved.")
+        Result.fold
+            (fun _ -> eprintfn "Your access token has been saved.")
             (fun e ->
-                printfn "An unexpected error occurred."
-                printfn ""
-                printfn "%O" e)
+                eprintfn "An unexpected error occurred."
+                eprintfn ""
+                eprintfn "%O" e)
 
     let getAndStoreAccessToken code =
         getAccessToken code
+        |> Async.RunSynchronously
+        >>= saveAccessToken
         |> logResult
 
     let body =
@@ -40,7 +74,6 @@ type AccessTokenProcessor(fitbitClient: FitbitClient.T,
                     match! inbox.Receive() with
                     | AccessTokenRetrieved code ->
                         getAndStoreAccessToken code
-                        |> Async.RunSynchronously
 
                         cts.Cancel()
                 }

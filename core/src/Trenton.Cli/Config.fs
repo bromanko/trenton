@@ -7,6 +7,11 @@ open FsToolkit.ErrorHandling.Operator.Result
 open Microsoft.Extensions.Configuration
 open System
 
+type ConfigLoadError =
+    | LoadException of exn
+    | ParseError of ConfigParseError
+    | NotFound
+
 type FitbitAuthConfig =
     { AccessToken: string
       RefreshToken: string
@@ -35,21 +40,30 @@ module Config =
     [<Literal>]
     let DefaultConfigFilename = "config.json"
 
-    let private loadConfigFile path filename =
-        if File.Exists <| Path.Combine(path, filename) then
-            ConfigurationBuilder().SetBasePath(path)
-                .AddJsonFile(filename, optional = true).Build()
-            |> AppConfig
-            |> Ok
+    let DefaultConfigPath =
+        Path.Combine(DefaultConfigRoot, DefaultConfigFilename)
+
+    let private loadConfigFile path =
+        if File.Exists path then
+            try
+                ConfigurationBuilder()
+                    .SetBasePath(Path.GetDirectoryName path)
+                    .AddJsonFile(Path.GetFileName path, optional = true)
+                    .Build()
+                |> AppConfig
+                |> Ok
+
+            with e -> Error <| LoadException e
         else
-            Error ConfigFileNotFound
+            Error NotFound
 
     let parseConfig (c: FsConfig.AppConfig) =
-        c.Get<AppConfig>()
-        |> Result.mapError ConfigParseError
+        c.Get<AppConfig>() |> Result.mapError ParseError
 
-    let load path filename =
-        loadConfigFile path filename >>= parseConfig
+    let load path = loadConfigFile path >>= parseConfig
 
-    let save cfg path =
-        File.WriteAllText(path, JsonSerializer.Serialize cfg)
+    let save path cfg =
+        try
+            File.WriteAllText(path, JsonSerializer.Serialize cfg)
+            |> Ok
+        with e -> Error e

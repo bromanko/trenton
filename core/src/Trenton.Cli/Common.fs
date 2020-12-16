@@ -1,10 +1,7 @@
 namespace Trenton.Cli
 
-open FsConfig
-
 type ExecError =
-    | ConfigFileNotFound
-    | ConfigParseError of ConfigParseError
+    | ConfigLoadError of ConfigLoadError
     | UnknownVerb of string
     | ArgParseError of string
     | Exception of exn
