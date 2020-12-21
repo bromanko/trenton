@@ -1,9 +1,9 @@
-namespace Trenton.Cli.Verbs
+namespace Trenton.Cli.Verbs.Auth
 
 open Argu
 open Trenton.Cli
 
-module Auth =
+module Execution =
     let exec cfg gOpts (args: ParseResults<AuthArgs>) =
         match args.GetSubCommand() with
-        | AuthArgs.Fitbit  -> AuthFitbitExecution.exec cfg gOpts args
+        | AuthArgs.Fitbit  -> Fitbit.Execution.exec cfg gOpts args

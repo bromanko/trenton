@@ -1,4 +1,4 @@
-namespace Trenton.Cli.Verbs
+namespace Trenton.Cli.Verbs.Auth.Fitbit
 
 open System.Diagnostics
 open System.Runtime.InteropServices
@@ -7,13 +7,14 @@ open Microsoft.Extensions.Logging
 open Trenton.Common
 open Microsoft.Extensions.Hosting
 open Trenton.Cli
-open Trenton.Cli.Verbs.AuthFitbit
-open Trenton.Cli.Verbs.AuthFitbit.Host
+open Trenton.Cli.Verbs
+open Trenton.Cli.Verbs.Auth.Fitbit
+open Trenton.Cli.Verbs.Auth.Fitbit.Host
 open Trenton.Health
 open FsToolkit.ErrorHandling
 open FsToolkit.ErrorHandling.Operator.Result
 
-module AuthFitbitExecution =
+module Execution =
     module private Config =
         type AuthConfig =
             { ClientId: NonEmptyString.T

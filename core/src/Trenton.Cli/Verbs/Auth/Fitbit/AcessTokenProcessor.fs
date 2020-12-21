@@ -1,4 +1,4 @@
-namespace Trenton.Cli.Verbs.AuthFitbit
+namespace Trenton.Cli.Verbs.Auth.Fitbit
 
 open System.Threading
 open Trenton.Cli

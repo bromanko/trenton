@@ -21,8 +21,7 @@ module Main =
     let private printUsage () = parser.PrintUsage() |> printf "%s"
 
     let private printError ex =
-        eprintfn "ERROR: An error has occurred."
-        eprintfn "%O" ex
+        eprintfn "ERROR: %O" ex
 
     let private printConfigError e =
         sprintf "The config file could not be parsed.\n%O" e
@@ -32,10 +31,10 @@ module Main =
         function
         | UnknownVerb m ->
             printError m
+            printf "\n"
             printUsage ()
         | ArgParseError e ->
             printError e
-            printUsage ()
         | Exception ex -> printError ex
         | ConfigLoadError c ->
             match c with
@@ -57,7 +56,8 @@ module Main =
             let gOpts = GlobalOptions.FromParseResults res
 
             match parsed.GetSubCommand() with
-            | Auth s -> Auth.exec config gOpts s
+            | Auth s -> Auth.Execution.exec config gOpts s
+            | Export s -> Export.Execution.exec config gOpts s
             | _ ->
                 UnknownVerb "A valid command must be specified."
                 |> Error

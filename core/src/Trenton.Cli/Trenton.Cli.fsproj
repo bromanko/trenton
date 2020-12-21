@@ -15,10 +15,13 @@
         <Compile Include="Arguments\Main.fs" />
         <Compile Include="Verbs\Parsing.fs" />
         <Compile Include="Verbs\Version.fs" />
-        <Compile Include="Verbs\AuthFitbit\AcessTokenProcessor.fs" />
-        <Compile Include="Verbs\AuthFitbit\Host.fs" />
-        <Compile Include="Verbs\AuthFitbit\AuthFitbitExecution.fs" />
-        <Compile Include="Verbs\Auth.fs" />
+        <Folder Include="Verbs\AuthFitbit" />
+        <Compile Include="Verbs\Export\Fitbit\Execution.fs" />
+        <Compile Include="Verbs\Export\Execution.fs" />
+        <Compile Include="Verbs\Auth\Fitbit\AcessTokenProcessor.fs" />
+        <Compile Include="Verbs\Auth\Fitbit\Host.fs" />
+        <Compile Include="Verbs\Auth\Fitbit\Execution.fs" />
+        <Compile Include="Verbs\Auth\Execution.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
     <ItemGroup>

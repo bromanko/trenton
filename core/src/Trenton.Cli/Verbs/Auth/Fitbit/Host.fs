@@ -1,4 +1,4 @@
-namespace Trenton.Cli.Verbs.AuthFitbit
+namespace Trenton.Cli.Verbs.Auth.Fitbit
 
 open System
 open Giraffe
@@ -10,7 +10,6 @@ open Microsoft.Extensions.Hosting
 open Microsoft.AspNetCore.Http
 open System.Threading.Tasks
 open FSharp.Control.Tasks.V2.ContextInsensitive
-open Trenton.Cli.Verbs.AuthFitbit
 
 type ServerConfig = { Port: int; LogLevel: LogLevel }
 
@@ -82,7 +81,7 @@ module Host =
     let private configureApp cfg compRoot (app: IApplicationBuilder) =
         app.UseRouting() |> ignore
         app.UseGiraffeErrorHandler(errorHandler) |> ignore
-        app.UseGiraffe(webApp cfg compRoot) |> ignore
+        app.UseGiraffe(webApp cfg compRoot)
 
     let createHostBuilder cfg compRoot =
         Host.CreateDefaultBuilder()
