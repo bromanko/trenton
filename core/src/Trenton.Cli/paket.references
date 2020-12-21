@@ -1,6 +1,7 @@
 Argu
 FsConfig
 FSharp.Core
+Microsoft.FSharpLu.Json
 FsToolkit.ErrorHandling
 Microsoft.Extensions.Configuration.Json
 Giraffe

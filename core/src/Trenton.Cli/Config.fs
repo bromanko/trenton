@@ -1,7 +1,7 @@
 namespace Trenton.Cli
 
 open System.IO
-open System.Text.Json
+open Microsoft.FSharpLu.Json.Default
 open FsConfig
 open FsToolkit.ErrorHandling.Operator.Result
 open Microsoft.Extensions.Configuration
@@ -64,6 +64,6 @@ module Config =
 
     let save path cfg =
         try
-            File.WriteAllText(path, JsonSerializer.Serialize cfg)
+            serializeToFile path cfg
             |> Ok
         with e -> Error e
