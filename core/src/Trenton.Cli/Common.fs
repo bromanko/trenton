@@ -1,7 +1,7 @@
 namespace Trenton.Cli
 
 type ExecError =
-    | ConfigLoadError of ConfigLoadError
+    | ConfigFileError of ConfigFileError
     | UnknownVerb of string
     | ArgParseError of string
     | Exception of exn

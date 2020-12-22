@@ -1,26 +1,24 @@
 namespace Trenton.Cli
 
 open System.IO
-open Microsoft.FSharpLu.Json.Default
-open FsConfig
 open FsToolkit.ErrorHandling.Operator.Result
 open Microsoft.Extensions.Configuration
 open System
+open FsConfig
+open FsToolkit.ErrorHandling
 
-type ConfigLoadError =
+type ConfigFileError =
     | LoadException of exn
     | ParseError of ConfigParseError
-    | NotFound
-
-type FitbitAuthConfig =
-    { AccessToken: string
-      RefreshToken: string
-      ExpiresInSeconds: int32 }
+    | NotFound of string
 
 type FitbitConfig =
     { ClientId: string
-      ClientSecret: string
-      Auth: FitbitAuthConfig option }
+      ClientSecret: string }
+
+type FitbitAuthConfig =
+    { AccessToken: string
+      RefreshToken: string }
 
 type ServerConfig =
     { [<DefaultValue("9032")>]
@@ -28,6 +26,7 @@ type ServerConfig =
 
 type AppConfig =
     { Fitbit: FitbitConfig
+      FitbitAuth: FitbitAuthConfig option
       Server: ServerConfig }
 
 [<RequireQualifiedAccess>]
@@ -38,7 +37,7 @@ module Config =
                      "trenton" |]
 
     [<Literal>]
-    let DefaultConfigFilename = "config.json"
+    let DefaultConfigFilename = "config.ini"
 
     let DefaultConfigPath =
         Path.Combine(DefaultConfigRoot, DefaultConfigFilename)
@@ -48,22 +47,25 @@ module Config =
             try
                 ConfigurationBuilder()
                     .SetBasePath(Path.GetDirectoryName path)
-                    .AddJsonFile(Path.GetFileName path, optional = true)
+                    .AddIniFile(Path.GetFileName path, optional = true)
                     .Build()
                 |> AppConfig
                 |> Ok
 
-            with e -> Error <| LoadException e
+            with e -> LoadException e |> Error
         else
-            Error NotFound
+            NotFound path |> Error
 
-    let parseConfig (c: FsConfig.AppConfig) =
+    let private parseConfig (c: FsConfig.AppConfig) =
         c.Get<AppConfig>() |> Result.mapError ParseError
 
-    let load path = loadConfigFile path >>= parseConfig
+    let load path =
+        loadConfigFile path
+        >>= parseConfig
+        |> Result.tee (printfn "%O")
 
-    let save path cfg =
-        try
-            serializeToFile path cfg
-            |> Ok
-        with e -> Error e
+//    let save path cfg =
+//        try
+//            serializeToFile path cfg
+//            |> Ok
+//        with e -> Error e

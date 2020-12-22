@@ -4,6 +4,6 @@ open Argu
 open Trenton.Cli
 
 module Execution =
-    let exec cfg gOpts (args: ParseResults<AuthArgs>) =
+    let exec cfg (args: ParseResults<AuthArgs>) =
         match args.GetSubCommand() with
-        | AuthArgs.Fitbit  -> Fitbit.Execution.exec cfg gOpts args
+        | AuthArgs.Fitbit f -> Fitbit.Execution.exec cfg f

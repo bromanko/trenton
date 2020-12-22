@@ -20,8 +20,7 @@ module Main =
 
     let private printUsage () = parser.PrintUsage() |> printf "%s"
 
-    let private printError ex =
-        eprintfn "ERROR: %O" ex
+    let private printError ex = eprintfn "ERROR: %O" ex
 
     let private printConfigError e =
         sprintf "The config file could not be parsed.\n%O" e
@@ -33,41 +32,36 @@ module Main =
             printError m
             printf "\n"
             printUsage ()
-        | ArgParseError e ->
-            printError e
+        | ArgParseError e -> printError e
         | Exception ex -> printError ex
-        | ConfigLoadError c ->
+        | ConfigFileError c ->
             match c with
             | LoadException e -> printError e
-            | NotFound ->
-                sprintf "Config file not found at %s." Config.DefaultConfigPath
+            | NotFound p ->
+                sprintf "Config file not found at %s." p
                 |> printError
             | ParseError e ->
                 sprintf "The config file could not be parsed.\n%O" e
                 |> printError
 
-    let private execCommand argv config =
+    let private execCommand argv cfg =
         let parsed = parser.ParseCommandLine(argv)
         let res = parsed.GetAllResults()
 
         match res with
         | [ Version ] -> Version.exec ()
         | _ ->
-            let gOpts = GlobalOptions.FromParseResults res
-
             match parsed.GetSubCommand() with
-            | Auth s -> Auth.Execution.exec config gOpts s
-            | Export s -> Export.Execution.exec config gOpts s
+            | Auth args -> Auth.Execution.exec cfg args
+            //            | Export s -> Export.Execution.exec gOpts s
             | _ ->
                 UnknownVerb "A valid command must be specified."
                 |> Error
 
-    let loadConfig () = Config.load Config.DefaultConfigPath
-
     [<EntryPoint>]
     let main argv =
-        loadConfig ()
-        |> Result.mapError ExecError.ConfigLoadError
+        Config.load Config.DefaultConfigPath
+        |> Result.mapError ExecError.ConfigFileError
         >>= execCommand argv
         |> function
         | Ok _ -> 0

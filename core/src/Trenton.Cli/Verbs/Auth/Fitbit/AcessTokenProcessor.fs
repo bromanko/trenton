@@ -12,7 +12,7 @@ type private AccessTokenMessage = AccessTokenRetrieved of AccessTokenCode
 
 type private ProcessingError =
     | FitbitApiError of string
-    | ConfigLoadError of ConfigLoadError
+    | ConfigFileError of ConfigFileError
     | Exception of exn
 
 type AccessTokenProcessor(fitbitClient: FitbitClient.T,
@@ -29,29 +29,29 @@ type AccessTokenProcessor(fitbitClient: FitbitClient.T,
             | FitbitClient.Error e -> FitbitApiError e
             | FitbitClient.Exception e -> Exception e)
 
-    let loadConfig cfgPath =
-        Config.load cfgPath
-        |> Result.mapError ConfigLoadError
+//    let loadConfig cfgPath =
+//        Config.load cfgPath
+//        |> Result.mapError ConfigLoadError
 
-    let saveConfig cfgPath cfg =
-        Config.save cfgPath cfg
-        |> Result.mapError ProcessingError.Exception
+//    let saveConfig cfgPath cfg =
+//        Config.save cfgPath cfg
+//        |> Result.mapError ProcessingError.Exception
 
-    let updateConfig (dto: FitbitClient.AccessTokenDto) (cfg: AppConfig) =
-        { cfg with
-              Fitbit =
-                  { cfg.Fitbit with
-                        Auth =
-                            Some
-                                { FitbitAuthConfig.AccessToken = dto.AccessToken
-                                  RefreshToken = dto.RefreshToken
-                                  ExpiresInSeconds = dto.ExpiresInSeconds } } }
-        |> Ok
+//    let updateConfig (dto: FitbitClient.AccessTokenDto) (cfg: AppConfig) =
+//        { cfg with
+//              Fitbit =
+//                  { cfg.Fitbit with
+//                        Auth =
+//                            Some
+//                                { FitbitAuthConfig.AccessToken = dto.AccessToken
+//                                  RefreshToken = dto.RefreshToken
+//                                  ExpiresInSeconds = dto.ExpiresInSeconds } } }
+//        |> Ok
 
-    let saveAccessToken dto =
-        loadConfig cfgPath
-        >>= updateConfig dto
-        >>= saveConfig cfgPath
+//    let saveAccessToken dto =
+//        loadConfig cfgPath
+//        >>= updateConfig dto
+//        >>= saveConfig cfgPath
 
     let logResult =
         Result.fold
@@ -64,7 +64,7 @@ type AccessTokenProcessor(fitbitClient: FitbitClient.T,
     let getAndStoreAccessToken code =
         getAccessToken code
         |> Async.RunSynchronously
-        >>= saveAccessToken
+//        >>= saveAccessToken
         |> logResult
 
     let body =

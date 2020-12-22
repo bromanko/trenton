@@ -1,7 +1,7 @@
 source https://api.nuget.org/v3/index.json
 
 storage: none
-framework: netcore5
+framework: net5
 
 nuget Argu
 nuget Destructurama.FSharp prerelease
@@ -10,7 +10,6 @@ nuget Http.Fs
 nuget FsConfig
 nuget FSharp.Core
 nuget FSharp.Data
-nuget Microsoft.FSharpLu.Json
 nuget FsToolkit.ErrorHandling
 nuget Giraffe
 nuget Giraffe.Razor
