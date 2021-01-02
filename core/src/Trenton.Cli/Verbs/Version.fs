@@ -1,13 +1,14 @@
 namespace Trenton.Cli.Verbs
 
+open Trenton.Cli
 open System.Reflection
 
 module Version =
-    let Exec () =
+    let Exec (console: #IConsole) =
         Assembly
             .GetExecutingAssembly()
             .GetName()
             .Version.ToString()
-        |> printf "%s"
+        |> console.Out.Write
 
         Ok()

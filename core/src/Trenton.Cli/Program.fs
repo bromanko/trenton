@@ -13,42 +13,40 @@ module Main =
                 | ErrorCode.HelpText -> None
                 | _ -> Some ConsoleColor.Red)
 
-    let private parser =
-        ArgumentParser.Create<MainArgs>
-            (programName = "trenton", errorHandler = errorHandler)
+    let private printUsage (parser: ArgumentParser<_>) (console: #IConsole) =
+        parser.PrintUsage() |> console.Out.Write
 
-    let private printUsage () = parser.PrintUsage() |> printf "%s"
+    let private printError (console: #IConsole) ex =
+        sprintf "ERROR: %O" ex |> console.Error.Write
 
-    let private printError ex = eprintfn "ERROR: %O" ex
-
-    let private printConfigError e =
+    let private printConfigError (console: #IConsole) e =
         sprintf "The config file could not be parsed.\n%O" e
-        |> printError
+        |> printError console
 
-    let private reportError =
+    let private reportError console parser =
         function
         | UnknownVerb m ->
-            printError m
+            printError console m
             printf "\n"
-            printUsage ()
-        | ArgParseError e -> printError e
-        | Exception ex -> printError ex
+            printUsage parser console
+        | ArgParseError e -> printError console e
+        | Exception ex -> printError console ex
         | ConfigFileError c ->
             match c with
-            | LoadException e -> printError e
+            | LoadException e -> printError console e
             | NotFound p ->
                 sprintf "Config file not found at %s." p
-                |> printError
+                |> printError console
             | ParseError e ->
                 sprintf "The config file could not be parsed.\n%O" e
-                |> printError
+                |> printError console
 
-    let private execCommand argv =
+    let private execCommand console (parser: ArgumentParser<MainArgs>) argv =
         let parsed = parser.ParseCommandLine(argv)
         let res = parsed.GetAllResults()
 
         match res with
-        | [ Version ] -> Version.Exec ()
+        | [ Version ] -> Version.Exec console
         | _ ->
             match parsed.GetSubCommand() with
             | Auth args -> Auth.SubCommands.Exec args
@@ -59,9 +57,15 @@ module Main =
 
     [<EntryPoint>]
     let main argv =
-        execCommand argv
+        let console = SystemConsole()
+
+        let parser =
+            ArgumentParser.Create<MainArgs>
+                (programName = "trenton", errorHandler = errorHandler)
+
+        execCommand console parser argv
         |> function
         | Ok _ -> 0
         | Error e ->
-            reportError e
+            reportError console parser e
             1
