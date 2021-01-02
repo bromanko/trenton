@@ -59,7 +59,7 @@ module Config =
     let private parseConfig (c: FsConfig.AppConfig) =
         c.Get<AppConfig>() |> Result.mapError ParseError
 
-    let load path =
+    let Load path =
         loadConfigFile path
         >>= parseConfig
         |> Result.tee (printfn "%O")

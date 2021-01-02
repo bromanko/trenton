@@ -16,7 +16,6 @@ type private ProcessingError =
     | Exception of exn
 
 type AccessTokenProcessor(fitbitClient: FitbitClient.T,
-                          cfgPath,
                           cts: CancellationTokenSource) =
     let getAccessToken code =
         (FitbitClient.AuthorizationCodeWithPkce
@@ -29,43 +28,21 @@ type AccessTokenProcessor(fitbitClient: FitbitClient.T,
             | FitbitClient.Error e -> FitbitApiError e
             | FitbitClient.Exception e -> Exception e)
 
-//    let loadConfig cfgPath =
-//        Config.load cfgPath
-//        |> Result.mapError ConfigLoadError
 
-//    let saveConfig cfgPath cfg =
-//        Config.save cfgPath cfg
-//        |> Result.mapError ProcessingError.Exception
+    let emitAccessToken dto =
+        dto
+        |> System.Text.Json.JsonSerializer.Serialize
+        |> printfn "%s"
 
-//    let updateConfig (dto: FitbitClient.AccessTokenDto) (cfg: AppConfig) =
-//        { cfg with
-//              Fitbit =
-//                  { cfg.Fitbit with
-//                        Auth =
-//                            Some
-//                                { FitbitAuthConfig.AccessToken = dto.AccessToken
-//                                  RefreshToken = dto.RefreshToken
-//                                  ExpiresInSeconds = dto.ExpiresInSeconds } } }
-//        |> Ok
-
-//    let saveAccessToken dto =
-//        loadConfig cfgPath
-//        >>= updateConfig dto
-//        >>= saveConfig cfgPath
-
-    let logResult =
-        Result.fold
-            (fun _ -> eprintfn "Your access token has been saved.")
-            (fun e ->
-                eprintfn "An unexpected error occurred."
-                eprintfn ""
-                eprintfn "%O" e)
+    let logError e =
+        eprintfn "An unexpected error occurred."
+        eprintfn ""
+        eprintfn "%O" e
 
     let getAndStoreAccessToken code =
         getAccessToken code
         |> Async.RunSynchronously
-//        >>= saveAccessToken
-        |> logResult
+        |> Result.fold emitAccessToken logError
 
     let body =
         (fun (inbox: MailboxProcessor<AccessTokenMessage>) ->

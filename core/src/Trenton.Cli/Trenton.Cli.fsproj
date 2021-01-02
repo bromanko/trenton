@@ -21,7 +21,7 @@
         <Compile Include="Verbs\Auth\Fitbit\AcessTokenProcessor.fs" />
         <Compile Include="Verbs\Auth\Fitbit\Host.fs" />
         <Compile Include="Verbs\Auth\Fitbit\Execution.fs" />
-        <Compile Include="Verbs\Auth\Execution.fs" />
+        <Compile Include="Verbs\Auth\SubCommands.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
     <ItemGroup>

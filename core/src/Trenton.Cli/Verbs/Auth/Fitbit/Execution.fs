@@ -4,7 +4,6 @@ open Argu
 open System.Diagnostics
 open System.Runtime.InteropServices
 open System.Threading
-open Microsoft.Extensions.Logging
 open Trenton.Common
 open Microsoft.Extensions.Hosting
 open Trenton.Cli
@@ -16,55 +15,47 @@ open FsToolkit.ErrorHandling
 open FsToolkit.ErrorHandling.Operator.Result
 
 module Execution =
+    [<Literal>]
+    let DefaultServerPort = 9032
+
     type private ParsedArgs =
-        { AppConfigPath: NonEmptyString.T
-          ClientId: NonEmptyString.T
+        { ClientId: NonEmptyString.T
           ClientSecret: NonEmptyString.T
           ServerPort: int
           ServerLogLevel: Microsoft.Extensions.Logging.LogLevel }
 
     module private Parsing =
-        let parseLogLevel (args: ParseResults<_>) =
-            match (GlobalConfig.ParseArgs args).Debug with
-            | true -> Microsoft.Extensions.Logging.LogLevel.Debug
-            | _ -> LogLevel.None
+        let parseLogLevel =
+            function
+            | Some l -> Ok l
+            | None -> Ok Microsoft.Extensions.Logging.LogLevel.None
 
-        let parseAppCfgPath (args: ParseResults<_>) =
-            (GlobalConfig.ParseArgs args).ConfigFilePath
-
-        let parsePort (cfg: AppConfig) msg port =
+        let parsePort msg port =
             match port with
             | Some p -> p
-            | None -> cfg.Server.Port
+            | None -> DefaultServerPort
             |> function
             | p when p <= 0 -> ArgParseError msg |> Result.Error
             | p -> Ok p
 
-        let parseClientId (cfg: AppConfig) =
-            parseNesWithFallback (fun () -> Some cfg.Fitbit.ClientId)
-
-        let parseClientSecret (cfg: AppConfig) =
-            parseNesWithFallback (fun () -> Some cfg.Fitbit.ClientSecret)
-
-        let mkConfig logLevel appCfgPath port clientId clientSecret =
-            { AppConfigPath = appCfgPath
-              ClientId = clientId
+        let mkConfig logLevel port clientId clientSecret =
+            { ClientId = clientId
               ClientSecret = clientSecret
               ServerPort = port
               ServerLogLevel = logLevel }
 
-        let parse (cfg: AppConfig) (args: ParseResults<FitbitAuthArgs>) =
-            mkConfig (parseLogLevel args) (parseAppCfgPath args)
-            <!> (parsePort cfg "Server port must be a valid port."
+        let parse (args: ParseResults<FitbitAuthArgs>) =
+            mkConfig
+            <!> (parseLogLevel
+                 <| args.TryGetResult FitbitAuthArgs.ServerLogLevel)
+            <*> (parsePort "Server port must be a valid port."
                  <| args.TryGetResult FitbitAuthArgs.ServerPort)
-            <*> (parseClientId
-                     cfg
+            <*> (parseNes
                      "ClientId must be provided or specified in app configuration file."
-                 <| args.TryGetResult FitbitAuthArgs.ClientId)
-            <*> (parseClientSecret
-                     cfg
+                 <| args.GetResult FitbitAuthArgs.ClientId)
+            <*> (parseNes
                      "ClientSecret must be provided or specified in app configuration file."
-                 <| args.TryGetResult FitbitAuthArgs.ClientSecret)
+                 <| args.GetResult FitbitAuthArgs.ClientSecret)
 
     module private Browser =
         [<Literal>]
@@ -112,8 +103,7 @@ module Execution =
                 (NonEmptyString.value cfg.ClientSecret)
             |> FitbitClient.getClient
 
-        let atp =
-            AccessTokenProcessor(fitbitClient, cfg.AppConfigPath, cts)
+        let atp = AccessTokenProcessor(fitbitClient, cts)
 
         atp.Start()
         atp
@@ -137,11 +127,10 @@ module Execution =
 
         Ok()
 
-
-    let exec cfg args =
+    let Exec args =
         let K f x = f x |> Result.map (fun _ -> x)
 
-        Parsing.parse cfg args
+        Parsing.parse args
         >>= K Browser.launchUrl
         >>= K startServer
         |> Result.ignore

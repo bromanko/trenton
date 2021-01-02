@@ -4,7 +4,6 @@ open System
 open Argu
 open Trenton.Cli
 open Trenton.Cli.Verbs
-open FsToolkit.ErrorHandling.Operator.Result
 
 module Main =
     let private errorHandler =
@@ -44,15 +43,15 @@ module Main =
                 sprintf "The config file could not be parsed.\n%O" e
                 |> printError
 
-    let private execCommand argv cfg =
+    let private execCommand argv =
         let parsed = parser.ParseCommandLine(argv)
         let res = parsed.GetAllResults()
 
         match res with
-        | [ Version ] -> Version.exec ()
+        | [ Version ] -> Version.Exec ()
         | _ ->
             match parsed.GetSubCommand() with
-            | Auth args -> Auth.Execution.exec cfg args
+            | Auth args -> Auth.SubCommands.Exec args
             //            | Export s -> Export.Execution.exec gOpts s
             | _ ->
                 UnknownVerb "A valid command must be specified."
@@ -60,9 +59,7 @@ module Main =
 
     [<EntryPoint>]
     let main argv =
-        Config.load Config.DefaultConfigPath
-        |> Result.mapError ExecError.ConfigFileError
-        >>= execCommand argv
+        execCommand argv
         |> function
         | Ok _ -> 0
         | Error e ->
