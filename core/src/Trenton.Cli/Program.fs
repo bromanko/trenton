@@ -49,7 +49,7 @@ module Main =
         | [ Version ] -> Version.Exec console
         | _ ->
             match parsed.GetSubCommand() with
-            | Auth args -> Auth.SubCommands.Exec args
+            | Auth args -> Auth.SubCommands.Exec console args
             //            | Export s -> Export.Execution.exec gOpts s
             | _ ->
                 UnknownVerb "A valid command must be specified."

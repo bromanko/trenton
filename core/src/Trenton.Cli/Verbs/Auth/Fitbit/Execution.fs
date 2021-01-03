@@ -94,16 +94,15 @@ module Execution =
             with ex -> ExecError.Exception ex |> Result.Error
 
 
-    let private startAccessTokenProcessor (cfg: ParsedArgs)
-                                          (cts: CancellationTokenSource)
-                                          =
+    let private startAccessTokenProcessor (cfg: ParsedArgs) console cts =
         let fitbitClient =
             FitbitClient.defaultConfig
                 (NonEmptyString.value cfg.ClientId)
                 (NonEmptyString.value cfg.ClientSecret)
             |> FitbitClient.getClient
 
-        let atp = AccessTokenProcessor(fitbitClient, cts)
+        let atp =
+            AccessTokenProcessor(fitbitClient, console, cts)
 
         atp.Start()
         atp
@@ -114,10 +113,11 @@ module Execution =
             { Port = cfg.ServerPort
               LogLevel = cfg.ServerLogLevel }
 
-    let private startServer cfg =
+    let private startServer console cfg =
         use cts = new CancellationTokenSource()
 
-        let atAgent = startAccessTokenProcessor cfg cts
+        let atAgent =
+            startAccessTokenProcessor cfg console cts
 
         let server = (mkServer cfg atAgent).Build()
 
@@ -127,10 +127,10 @@ module Execution =
 
         Ok()
 
-    let Exec args =
+    let Exec console args =
         let K f x = f x |> Result.map (fun _ -> x)
 
         Parsing.parse args
         >>= K Browser.launchUrl
-        >>= K startServer
+        >>= K(startServer console)
         |> Result.ignore

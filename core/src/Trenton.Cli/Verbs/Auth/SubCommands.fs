@@ -4,6 +4,6 @@ open Argu
 open Trenton.Cli
 
 module SubCommands =
-    let Exec (args: ParseResults<AuthArgs>) =
+    let Exec console (args: ParseResults<AuthArgs>) =
         match args.GetSubCommand() with
-        | AuthArgs.Fitbit f -> Fitbit.Execution.Exec f
+        | AuthArgs.Fitbit f -> Fitbit.Execution.Exec console f

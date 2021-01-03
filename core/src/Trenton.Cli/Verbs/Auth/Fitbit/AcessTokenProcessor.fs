@@ -16,6 +16,7 @@ type private ProcessingError =
     | Exception of exn
 
 type AccessTokenProcessor(fitbitClient: FitbitClient.T,
+                          console: IConsole,
                           cts: CancellationTokenSource) =
     let getAccessToken code =
         (FitbitClient.AuthorizationCodeWithPkce
@@ -32,12 +33,12 @@ type AccessTokenProcessor(fitbitClient: FitbitClient.T,
     let emitAccessToken dto =
         dto
         |> System.Text.Json.JsonSerializer.Serialize
-        |> printfn "%s"
+        |> console.Out.Write
 
     let logError e =
-        eprintfn "An unexpected error occurred."
-        eprintfn ""
-        eprintfn "%O" e
+        console.Error.Write "An unexpected error occurred."
+        console.Error.Write ""
+        sprintf "%O" e |> console.Error.Write
 
     let getAndStoreAccessToken code =
         getAccessToken code
