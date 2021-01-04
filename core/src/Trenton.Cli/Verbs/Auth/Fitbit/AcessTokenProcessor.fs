@@ -12,7 +12,6 @@ type private AccessTokenMessage = AccessTokenRetrieved of AccessTokenCode
 
 type private ProcessingError =
     | FitbitApiError of string
-    | ConfigFileError of ConfigFileError
     | Exception of exn
 
 type AccessTokenProcessor(fitbitClient: FitbitClient.T,

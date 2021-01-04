@@ -1,7 +1,6 @@
 namespace Trenton.Cli
 
 open Argu
-open Trenton.Common
 
 type MainArgs =
     | Version
@@ -19,14 +18,9 @@ type MainArgs =
             | Export _ -> "Exports data from services."
 
 type GlobalConfig =
-    { Debug: bool
-      ConfigFilePath: NonEmptyString.T }
+    { Debug: bool }
 
-    static member private DefaultConfig =
-        { Debug = false
-          ConfigFilePath =
-              (NonEmptyString.create Config.DefaultConfigPath)
-                  .Value }
+    static member private DefaultConfig = { Debug = false }
 
     static member ParseArgs(parseResults: ParseResults<_>) =
         match parseResults.UnrecognizedCliParseResults with

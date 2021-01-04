@@ -8,7 +8,6 @@
     </PropertyGroup>
     <ItemGroup>
         <Content Include="paket.references" />
-        <Compile Include="Config.fs" />
         <Compile Include="Console.fs" />
         <Compile Include="Common.fs" />
         <Compile Include="Arguments\Export.fs" />
@@ -16,9 +15,8 @@
         <Compile Include="Arguments\Main.fs" />
         <Compile Include="Verbs\Parsing.fs" />
         <Compile Include="Verbs\Version.fs" />
-        <Folder Include="Verbs\AuthFitbit" />
         <Compile Include="Verbs\Export\Fitbit\Execution.fs" />
-        <Compile Include="Verbs\Export\Execution.fs" />
+        <Compile Include="Verbs\Export\SubCommands.fs" />
         <Compile Include="Verbs\Auth\Fitbit\AcessTokenProcessor.fs" />
         <Compile Include="Verbs\Auth\Fitbit\Host.fs" />
         <Compile Include="Verbs\Auth\Fitbit\Execution.fs" />

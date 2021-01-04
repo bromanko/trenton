@@ -50,11 +50,9 @@ module Execution =
                  <| args.TryGetResult FitbitAuthArgs.ServerLogLevel)
             <*> (parsePort "Server port must be a valid port."
                  <| args.TryGetResult FitbitAuthArgs.ServerPort)
-            <*> (parseNes
-                     "ClientId must be provided or specified in app configuration file."
+            <*> (parseNes "Client Id must be provided."
                  <| args.GetResult FitbitAuthArgs.ClientId)
-            <*> (parseNes
-                     "ClientSecret must be provided or specified in app configuration file."
+            <*> (parseNes "Client Secret must be provided."
                  <| args.GetResult FitbitAuthArgs.ClientSecret)
 
     module private Browser =

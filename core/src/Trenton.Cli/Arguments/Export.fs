@@ -3,6 +3,9 @@ namespace Trenton.Cli
 open Argu
 
 type FitbitExportArgs =
+    | [<Unique; Mandatory; CustomCommandLine("--client_id")>] ClientId of string
+    | [<Unique; Mandatory; CustomCommandLine("--client_secret")>] ClientSecret of
+        string
     | [<CustomCommandLine("--access_token"); AltCommandLine("-a"); Unique>] AccessToken of
         string
     | [<CustomCommandLine("--refresh_token"); AltCommandLine("-r"); Unique>] RefreshToken of
@@ -14,6 +17,8 @@ type FitbitExportArgs =
     interface IArgParserTemplate with
         member x.Usage =
             match x with
+            | ClientId _ -> "Client ID of the OAuth Application."
+            | ClientSecret _ -> "Client Secret of the OAuth Application."
             | AccessToken _ -> "A user OAuth access token."
             | RefreshToken _ -> "An OAuth refresh token."
             | StartDate _ -> "Export data starting from this date."

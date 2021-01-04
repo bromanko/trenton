@@ -31,15 +31,6 @@ module Main =
             printUsage parser console
         | ArgParseError e -> printError console e
         | Exception ex -> printError console ex
-        | ConfigFileError c ->
-            match c with
-            | LoadException e -> printError console e
-            | NotFound p ->
-                sprintf "Config file not found at %s." p
-                |> printError console
-            | ParseError e ->
-                sprintf "The config file could not be parsed.\n%O" e
-                |> printError console
 
     let private execCommand console (parser: ArgumentParser<MainArgs>) argv =
         let parsed = parser.ParseCommandLine(argv)
@@ -50,7 +41,7 @@ module Main =
         | _ ->
             match parsed.GetSubCommand() with
             | Auth args -> Auth.SubCommands.Exec console args
-            //            | Export s -> Export.Execution.exec gOpts s
+            | Export args -> Export.SubCommands.Exec console args
             | _ ->
                 UnknownVerb "A valid command must be specified."
                 |> Error
