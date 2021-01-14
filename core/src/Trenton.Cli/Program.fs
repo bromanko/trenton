@@ -31,6 +31,7 @@ module Main =
             printUsage parser console
         | ArgParseError e -> printError console e
         | Exception ex -> printError console ex
+        | UnknownError e -> printError console e
 
     let private execCommand console (parser: ArgumentParser<MainArgs>) argv =
         let parsed = parser.ParseCommandLine(argv)

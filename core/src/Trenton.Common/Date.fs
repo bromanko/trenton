@@ -5,11 +5,9 @@ open System.Collections
 open System.Runtime.Serialization
 
 // Based off of https://github.com/supersonicclay/csharp-date
+[<RequireQualifiedAccess>]
 module Date =
-    type DateParts =
-        { Year: int
-          Month: int
-          Day: int }
+    type DateParts = { Year: int; Month: int; Day: int }
 
     [<CustomEquality; CustomComparison>]
     type T =
@@ -70,11 +68,8 @@ module Date =
 
     let create y m d =
         try
-            DateTime(y, m, d)
-            |> T.FromDateTime
-            |> Some
-        with _ ->
-            None
+            DateTime(y, m, d) |> T.FromDateTime |> Some
+        with _ -> None
 
     let today () = T.FromDateTime <| DateTime.Now
 
@@ -89,10 +84,7 @@ module Date =
 
     let daysInMonth y m = DateTime.DaysInMonth(y, m)
 
-    let parse s =
-        s
-        |> DateTime.Parse
-        |> T.FromDateTime
+    let parse s = s |> DateTime.Parse |> T.FromDateTime
 
     let tryParse (s: string) =
         match DateTime.TryParse s with

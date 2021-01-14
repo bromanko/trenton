@@ -14,6 +14,8 @@ type FitbitExportArgs =
         string
     | [<CustomCommandLine("--end"); AltCommandLine("-e"); Unique>] EndDate of
         string
+    | [<CustomCommandLine("--out"); Unique; Mandatory>] OutputDirectory of
+        string
     interface IArgParserTemplate with
         member x.Usage =
             match x with
@@ -23,6 +25,7 @@ type FitbitExportArgs =
             | RefreshToken _ -> "An OAuth refresh token."
             | StartDate _ -> "Export data starting from this date."
             | EndDate _ -> "Export data ending on this date."
+            | OutputDirectory _ -> "Output directory for exported data."
 
 type ExportArgs =
     | [<SubCommand; CliPrefix(CliPrefix.None)>] Fitbit of

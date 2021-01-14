@@ -11,13 +11,13 @@ module Parsing =
         | None -> Result.Error <| ArgParseError msg
         | Some s -> Ok s
 
-    let parseInt =
-        Option.tryParse<int>
-        |> parse
+    let parseInt = Option.tryParse<int> |> parse
 
     let parseNes = parse NonEmptyString.create
 
     let parseDate = parse Date.tryParse
+
+    let parsePath = parse FilePath.create
 
     let parseOptionalNes msg = Option.traverseResult (parseNes msg)
 
