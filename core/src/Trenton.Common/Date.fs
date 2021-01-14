@@ -20,7 +20,13 @@ module Date =
 
         interface IStructuralComparable with
             member this.CompareTo(other, comparer) =
-                comparer.Compare(this._dt, other)
+                match other with
+                | :? T as o -> comparer.Compare(this._dt, o._dt)
+                | :? DateTime as o -> comparer.Compare(this._dt, o)
+                | _ ->
+                    ArgumentException
+                        "Object must be of type Date.T or DateTime"
+                    |> raise
 
         interface ISerializable with
             member this.GetObjectData(info, _) =
@@ -40,7 +46,7 @@ module Date =
             | "O"
             | "o"
             | "s" -> this.ToString "yyyy-MM-dd"
-            | _ -> this.ToString fmt
+            | _ -> this._dt.ToString fmt
 
         override this.Equals d = this._dt.Equals d
 
