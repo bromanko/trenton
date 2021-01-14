@@ -56,7 +56,7 @@ module Date =
 
         static member FromDateTime(dt: DateTime) =
             Date
-                { Year = dt.Day
+                { Year = dt.Year
                   Month = dt.Month
                   Day = dt.Day }
 
