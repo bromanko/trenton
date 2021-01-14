@@ -166,8 +166,8 @@ module FitbitClient =
             |> execReq
 
         let getBodyWeightLogs config accessToken (date: Date.T) =
-            date.ToShortString()
-            |> sprintf "%s/1/user/-/body/log/weight/date/%s" config.BaseUrl
+            date.ToString("s")
+            |> sprintf "%s/1/user/-/body/log/weight/date/%s.json" config.BaseUrl
             |> Http.httpGet
             |> Http.setUserAuthHeader accessToken
             |> execReq
@@ -197,6 +197,7 @@ module FitbitClient =
             |> FitbitApiError.Error
 
         let rawResponse r: Result<string, FitbitApiError> =
+            printfn "here: %O" r
             match r with
             | Ok r -> r.Body |> Result.Ok
             | Result.Error r -> parseApiError r |> Result.Error

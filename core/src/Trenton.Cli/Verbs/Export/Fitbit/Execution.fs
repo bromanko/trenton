@@ -73,13 +73,11 @@ module Execution =
                 (NonEmptyString.value cfg.ClientSecret)
             |> FitbitClient.getClient
 
-        let getDates (startDate: Date.T) (endDate: Date.T) =
-            printfn "%O %O" startDate endDate
+        let getDatesInRange (startDate: Date.T) (endDate: Date.T) =
             let mutable currDate = startDate
 
             seq {
                 while currDate <= endDate do
-                    printfn "%O" currDate
                     yield currDate
                     currDate <- Date.addDays currDate 1.0
             }
@@ -90,7 +88,11 @@ module Execution =
             |> AsyncResult.mapError FitbitApiError
 
         let saveData outDir data =
-            File.WriteAllTextAsync(outDir, data)
+            printfn "%s" data
+            // todo come up with proper filenames
+
+            let fName = Path.Join(outDir, "out.json")
+            File.WriteAllTextAsync(fName, data)
             |> AsyncResult.ofTaskAction
             |> AsyncResult.mapError Exception
 
@@ -102,19 +104,26 @@ module Execution =
                 | FitbitClient.Exception e -> ExecError.Exception e
                 | FitbitClient.Error e -> ExecError.UnknownError e
 
-        let export (console: #IConsole) cfg =
+
+        let mergeResults (r)
+                         : Result<unit, ExecError> =
+            printfn "merging %O" r
+            Ok()
+
+        let export _ cfg =
             let client =
                 NonEmptyString.value cfg.AccessToken
                 |> (mkClient cfg).Authenticated
 
-            getDates cfg.StartDate cfg.EndDate
+            let parallelizeRequests o = Async.Parallel(o, 2)
+
+            getDatesInRange cfg.StartDate cfg.EndDate
             |> Seq.map (getBodyWeightLogs client)
             |> Seq.map
                 (AsyncResult.bind
                  <| saveData cfg.OutputDirectory.FullPath)
-            |> Async.Parallel
-            |> Async.map Seq.head
-            |> AsyncResult.mapError exToExErr
+            |> parallelizeRequests
+            |> Async.map mergeResults
             |> Async.RunSynchronously
 
     let Exec console args =
