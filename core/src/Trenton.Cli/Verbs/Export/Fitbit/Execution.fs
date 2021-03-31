@@ -6,6 +6,7 @@ open System.IO
 
 open Trenton.Cli
 open Trenton.Cli.Verbs
+open Trenton.Cli.FileHelpers
 open Trenton.Health
 open Trenton.Common
 
@@ -82,17 +83,19 @@ module Execution =
                     currDate <- Date.addDays currDate 1.0
             }
 
+        type LogsForDate = { Date: Date.T; Logs: string }
+
         let getBodyWeightLogs (client: FitbitClient.FitbitAuthenticatedApi) date =
             { FitbitClient.BaseDate = date }
             |> client.Body.Raw.GetWeightLogs
+            |> AsyncResult.map (fun r -> { Date = date; Logs = r })
             |> AsyncResult.mapError FitbitApiError
 
-        let saveData outDir data =
-            printfn "%s" data
-            // todo come up with proper filenames
+        let saveData outDir (data: LogsForDate) =
+            let fName =
+                Path.Join(outDir, getFilenameForDate "fitbit-body-weight" data.Date "json")
 
-            let fName = Path.Join(outDir, "out.json")
-            File.WriteAllTextAsync(fName, data)
+            File.WriteAllTextAsync(fName, data.Logs)
             |> AsyncResult.ofTaskAction
             |> AsyncResult.mapError Exception
 
@@ -104,11 +107,6 @@ module Execution =
                 | FitbitClient.Exception e -> ExecError.Exception e
                 | FitbitClient.Error e -> ExecError.UnknownError e
 
-
-        let mergeResults (r)
-                         : Result<unit, ExecError> =
-            printfn "merging %O" r
-            Ok()
 
         let export _ cfg =
             let client =
@@ -123,7 +121,7 @@ module Execution =
                 (AsyncResult.bind
                  <| saveData cfg.OutputDirectory.FullPath)
             |> parallelizeRequests
-            |> Async.map mergeResults
+            |> Async.map (fun _ -> Ok())
             |> Async.RunSynchronously
 
     let Exec console args =

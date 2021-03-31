@@ -197,7 +197,6 @@ module FitbitClient =
             |> FitbitApiError.Error
 
         let rawResponse r: Result<string, FitbitApiError> =
-            printfn "here: %O" r
             match r with
             | Ok r -> r.Body |> Result.Ok
             | Result.Error r -> parseApiError r |> Result.Error

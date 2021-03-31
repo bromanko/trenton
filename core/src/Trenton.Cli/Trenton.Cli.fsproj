@@ -10,6 +10,7 @@
         <Content Include="paket.references" />
         <Compile Include="Console.fs" />
         <Compile Include="Common.fs" />
+        <Compile Include="FileHelpers.fs" />
         <Compile Include="Arguments\Export.fs" />
         <Compile Include="Arguments\Auth.fs" />
         <Compile Include="Arguments\Main.fs" />
