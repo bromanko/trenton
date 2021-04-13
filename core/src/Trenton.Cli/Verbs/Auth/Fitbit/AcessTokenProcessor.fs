@@ -2,6 +2,7 @@ namespace Trenton.Cli.Verbs.Auth.Fitbit
 
 open System.Threading
 open Trenton.Cli
+open Trenton.Cli.LogFormatters
 open Trenton.Health
 open FsToolkit.ErrorHandling
 open FsToolkit.ErrorHandling.Operator.Result
@@ -28,21 +29,10 @@ type AccessTokenProcessor(fitbitClient: FitbitClient.T,
             | FitbitClient.Error e -> FitbitApiError e
             | FitbitClient.Exception e -> Exception e)
 
-
-    let emitAccessToken dto =
-        dto
-        |> System.Text.Json.JsonSerializer.Serialize
-        |> console.Out.Write
-
-    let logError e =
-        console.Error.Write "An unexpected error occurred."
-        console.Error.Write ""
-        sprintf "%O" e |> console.Error.Write
-
     let getAndStoreAccessToken code =
         getAccessToken code
         |> Async.RunSynchronously
-        |> Result.fold emitAccessToken logError
+        |> Result.fold (logDto console) (logError console)
 
     let body =
         (fun (inbox: MailboxProcessor<AccessTokenMessage>) ->

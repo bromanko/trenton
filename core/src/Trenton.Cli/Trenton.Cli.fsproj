@@ -10,6 +10,7 @@
         <Content Include="paket.references" />
         <Compile Include="Console.fs" />
         <Compile Include="Common.fs" />
+        <Compile Include="LogFormatters.fs" />
         <Compile Include="FileHelpers.fs" />
         <Compile Include="Arguments\Export.fs" />
         <Compile Include="Arguments\Auth.fs" />
@@ -20,7 +21,9 @@
         <Compile Include="Verbs\Export\SubCommands.fs" />
         <Compile Include="Verbs\Auth\Fitbit\AcessTokenProcessor.fs" />
         <Compile Include="Verbs\Auth\Fitbit\Host.fs" />
-        <Compile Include="Verbs\Auth\Fitbit\Execution.fs" />
+        <Compile Include="Verbs\Auth\Fitbit\Login.fs" />
+        <Compile Include="Verbs\Auth\Fitbit\RefreshToken.fs" />
+        <Compile Include="Verbs\Auth\Fitbit\SubCommands.fs" />
         <Compile Include="Verbs\Auth\SubCommands.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>

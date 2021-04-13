@@ -2,7 +2,7 @@ namespace Trenton.Cli
 
 open Argu
 
-type FitbitAuthArgs =
+type FitbitLoginArgs =
     | [<Unique; CustomCommandLine("--server_port")>] ServerPort of int
     | [<Unique; CustomCommandLine("--server_log_level")>] ServerLogLevel of
         Microsoft.Extensions.Logging.LogLevel
@@ -17,6 +17,34 @@ type FitbitAuthArgs =
             | ClientId _ -> "Client ID of the OAuth Application."
             | ClientSecret _ -> "Client Secret of the OAuth Application."
 
+type FitbitRefreshTokenArgs =
+    | [<Unique; Mandatory; CustomCommandLine("--client_id")>] ClientId of string
+    | [<Unique; Mandatory; CustomCommandLine("--client_secret")>] ClientSecret of
+        string
+    | [<Unique; CustomCommandLine("--access_token")>] AccessToken of string
+    | [<Unique; CustomCommandLine("--refresh_token")>] RefreshToken of string
+    interface IArgParserTemplate with
+        member x.Usage =
+            match x with
+            | AccessToken _ -> "Fitbit access token to be refreshed."
+            | RefreshToken _ -> "Refresh token."
+            | ClientId _ -> "Client ID of the OAuth Application."
+            | ClientSecret _ -> "Client Secret of the OAuth Application."
+
+[<RequireSubcommand>]
+type FitbitAuthArgs =
+    | [<SubCommand; CliPrefix(CliPrefix.None)>] Login of
+        ParseResults<FitbitLoginArgs>
+    | [<SubCommand;
+        CliPrefix(CliPrefix.None);
+        CustomCommandLine("refresh-token")>] RefreshToken of
+        ParseResults<FitbitRefreshTokenArgs>
+    interface IArgParserTemplate with
+        member x.Usage =
+            match x with
+            | Login _ -> "Login to Fitbit."
+            | RefreshToken _ -> "Refresh an access token."
+
 [<RequireSubcommand>]
 type AuthArgs =
     | [<SubCommand; CliPrefix(CliPrefix.None)>] Fitbit of
@@ -24,4 +52,4 @@ type AuthArgs =
     interface IArgParserTemplate with
         member x.Usage =
             match x with
-            | Fitbit _ -> "Authenticates with Fitbit."
+            | Fitbit _ -> "Fitbit authentication commands."

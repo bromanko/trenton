@@ -29,14 +29,15 @@ module Execution =
 
     module private Parsing =
 
-        let mkConfig clientId
-                     clientSecret
-                     accessToken
-                     refreshToken
-                     startDate
-                     endDate
-                     outDir
-                     =
+        let mkConfig
+            clientId
+            clientSecret
+            accessToken
+            refreshToken
+            startDate
+            endDate
+            outDir
+            =
             { ClientId = clientId
               ClientSecret = clientSecret
               AccessToken = accessToken
@@ -58,9 +59,9 @@ module Execution =
             <*> (parseNes "Client Secret must be a valid string."
                  <| args.GetResult FitbitExportArgs.ClientSecret)
             <*> (parseNes "Access Token must be a valid string."
-                 <| args.GetResult AccessToken)
+                 <| args.GetResult FitbitExportArgs.AccessToken)
             <*> (parseOptionalNes "Refresh token must be a valid string."
-                 <| args.TryGetResult RefreshToken)
+                 <| args.TryGetResult FitbitExportArgs.RefreshToken)
             <*> (parseDate "Start date must be a valid date."
                  <| args.GetResult StartDate)
             <*> (parseEndDate <| args.TryGetResult EndDate)
@@ -85,7 +86,10 @@ module Execution =
 
         type LogsForDate = { Date: Date.T; Logs: string }
 
-        let getBodyWeightLogs (client: FitbitClient.FitbitAuthenticatedApi) date =
+        let getBodyWeightLogs
+            (client: FitbitClient.FitbitAuthenticatedApi)
+            date
+            =
             { FitbitClient.BaseDate = date }
             |> client.Body.Raw.GetWeightLogs
             |> AsyncResult.map (fun r -> { Date = date; Logs = r })
@@ -93,7 +97,10 @@ module Execution =
 
         let saveData outDir (data: LogsForDate) =
             let fName =
-                Path.Join(outDir, getFilenameForDate "fitbit-body-weight" data.Date "json")
+                Path.Join(
+                    outDir,
+                    getFilenameForDate "fitbit-body-weight" data.Date "json"
+                )
 
             File.WriteAllTextAsync(fName, data.Logs)
             |> AsyncResult.ofTaskAction
@@ -117,9 +124,10 @@ module Execution =
 
             getDatesInRange cfg.StartDate cfg.EndDate
             |> Seq.map (getBodyWeightLogs client)
-            |> Seq.map
-                (AsyncResult.bind
-                 <| saveData cfg.OutputDirectory.FullPath)
+            |> Seq.map (
+                AsyncResult.bind
+                <| saveData cfg.OutputDirectory.FullPath
+            )
             |> parallelizeRequests
             |> Async.map (fun _ -> Ok())
             |> Async.RunSynchronously

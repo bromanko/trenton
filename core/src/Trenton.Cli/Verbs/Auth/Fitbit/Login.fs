@@ -7,6 +7,7 @@ open System.Threading
 open Trenton.Common
 open Microsoft.Extensions.Hosting
 open Trenton.Cli
+open Trenton.Cli.LogFormatters
 open Trenton.Cli.Verbs
 open Trenton.Cli.Verbs.Auth.Fitbit
 open Trenton.Cli.Verbs.Auth.Fitbit.Host
@@ -14,7 +15,7 @@ open Trenton.Health
 open FsToolkit.ErrorHandling
 open FsToolkit.ErrorHandling.Operator.Result
 
-module Execution =
+module Login =
     [<Literal>]
     let DefaultServerPort = 9032
 
@@ -44,16 +45,16 @@ module Execution =
               ServerPort = port
               ServerLogLevel = logLevel }
 
-        let parse (args: ParseResults<FitbitAuthArgs>) =
+        let parse (args: ParseResults<FitbitLoginArgs>) =
             mkConfig
             <!> (parseLogLevel
-                 <| args.TryGetResult FitbitAuthArgs.ServerLogLevel)
+                 <| args.TryGetResult FitbitLoginArgs.ServerLogLevel)
             <*> (parsePort "Server port must be a valid port."
-                 <| args.TryGetResult FitbitAuthArgs.ServerPort)
+                 <| args.TryGetResult FitbitLoginArgs.ServerPort)
             <*> (parseNes "Client Id must be provided."
-                 <| args.GetResult FitbitAuthArgs.ClientId)
+                 <| args.GetResult FitbitLoginArgs.ClientId)
             <*> (parseNes "Client Secret must be provided."
-                 <| args.GetResult FitbitAuthArgs.ClientSecret)
+                 <| args.GetResult FitbitLoginArgs.ClientSecret)
 
     module private Browser =
         [<Literal>]
@@ -72,7 +73,7 @@ module Execution =
 
         let browser url =
             if RuntimeInformation.IsOSPlatform OSPlatform.Windows then
-                ProcessStartInfo("cmd", sprintf "/c start %s" url)
+                ProcessStartInfo("cmd", $"/c start %s{url}")
             elif RuntimeInformation.IsOSPlatform OSPlatform.OSX then
                 ProcessStartInfo("open", url)
             else
