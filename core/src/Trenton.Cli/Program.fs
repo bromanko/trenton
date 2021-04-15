@@ -17,11 +17,7 @@ module Main =
         parser.PrintUsage() |> console.Out.Write
 
     let private printError (console: #IConsole) ex =
-        sprintf "ERROR: %O" ex |> console.Error.Write
-
-    let private printConfigError (console: #IConsole) e =
-        sprintf "The config file could not be parsed.\n%O" e
-        |> printError console
+        $"ERROR: {ex}" |> console.Error.Write
 
     let private reportError console parser =
         function
