@@ -63,12 +63,12 @@ module FitbitClient =
 
     module private Http =
         let authHeader clientId clientSecret =
-            sprintf "%s:%s" clientId clientSecret
+            $"%s{clientId}:%s{clientSecret}"
             |> Encoding.UTF8.GetBytes
             |> Convert.ToBase64String
             |> sprintf "Basic %s"
 
-        let userAuthHeader accessToken = sprintf "Bearer %s" accessToken
+        let userAuthHeader accessToken = $"Bearer %s{accessToken}"
 
         let setAuthHeader (config: FitbitClientConfig) =
             Request.setHeader
@@ -137,7 +137,7 @@ module FitbitClient =
         let getAccessToken config req =
             let form = getAccessTokenForm config.ClientId req
 
-            sprintf "%s/oauth2/token" config.BaseUrl
+            $"%s{config.BaseUrl}/oauth2/token"
             |> Http.httpPost
             |> Http.setAuthHeader config
             |> Request.body (BodyForm form)
@@ -152,14 +152,14 @@ module FitbitClient =
         let refreshAccessToken config req =
             let form = refreshAccessTokenForm req
 
-            sprintf "%s/oauth2/token" config.BaseUrl
+            $"%s{config.BaseUrl}/oauth2/token"
             |> Http.httpPost
             |> Http.setAuthHeader config
             |> Request.body (BodyForm form)
             |> execReq
 
         let introspectToken config accessToken req =
-            sprintf "%s/1.1/oauth2/introspect" config.BaseUrl
+            $"%s{config.BaseUrl}/1.1/oauth2/introspect"
             |> Http.httpPost
             |> Http.setUserAuthHeader accessToken
             |> Request.body (BodyForm [ NameValue("token", req.Token) ])
