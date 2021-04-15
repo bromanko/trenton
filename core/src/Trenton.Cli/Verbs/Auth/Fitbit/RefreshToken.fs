@@ -35,20 +35,22 @@ module RefreshToken =
                  <| args.GetResult FitbitRefreshTokenArgs.RefreshToken)
 
     module private Execution =
-        let mkClient cfg: FitbitClient.T =
+        let mkClient cfg : FitbitClient.T =
             FitbitClient.defaultConfig
                 (NonEmptyString.value cfg.ClientId)
                 (NonEmptyString.value cfg.ClientSecret)
             |> FitbitClient.getClient
 
-        let mapError = function
+        let mapError =
+            function
             | FitbitClient.Error e -> ExecError.UnknownError e
             | FitbitClient.Exception ex -> ExecError.Exception ex
 
         let exec console cfg =
             let client = mkClient cfg
 
-            client.RefreshAccessToken { RefreshToken = "" }
+            client.RefreshAccessToken
+                { RefreshToken = NonEmptyString.value cfg.RefreshToken }
             |> AsyncResult.map (logDto console)
             |> AsyncResult.mapError mapError
             |> Async.RunSynchronously
