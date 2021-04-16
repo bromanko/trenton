@@ -1,9 +1,0 @@
-ingress:
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    cert-manager.io/cluster-issuer: "letsencrypt"
-  host: trenton.seemy.app
-
-config:
-  TRENTON_WEB_GOOGLE_CLOUD_PROJECT_ID: trenton-production-c5cb9af5
-  TRENTON_WEB_FITBIT_CLIENT_ID: 22BRFJ

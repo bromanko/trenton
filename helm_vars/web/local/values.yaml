@@ -1,7 +1,0 @@
-ingress:
-  annotations: {}
-  host: trenton.localhost
-
-config:
-  TRENTON_WEB_GOOGLE_CLOUD_PROJECT_ID: trenton-local-dev
-  TRENTON_WEB_FITBIT_CLIENT_ID: 22CNRY
