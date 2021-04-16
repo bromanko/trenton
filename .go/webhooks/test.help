@@ -1,8 +1,0 @@
-
-Runs tests
-
-Options:
-    -l                Runs commands locally rather than in Docker containers
-
-Arguments:
-    project           Optional name of project to test. Defaults to all projects.

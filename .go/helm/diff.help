@@ -1,8 +1,0 @@
-Diffs the current Helm config with a deployed release
-
-== Detailed Usage ==
-
-chart                 The Helm chart to diff
-version               Commit hash for the version to diff
-environment           The environment to diff
-namespace             The Kubernetes namespace to diff

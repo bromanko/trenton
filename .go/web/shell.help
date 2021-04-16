@@ -1,6 +1,0 @@
-Starts a shell in the core container
-
-== Detailed Usage ==
-
-optional arguments:
-command             The command to be executed. Defaults to bash.

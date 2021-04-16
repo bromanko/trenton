@@ -1,5 +1,0 @@
-
-Runs integration tests against a server
-
-Options:
-    -l                Runs commands locally rather than in Docker containers

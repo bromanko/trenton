@@ -1,4 +1,0 @@
-Starts the core server from a prebuilt image
-
-Options:
-    -d                Start the service in the background
