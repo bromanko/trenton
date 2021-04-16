@@ -1,9 +1,0 @@
-Destructurama.FSharp
-FSharp.Core
-FsConfig
-Giraffe
-Microsoft.AspNetCore.Diagnostics.HealthChecks
-Serilog
-Serilog.Sinks.Console
-Serilog.Formatting.Compact
-Serilog.AspNetCore

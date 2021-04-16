@@ -4,28 +4,15 @@ storage: none
 framework: net5
 
 nuget Argu
-nuget Destructurama.FSharp prerelease
+nuget FsConfig
 nuget Hopac
 nuget Http.Fs
-nuget FsConfig
 nuget FSharp.Core
 nuget FSharp.Data
 nuget FsToolkit.ErrorHandling
 nuget Giraffe
-nuget Giraffe.Razor
-nuget Microsoft.AspNetCore.Diagnostics.HealthChecks
-nuget Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation
 nuget Microsoft.Extensions.Configuration.Json
 nuget Microsoft.Extensions.Logging
-nuget Serilog
-nuget Serilog.Sinks.Console
-nuget Serilog.Formatting.Compact
-nuget Serilog.AspNetCore
-nuget Google.Cloud.Firestore
-nuget Google.Cloud.Storage.V1
-nuget TaskBuilder.fs
-nuget FSharpx.Async
-nuget Westwind.AspnetCore.LiveReload
 
 nuget Logary.Adapters.Facade
 nuget Bogus

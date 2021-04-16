@@ -1,5 +1,4 @@
 FSharp.Core
 Http.Fs
 Hopac
-Microsoft.Extensions.Logging
 FsConfig

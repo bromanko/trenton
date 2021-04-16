@@ -6,20 +6,14 @@
     </PropertyGroup>
     <ItemGroup>
         <Content Include="paket.references" />
-        <Compile Include="DataSource.fs" />
-        <Compile Include="BodyFat.fs" />
         <Compile Include="FitbitClient.fs" />
-        <Compile Include="FitbitAuthRepository.fs" />
-        <Compile Include="FitbitService.fs" />
         <Content Include="Samples\get_weight_logs_response.json" />
         <EmbeddedResource Include="Samples\introspect_token_response.json" />
         <EmbeddedResource Include="Samples\get_access_token_response.json" />
         <EmbeddedResource Include="Samples\error_response.json" />
-        <Compile Include="Models.fs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj" />
-        <ProjectReference Include="..\Trenton.Iam\Trenton.Iam.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

@@ -10,7 +10,6 @@
     <Compile Include="Percents.fs" />
     <Compile Include="HttpUtils.fs" />
     <Compile Include="ApiClient.fs" />
-    <Compile Include="Logging.fs" />
     <Compile Include="Json.fs" />
     <Compile Include="Config.fs" />
     <Compile Include="Models.fs" />

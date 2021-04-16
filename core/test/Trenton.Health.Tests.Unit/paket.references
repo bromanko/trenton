@@ -1,9 +1,0 @@
-FSharp.Core
-Logary.Adapters.Facade
-Bogus
-Expecto
-Expecto.BenchmarkDotNet
-Expecto.FsCheck
-Expecto.Hopac
-FsConfig
-Google.Cloud.Firestore
