@@ -1,12 +1,12 @@
 { pkgs ? import <nixpkgs> { } }:
 
 let
-  datasetteVega = pkgs.python39.pkgs.buildPythonPackage rec {
+  datasetteVega = with pkgs.python39.pkgs; buildPythonPackage rec {
     pname = "datasette-vega";
     version = "0.6.2";
     format = "wheel";
 
-    src = pkgs.python39.pkgs.fetchPypi (
+    src = fetchPypi (
       {
         pname = "datasette_vega";
         inherit version format;
@@ -15,7 +15,7 @@ let
       });
 
     buildInputs = [ pkgs.python39Packages.datasette ];
-    propagatedBuildInputs = [ pkgs.python39.pkgs.setuptools ];
+    propagatedBuildInputs = [ setuptools ];
 
     meta = with pkgs.lib; {
       description = "A Datasette plugin that provides tools for generating charts using Vega.";
@@ -24,18 +24,18 @@ let
     };
   };
 
-  customPython = pkgs.python39.buildEnv.override {
+  customPython = with pkgs; python39.buildEnv.override {
     extraLibs = [
-      pkgs.python39Packages.datasette
-      pkgs.python39Packages.sqlite-utils
+      python39Packages.datasette
+      python39Packages.sqlite-utils
       datasetteVega
     ];
   };
 in
 pkgs.mkShell {
-  buildInputs = [
+  buildInputs = with pkgs; [
     customPython
-    pkgs.sqlite
-    pkgs.jq
+    sqlite
+    jq
   ];
 }
