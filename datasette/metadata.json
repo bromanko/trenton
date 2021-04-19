@@ -1,0 +1,14 @@
+{
+  "databases": {
+    "bromanko": {
+      "tables": {
+        "fitbit_body_weight": {
+          "sort": "date",
+          "units": {
+            "weight": "kilogram"
+          }
+        }
+      }
+    }
+  }
+}
