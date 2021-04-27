@@ -2,7 +2,10 @@
 
 set -eo pipefail
 
-script_path="$( cd "$(dirname "$0")" ; pwd -P )"
+script_path="$(
+	cd "$(dirname "$0")"
+	pwd -P
+)"
 cd "$script_path"/../
 
 start_date=$1
@@ -33,6 +36,7 @@ echo "Exporting data for period from $start_date to $end_date ..."
 mkdir -p "$out_dir"
 
 $trenton export fitbit \
+	--debug \
 	--client_id "$client_id" \
 	--client_secret "$client_secret" \
 	--access_token "$access_token" \
