@@ -33,4 +33,4 @@ type ExportArgs =
     interface IArgParserTemplate with
         member x.Usage =
             match x with
-            | Fitbit _ -> "Exports data from Fitbit."
+            | Fitbit _ -> "Export data from Fitbit."

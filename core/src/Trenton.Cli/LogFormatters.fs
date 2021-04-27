@@ -4,9 +4,9 @@ module LogFormatters =
     let logDto (console: IConsole) dto =
         dto
         |> System.Text.Json.JsonSerializer.Serialize
-        |> console.Out.Write
+        |> console.Out.WriteLine
 
     let logError (console: IConsole) e =
-        console.Error.Write "An unexpected error occurred."
-        console.Error.Write ""
-        $"{e}" |> console.Error.Write
+        console.Error.WriteLine "An unexpected error occurred."
+        console.Error.WriteLine ""
+        $"{e}" |> console.Error.WriteLine

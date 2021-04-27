@@ -5,6 +5,7 @@ open System.IO
 
 type IStandardStreamWriter =
     abstract Write: string -> unit
+    abstract WriteLine: string -> unit
 
 type IStandardError =
     abstract Error: IStandardStreamWriter
@@ -19,6 +20,7 @@ type IConsole =
 type StandardStreamWriter(writer: TextWriter) =
     interface IStandardStreamWriter with
         member x.Write str = writer.Write str
+        member x.WriteLine str = writer.WriteLine str
 
 type SystemConsole() =
     let error = StandardStreamWriter(Console.Error)

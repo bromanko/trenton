@@ -14,6 +14,7 @@ open FsToolkit.ErrorHandling
 open FsToolkit.ErrorHandling.Operator.Result
 
 module Execution =
+
     type private ExportConfig =
         { ClientId: NonEmptyString.T
           ClientSecret: NonEmptyString.T
@@ -21,7 +22,8 @@ module Execution =
           RefreshToken: NonEmptyString.T option
           StartDate: Date.T
           EndDate: Date.T
-          OutputDirectory: FilePath.T }
+          OutputDirectory: FilePath.T
+          Debug: bool }
 
     type ExecutionError =
         | Exception of exn
@@ -30,6 +32,7 @@ module Execution =
     module private Parsing =
 
         let mkConfig
+            debug
             clientId
             clientSecret
             accessToken
@@ -38,7 +41,8 @@ module Execution =
             endDate
             outDir
             =
-            { ClientId = clientId
+            { Debug = debug
+              ClientId = clientId
               ClientSecret = clientSecret
               AccessToken = accessToken
               RefreshToken = refreshToken
@@ -53,8 +57,8 @@ module Execution =
 
 
         let parse (args: ParseResults<FitbitExportArgs>) =
-            mkConfig
-            <!> (parseNes "Client ID must be a valid string."
+            mkConfig <!> (Ok true)
+            <*> (parseNes "Client ID must be a valid string."
                  <| args.GetResult FitbitExportArgs.ClientId)
             <*> (parseNes "Client Secret must be a valid string."
                  <| args.GetResult FitbitExportArgs.ClientSecret)
@@ -95,6 +99,10 @@ module Execution =
             |> AsyncResult.map (fun r -> { Date = date; Logs = r })
             |> AsyncResult.mapError FitbitApiError
 
+        let getBodyWeightLogsLogged log client date =
+            $"Getting body weight logs for {date}" |> log
+            getBodyWeightLogs client date
+
         let saveData outDir (data: LogsForDate) =
             let fName =
                 Path.Join(
@@ -106,30 +114,45 @@ module Execution =
             |> AsyncResult.ofTaskAction
             |> AsyncResult.mapError Exception
 
-        let exToExErr =
+        let saveDataLogged log outDir data =
+            $"Saving data for {data.Date}" |> log
+            saveData outDir data
+
+        let collectResults r =
+            match Seq.tryFind Result.isError r with
+            | Some _ ->
+                ExecError.UnknownError "One or more errors occurred."
+                |> Error
+            | None -> Ok()
+
+        let errStr =
             function
-            | Exception e -> ExecError.Exception e
-            | FitbitApiError e ->
+            | ExecutionError.Exception e -> e.Message
+            | ExecutionError.FitbitApiError e ->
                 match e with
-                | FitbitClient.Exception e -> ExecError.Exception e
-                | FitbitClient.Error e -> ExecError.UnknownError e
+                | FitbitClient.FitbitApiError.Error e -> e
+                | FitbitClient.FitbitApiError.Exception e -> e.Message
 
-
-        let export _ cfg =
+        let export (console: #IConsole) cfg =
             let client =
                 NonEmptyString.value cfg.AccessToken
                 |> (mkClient cfg).Authenticated
 
-            let parallelizeRequests o = Async.Parallel(o, 2)
+            let dlog =
+                if cfg.Debug then
+                    console.Error.WriteLine
+                else
+                    fun _ -> ()
 
             getDatesInRange cfg.StartDate cfg.EndDate
-            |> Seq.map (getBodyWeightLogs client)
+            |> Seq.map (getBodyWeightLogsLogged dlog client)
             |> Seq.map (
-                AsyncResult.bind
-                <| saveData cfg.OutputDirectory.FullPath
+                saveDataLogged dlog cfg.OutputDirectory.FullPath
+                |> AsyncResult.bind
             )
-            |> parallelizeRequests
-            |> Async.map (fun _ -> Ok())
+            |> Seq.map (AsyncResult.teeError (fun e -> errStr e |> dlog))
+            |> fun o -> Async.Parallel(o, 2)
+            |> Async.map collectResults
             |> Async.RunSynchronously
 
     let Exec console args =

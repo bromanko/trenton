@@ -14,10 +14,10 @@ module Main =
                 | _ -> Some ConsoleColor.Red)
 
     let private printUsage (parser: ArgumentParser<_>) (console: #IConsole) =
-        parser.PrintUsage() |> console.Out.Write
+        parser.PrintUsage() |> console.Out.WriteLine
 
     let private printError (console: #IConsole) ex =
-        $"ERROR: {ex}" |> console.Error.Write
+        $"ERROR: {ex}" |> console.Error.WriteLine
 
     let private reportError console parser =
         function
