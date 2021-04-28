@@ -96,22 +96,22 @@ module FitbitClient =
 
     module private Api =
         type ErrorResponseTypeProvider =
-            JsonProvider<"Samples/error_response.json", EmbeddedResource="Trenton.Health, error_response.json">
+            JsonProvider<"Samples/fitbit/error_response.json", EmbeddedResource="Trenton.Health, error_response.json">
 
         type ErrorResponse = ErrorResponseTypeProvider.Root
 
         type AccessTokenResponseTypeProvider =
-            JsonProvider<"Samples/get_access_token_response.json", EmbeddedResource="Trenton.Health, get_access_token_response.json">
+            JsonProvider<"Samples/fitbit/get_access_token_response.json", EmbeddedResource="Trenton.Health, get_access_token_response.json">
 
         type AccessTokenResponse = AccessTokenResponseTypeProvider.Root
 
         type IntrospectTokenResponseTypeProvider =
-            JsonProvider<"Samples/introspect_token_response.json", EmbeddedResource="Trenton.Health, introspect_token_response.json", SampleIsList=true>
+            JsonProvider<"Samples/fitbit/introspect_token_response.json", EmbeddedResource="Trenton.Health, introspect_token_response.json", SampleIsList=true>
 
         type IntrospectTokenResponse = IntrospectTokenResponseTypeProvider.Root
 
         type BodyWeightLogResponseTypeProvider =
-            JsonProvider<"Samples/get_weight_logs_response.json", EmbeddedResource="Trenton.Health, get_weight_logs_response.json">
+            JsonProvider<"Samples/fitbit/get_weight_logs_response.json", EmbeddedResource="Trenton.Health, get_weight_logs_response.json">
 
         type BodyWeightLogResponse = BodyWeightLogResponseTypeProvider.Root
 

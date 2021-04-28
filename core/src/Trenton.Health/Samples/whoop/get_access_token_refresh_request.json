@@ -1,0 +1,4 @@
+{
+  "refresh_token": "myRefreshToken",
+  "grant_type": "refresh_token"
+}

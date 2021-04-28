@@ -1,0 +1,55 @@
+{
+  "access_token": "trstatsritrastrteiarstuylsyuatlsrtyuslr",
+  "refresh_token": "asrtrsieontrtsraoieoeinarstsraotsrtsroien",
+  "expires_in": 86400,
+  "membershipStatus": "trialing",
+  "user": {
+    "id": 585322,
+    "avatarUrl": null,
+    "createdAt": "2020-10-01T19:09:24.744Z",
+    "updatedAt": "2020-10-12T02:09:50.334Z",
+    "firstName": "Bob",
+    "lastName": "Burger",
+    "city": "Austin",
+    "country": "US",
+    "adminDivision": "TX",
+    "fullName": "Bob Burger",
+    "profile": {
+      "userId": 585322,
+      "bioDataId": 815635845,
+      "height": 1.7288,
+      "weight": 79.7499,
+      "birthday": "1979-1-08T00:00:00.000Z",
+      "gender": "male",
+      "unitSystem": "imperial",
+      "fitnessLevel": "recreational_enthusiast",
+      "createdAt": "2020-10-12T02:09:50.334Z",
+      "updatedAt": "2021-04-26T22:51:20.202Z",
+      "timezoneOffset": "-0500",
+      "physiologicalBaseline": null,
+      "id": 815635845,
+      "maxHeartRate": 193,
+      "minHeartRate": 51,
+      "avgHeartRate": null,
+      "kilojoules": null,
+      "canUploadData": true
+    },
+    "teams": [],
+    "preferences": {
+      "performanceOptimizationAssessment": true,
+      "performanceOptimizationDayOfWeek": 1
+    },
+    "email": "bob@gmail.com",
+    "username": "bobburger",
+    "privacyProfile": {
+      "overview": "all",
+      "intensity": "all",
+      "recovery": "all",
+      "sleep": "all",
+      "stats": "all",
+      "comps": "all"
+    }
+  },
+  "needsProfileCompletion": "0",
+  "token_type": "Bearer"
+}

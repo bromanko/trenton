@@ -7,10 +7,15 @@
     <ItemGroup>
         <Content Include="paket.references" />
         <Compile Include="FitbitClient.fs" />
-        <Content Include="Samples\get_weight_logs_response.json" />
-        <EmbeddedResource Include="Samples\introspect_token_response.json" />
-        <EmbeddedResource Include="Samples\get_access_token_response.json" />
-        <EmbeddedResource Include="Samples\error_response.json" />
+        <Compile Include="WhoopClient.fs" />
+        <Content Include="Samples\whoop\get_access_token_password_request.json" />
+        <Content Include="Samples\whoop\get_access_token_refresh_request.json" />
+        <Content Include="Samples\whoop\get_access_token_response.json" />
+        <EmbeddedResource Include="Samples\whoop\error_response.json" />
+        <Content Include="Samples\fitbit\get_weight_logs_response.json" />
+        <EmbeddedResource Include="Samples\fitbit\introspect_token_response.json" />
+        <EmbeddedResource Include="Samples\fitbit\get_access_token_response.json" />
+        <EmbeddedResource Include="Samples\fitbit\error_response.json" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Trenton.Common\Trenton.Common.fsproj" />
