@@ -32,6 +32,9 @@ $trenton auth fitbit refresh-token \
 	--refresh_token "$refresh_token" \
 	>"$fitbit_creds"
 
+access_token="$(jq -r .AccessToken <"$fitbit_creds")"
+refresh_token="$(jq -r .RefreshToken <"$fitbit_creds")"
+
 echo "Exporting data for period from $start_date to $end_date ..."
 mkdir -p "$out_dir"
 
