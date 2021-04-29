@@ -7,7 +7,6 @@ open System.Threading
 open Trenton.Common
 open Microsoft.Extensions.Hosting
 open Trenton.Cli
-open Trenton.Cli.LogFormatters
 open Trenton.Cli.Verbs
 open Trenton.Cli.Verbs.Auth.Fitbit
 open Trenton.Cli.Verbs.Auth.Fitbit.Host
@@ -36,7 +35,7 @@ module Login =
             | Some p -> p
             | None -> DefaultServerPort
             |> function
-            | p when p <= 0 -> ArgParseError msg |> Result.Error
+            | p when p <= 0 -> ArgParseError msg |> Error
             | p -> Ok p
 
         let mkConfig logLevel port clientId clientSecret =
@@ -90,7 +89,7 @@ module Login =
             try
                 browser url |> Process.Start |> ignore
                 Ok()
-            with ex -> ExecError.Exception ex |> Result.Error
+            with ex -> ExecError.Exception ex |> Error
 
 
     let private startAccessTokenProcessor (cfg: ParsedArgs) console cts =

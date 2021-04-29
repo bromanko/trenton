@@ -6,4 +6,5 @@ open Trenton.Cli
 module SubCommands =
     let Exec console (args: ParseResults<AuthArgs>) =
         match args.GetSubCommand() with
-        | AuthArgs.Fitbit f -> Fitbit.SubCommands.Exec console f
+        | AuthArgs.Fitbit a -> Fitbit.SubCommands.Exec console a
+        | AuthArgs.Whoop a -> Whoop.SubCommands.Exec console a

@@ -103,7 +103,7 @@ module WhoopClient =
                     AccessTokenRefreshRequest(r.RefreshToken, "refresh_token")
                     :> IJsonDocument
 
-            $"%s{config.BaseUrl}/oauth2/token"
+            $"%s{config.BaseUrl}/oauth/token"
             |> Http.post
             |> Http.jsonBody body
             |> execReq

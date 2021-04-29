@@ -45,11 +45,32 @@ type FitbitAuthArgs =
             | Login _ -> "Login to Fitbit."
             | RefreshToken _ -> "Refresh an access token."
 
+type WhoopLoginArgs =
+    | [<Unique; CustomCommandLine("--username")>] UserName of string
+    | [<Unique; CustomCommandLine("--password")>] Password of string
+    interface IArgParserTemplate with
+        member x.Usage =
+            match x with
+            | UserName _ -> "Whoop username."
+            | Password _ -> "Whoop password."
+
+[<RequireSubcommand>]
+type WhoopAuthArgs =
+    | [<SubCommand; CliPrefix(CliPrefix.None)>] Login of
+        ParseResults<WhoopLoginArgs>
+    interface IArgParserTemplate with
+        member x.Usage =
+            match x with
+            | Login _ -> "Login to Whoop."
+
 [<RequireSubcommand>]
 type AuthArgs =
     | [<SubCommand; CliPrefix(CliPrefix.None)>] Fitbit of
         ParseResults<FitbitAuthArgs>
+    | [<SubCommand; CliPrefix(CliPrefix.None)>] Whoop of
+        ParseResults<WhoopAuthArgs>
     interface IArgParserTemplate with
         member x.Usage =
             match x with
             | Fitbit _ -> "Fitbit authentication commands."
+            | Whoop _ -> "Whoop authentication commands."
