@@ -54,14 +54,28 @@ type WhoopLoginArgs =
             | UserName _ -> "Whoop username."
             | Password _ -> "Whoop password."
 
+type WhoopRefreshTokenArgs =
+    | [<Unique; CustomCommandLine("--access_token")>] AccessToken of string
+    | [<Unique; CustomCommandLine("--refresh_token")>] RefreshToken of string
+    interface IArgParserTemplate with
+        member x.Usage =
+            match x with
+            | AccessToken _ -> "Whoop access token to be refreshed."
+            | RefreshToken _ -> "Refresh token."
+
 [<RequireSubcommand>]
 type WhoopAuthArgs =
     | [<SubCommand; CliPrefix(CliPrefix.None)>] Login of
         ParseResults<WhoopLoginArgs>
+    | [<SubCommand;
+        CliPrefix(CliPrefix.None);
+        CustomCommandLine("refresh-token")>] RefreshToken of
+        ParseResults<WhoopRefreshTokenArgs>
     interface IArgParserTemplate with
         member x.Usage =
             match x with
             | Login _ -> "Login to Whoop."
+            | RefreshToken _ -> "Refresh an access token."
 
 [<RequireSubcommand>]
 type AuthArgs =

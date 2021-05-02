@@ -5,6 +5,7 @@ open FSharp.Data.Runtime.BaseTypes
 open Hopac
 open HttpFs.Client
 open System
+open Trenton.Common
 open Trenton.Common.ApiClient
 
 module WhoopClient =
@@ -30,10 +31,52 @@ module WhoopClient =
         | Password of OAuthTokenPasswordRequest
         | RefreshToken of OAuthTokenRefreshTokenRequest
 
+    type WhoopUser = { Id: int }
+
+    type AccessToken = string
+
     type AccessTokenDto =
-        { AccessToken: string
+        { AccessToken: AccessToken
           ExpiresInSeconds: int
-          RefreshToken: string }
+          RefreshToken: string
+          User: WhoopUser }
+
+    type GetCyclesRequest =
+        { UserId: int
+          StartDate: DateTime
+          EndDate: DateTime }
+
+    type HeartRateGranularity =
+        | SixSeconds
+        | SixtySeconds
+        | SixHundredSeconds
+        member x.Value =
+            match x with
+            | SixSeconds -> 6
+            | SixtySeconds -> 60
+            | SixHundredSeconds -> 600
+
+    type GetHeartRateRequest =
+        { UserId: int
+          Granularity: HeartRateGranularity
+          StartDate: DateTime
+          EndDate: DateTime }
+
+    type GetSleepRequest =
+        { UserId: int
+          SleepId: int }
+
+    type GetSleepSurveyResponseRequest =
+        { UserId: int
+          SleepId: int }
+
+    type GetWorkoutRequest =
+        { UserId: int
+          WorkoutId: int }
+
+    type GetWorkoutSurveyResponseRequest =
+        { UserId: int
+          WorkoutId: int }
 
     module private Http =
         let private userAuthHeader accessToken = $"Bearer %s{accessToken}"
@@ -108,6 +151,47 @@ module WhoopClient =
             |> Http.jsonBody body
             |> execReq
 
+        let getCycles config accessToken (req: GetCyclesRequest) =
+            $"%s{config.BaseUrl}/users/{req.UserId}/cycles"
+            |> HttpUtils.appendQueryToUrl ["start", req.StartDate.ToString()
+                                           "end", req.EndDate.ToString()]
+            |> Http.get
+            |> Http.setAuthHeader accessToken
+            |> execReq
+
+        let getHeartRate config accessToken (req: GetHeartRateRequest) =
+            $"%s{config.BaseUrl}/users/{req.UserId}/metrics/heart_rate"
+            |> HttpUtils.appendQueryToUrl [ "step", req.Granularity.Value.ToString()
+                                            "start", req.StartDate.ToString()
+                                            "end", req.EndDate.ToString() ]
+            |> Http.get
+            |> Http.setAuthHeader accessToken
+            |> execReq
+
+        let getSleep config accessToken (req: GetSleepRequest) =
+            $"%s{config.BaseUrl}/users/{req.UserId}/sleeps/${req.SleepId}"
+            |> Http.get
+            |> Http.setAuthHeader accessToken
+            |> execReq
+
+        let getSleepSurveyResponse config accessToken (req: GetSleepSurveyResponseRequest) =
+            $"%s{config.BaseUrl}/users/{req.UserId}/sleeps/{req.SleepId}/survey-response"
+            |> Http.get
+            |> Http.setAuthHeader accessToken
+            |> execReq
+
+        let getWorkout config accessToken (req: GetWorkoutRequest) =
+            $"%s{config.BaseUrl}/users/{req.UserId}/workouts/{req.WorkoutId}"
+            |> Http.get
+            |> Http.setAuthHeader accessToken
+            |> execReq
+
+        let getWorkoutSurveyResponses config accessToken (req: GetWorkoutSurveyResponseRequest) =
+            $"%s{config.BaseUrl}/users/{req.UserId}/workouts/{req.WorkoutId}/survey-response"
+            |> Http.get
+            |> Http.setAuthHeader accessToken
+            |> execReq
+
     module private Parse =
         let mapDto mapFn op =
             Job.map mapFn op
@@ -121,7 +205,8 @@ module WhoopClient =
         let accessTokenRespToDto (resp: Api.AccessTokenResponse) =
             { AccessToken = resp.AccessToken
               ExpiresInSeconds = resp.ExpiresIn
-              RefreshToken = resp.RefreshToken }
+              RefreshToken = resp.RefreshToken
+              User = { Id = resp.User.Id } }
 
         let errorMessage (resp: Api.ErrorResponse) = resp.Message
 
@@ -156,8 +241,54 @@ module WhoopClient =
         |> Job.map Parse.accessToken
         |> toAsync
 
+    let private getCycles config accessToken req =
+        Api.getCycles config accessToken req
+        |> Job.map Parse.rawResponse
+        |> toAsync
+
+    let private getHeartRate config accessToken req =
+        Api.getHeartRate config accessToken req
+        |> Job.map Parse.rawResponse
+        |> toAsync
+
+    let private getSleep config accessToken req =
+        Api.getSleep config accessToken req
+        |> Job.map Parse.rawResponse
+        |> toAsync
+
+    let private getSleepSurveyResponse config accessToken req =
+        Api.getSleepSurveyResponse config accessToken req
+        |> Job.map Parse.rawResponse
+        |> toAsync
+
+    let private getWorkout config accessToken req =
+        Api.getWorkout config accessToken req
+        |> Job.map Parse.rawResponse
+        |> toAsync
+
+    let private getWorkoutSurveyResponse config accessToken req =
+        Api.getWorkoutSurveyResponses config accessToken req
+        |> Job.map Parse.rawResponse
+        |> toAsync
+
+    type AuthenticatedApi =
+        { GetCycles: GetCyclesRequest -> Async<Result<string, WhoopApiError>>
+          GetHeartRate: GetHeartRateRequest -> Async<Result<string, WhoopApiError>>
+          GetSleep: GetSleepRequest -> Async<Result<string, WhoopApiError>>
+          GetSleepSurveyResponse: GetSleepSurveyResponseRequest -> Async<Result<string, WhoopApiError>>
+          GetWorkout: GetWorkoutRequest -> Async<Result<string, WhoopApiError>>
+          GetWorkoutSurveyResponse: GetWorkoutSurveyResponseRequest -> Async<Result<string, WhoopApiError>> }
+
     type T =
-        { GetAccessToken: OAuthTokenRequest -> Async<Result<AccessTokenDto, WhoopApiError>> }
+        { GetAccessToken: OAuthTokenRequest -> Async<Result<AccessTokenDto, WhoopApiError>>
+          Authenticated: AccessToken -> AuthenticatedApi }
 
     let getClient cfg =
-        { T.GetAccessToken = getAccessToken cfg }
+        { T.GetAccessToken = getAccessToken cfg
+          Authenticated = fun at ->
+              { GetCycles = getCycles cfg at
+                GetHeartRate = getHeartRate cfg at
+                GetSleep= getSleep cfg at
+                GetSleepSurveyResponse= getSleepSurveyResponse cfg at
+                GetWorkout= getWorkout cfg at
+                GetWorkoutSurveyResponse= getWorkoutSurveyResponse cfg at } }

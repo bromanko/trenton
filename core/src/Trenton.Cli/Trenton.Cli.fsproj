@@ -25,6 +25,7 @@
         <Compile Include="Verbs\Auth\Fitbit\RefreshToken.fs" />
         <Compile Include="Verbs\Auth\Fitbit\SubCommands.fs" />
         <Compile Include="Verbs\Auth\Whoop\Login.fs" />
+        <Compile Include="Verbs\Auth\Whoop\RefreshToken.fs" />
         <Compile Include="Verbs\Auth\Whoop\SubCommands.fs" />
         <Compile Include="Verbs\Auth\SubCommands.fs" />
         <Compile Include="Program.fs" />
