@@ -30,7 +30,6 @@ module Execution =
         | FitbitApiError of FitbitClient.FitbitApiError
 
     module private Parsing =
-
         let mkConfig
             debug
             clientId
@@ -57,8 +56,8 @@ module Execution =
 
 
         let parse (args: ParseResults<FitbitExportArgs>) =
-            mkConfig <!> (Ok true)
-            <*> (parseNes "Client ID must be a valid string."
+            mkConfig (GlobalConfig.ParseArgs args).Debug
+            <!> (parseNes "Client ID must be a valid string."
                  <| args.GetResult FitbitExportArgs.ClientId)
             <*> (parseNes "Client Secret must be a valid string."
                  <| args.GetResult FitbitExportArgs.ClientSecret)
@@ -67,10 +66,10 @@ module Execution =
             <*> (parseOptionalNes "Refresh token must be a valid string."
                  <| args.TryGetResult FitbitExportArgs.RefreshToken)
             <*> (parseDate "Start date must be a valid date."
-                 <| args.GetResult StartDate)
-            <*> (parseEndDate <| args.TryGetResult EndDate)
+                 <| args.GetResult FitbitExportArgs.StartDate)
+            <*> (parseEndDate <| args.TryGetResult FitbitExportArgs.EndDate)
             <*> (parsePath "The output directory must be a valid path."
-                 <| args.GetResult OutputDirectory)
+                 <| args.GetResult FitbitExportArgs.OutputDirectory)
 
     module private Execution =
         let mkClient cfg =
