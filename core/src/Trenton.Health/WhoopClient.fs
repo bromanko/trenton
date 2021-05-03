@@ -153,8 +153,8 @@ module WhoopClient =
 
         let getCycles config accessToken (req: GetCyclesRequest) =
             $"%s{config.BaseUrl}/users/{req.UserId}/cycles"
-            |> HttpUtils.appendQueryToUrl ["start", req.StartDate.ToString()
-                                           "end", req.EndDate.ToString()]
+            |> HttpUtils.appendQueryToUrl ["start", req.StartDate.ToUniversalTime().ToString("O")
+                                           "end", req.EndDate.ToUniversalTime().ToString("O")]
             |> Http.get
             |> Http.setAuthHeader accessToken
             |> execReq
@@ -162,8 +162,8 @@ module WhoopClient =
         let getHeartRate config accessToken (req: GetHeartRateRequest) =
             $"%s{config.BaseUrl}/users/{req.UserId}/metrics/heart_rate"
             |> HttpUtils.appendQueryToUrl [ "step", req.Granularity.Value.ToString()
-                                            "start", req.StartDate.ToString()
-                                            "end", req.EndDate.ToString() ]
+                                            "start", req.StartDate.ToUniversalTime().ToString("O")
+                                            "end", req.EndDate.ToUniversalTime().ToString("O") ]
             |> Http.get
             |> Http.setAuthHeader accessToken
             |> execReq
@@ -211,8 +211,11 @@ module WhoopClient =
         let errorMessage (resp: Api.ErrorResponse) = resp.Message
 
         let parseApiError r =
-            Api.ErrorResponseTypeProvider.Parse r.Body
-            |> errorMessage
+            if String.IsNullOrWhiteSpace r.Body |> not then
+                Api.ErrorResponseTypeProvider.Parse r.Body
+                |> errorMessage
+            else
+                "No error body provided."
             |> WhoopApiError.Error
 
         let rawResponse r : Result<string, WhoopApiError> =

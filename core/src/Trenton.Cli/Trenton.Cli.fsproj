@@ -18,6 +18,7 @@
         <Compile Include="Verbs\Parsing.fs" />
         <Compile Include="Verbs\Version.fs" />
         <Compile Include="Verbs\Export\Fitbit\Execution.fs" />
+        <Compile Include="Verbs\Export\Whoop\Execution.fs" />
         <Compile Include="Verbs\Export\SubCommands.fs" />
         <Compile Include="Verbs\Auth\Fitbit\AcessTokenProcessor.fs" />
         <Compile Include="Verbs\Auth\Fitbit\Host.fs" />
